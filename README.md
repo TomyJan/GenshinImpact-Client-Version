@@ -1,0 +1,2 @@
+# GenshinImpact-Client-Version
+ 

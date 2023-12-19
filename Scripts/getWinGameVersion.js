@@ -8,21 +8,20 @@ const OS_API_URL =
   'https://sdk-os-static.mihoyo.com/hk4e_global/mdk/launcher/api/resource?channel_id=1&key=gcStgarh&launcher_id=10&sub_channel_id=0'
 
 // 方便测试
-// process.argv[2] = 'cn'
+ process.argv[2] = 'cn'
 // 根据命令行参数选择目标链接
-const targetUrl =
+const server =
   process.argv[2] === 'cn'
-    ? CN_API_URL
+    ? 'CN'
     : process.argv[2] === 'os'
-    ? OS_API_URL
+    ? 'OS'
     : (() => {
         throw new Error('无效的命令行参数: ' + process.argv[2])
       })()
-const targetDir = process.argv[2] === 'cn' ? './Win/Game/CN/' : './Win/Game/OS/'
-const latestVerPath =
-  process.argv[2] === 'cn'
-    ? './Scripts/data/latest_Win_Game_CN.json'
-    : './Scripts/data/latest_Win_Game_OS.json'
+
+      const targetUrl = server === 'CN' ? CN_API_URL : OS_API_URL
+      const targetDir = `./Win/Game/${server}/`
+const latestVerPath =`./Scripts/data/latest_Win_Game_${server}.json`
 
 async function getWinGameVersion() {
   try {
@@ -99,7 +98,7 @@ async function getWinGameVersion() {
       console.log('数据已更新并保存成功。')
 
       // TODO 后续推送操作
-      push.pushWinGame()
+      push.pushWinGame(server, jsonData)
     } else {
       console.log('数据无变化，无需更新。')
     }

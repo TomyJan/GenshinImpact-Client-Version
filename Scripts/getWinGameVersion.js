@@ -1,5 +1,6 @@
 import fs from 'fs'
 import fetch from 'node-fetch'
+import AbortController from 'abort-controller'
 import push from './push/push.js'
 
 const CN_API_URL =

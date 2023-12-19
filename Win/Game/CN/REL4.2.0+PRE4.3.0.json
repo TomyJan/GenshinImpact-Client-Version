@@ -556,39 +556,7 @@
     "sdk": null,
     "deprecated_files": [
       {
-        "name": "YuanShen_Data/Plugins/InControlNative.dll",
-        "md5": ""
-      },
-      {
-        "name": "mhyprot3.Sys",
-        "md5": ""
-      },
-      {
-        "name": "YuanShen_Data/Plugins/metakeeper.dll",
-        "md5": ""
-      },
-      {
-        "name": "YuanShen_Data/blueReporter.exe",
-        "md5": ""
-      },
-      {
-        "name": "YuanShen_Data/Plugins/sqlite3.dll",
-        "md5": ""
-      },
-      {
         "name": "YuanShen_Data/Plugins/widevinecdmadapter.dll",
-        "md5": ""
-      },
-      {
-        "name": "mhyprot2.Sys",
-        "md5": ""
-      },
-      {
-        "name": "YuanShen_Data/Plugins/XInputInterface64.dll",
-        "md5": ""
-      },
-      {
-        "name": "YuanShen_Data/Plugins/d3dcompiler_43.dll",
         "md5": ""
       },
       {
@@ -596,7 +564,39 @@
         "md5": ""
       },
       {
+        "name": "YuanShen_Data/blueReporter.exe",
+        "md5": ""
+      },
+      {
+        "name": "YuanShen_Data/Plugins/XInputInterface64.dll",
+        "md5": ""
+      },
+      {
+        "name": "YuanShen_Data/Plugins/metakeeper.dll",
+        "md5": ""
+      },
+      {
+        "name": "YuanShen_Data/Plugins/d3dcompiler_43.dll",
+        "md5": ""
+      },
+      {
+        "name": "YuanShen_Data/Plugins/sqlite3.dll",
+        "md5": ""
+      },
+      {
         "name": "YuanShen_Data/Plugins/xlua.dll",
+        "md5": ""
+      },
+      {
+        "name": "mhyprot2.Sys",
+        "md5": ""
+      },
+      {
+        "name": "YuanShen_Data/Plugins/InControlNative.dll",
+        "md5": ""
+      },
+      {
+        "name": "mhyprot3.Sys",
         "md5": ""
       }
     ]

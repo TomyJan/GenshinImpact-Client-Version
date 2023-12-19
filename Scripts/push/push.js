@@ -2,8 +2,8 @@ import fs, { link } from 'fs'
 
 import fetch from 'node-fetch'
 
-const TGBotToken = '6837976518:AAF4Ajw1yOwz36TL5iNsDh0R0xALpr9Lrpg'
-const TGMsgID = '915891411'
+const TGBotToken = process.env.TGBotToken
+const TGMsgID = process.env.TGMsgID
 
 class Push {
   constructor() {

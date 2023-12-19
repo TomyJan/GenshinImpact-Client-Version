@@ -26,10 +26,16 @@ const latestVerPath = `./Scripts/data/latest_Win_Game_${server}.json`
 async function getWinGameVersion() {
   try {
     // 发送GET请求获取JSON数据
-    let rsp = await fetch(targetUrl)
+    let rsp = await fetchWithTimeout(targetUrl)
     if (!rsp.ok) {
-      console.log('请求失败:', rsp.status, rsp.statusText)
-      return false
+      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
+        rsp = await fetchWithTimeout(targetUrl)
+        if(!rsp.ok) {
+            console.log('请求失败:', rsp.status, rsp.statusText)
+            return false
+        }
+
+      
     }
 
     // console.log(JSON.stringify(await rsp.json()))
@@ -106,6 +112,19 @@ async function getWinGameVersion() {
     console.error('发生错误:', error.message)
   }
 }
+
+async function fetchWithTimeout(resource, options = {}) {
+    const { timeout = 10000 } = options;
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal
+    });
+    clearTimeout(id);
+    return response;
+    }
+
 
 // 执行函数
 getWinGameVersion()

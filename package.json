@@ -1,0 +1,22 @@
+{
+  "name": "GenshinImpact-Client-Version",
+  "version": "0.0.1",
+  "author": "TomyJan",
+  "description": "GenshinImpact client Versions",
+  "type": "module",
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "scripts": {
+    "format": "prettier --write \"**/*.js\"",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "conventional-changelog": "^3.1.25",
+    "conventional-changelog-custom-config": "^0.3.1",
+    "prettier": "^2.8.8"
+  }
+}

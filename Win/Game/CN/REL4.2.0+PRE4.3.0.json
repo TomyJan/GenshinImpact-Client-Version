@@ -560,11 +560,11 @@
         "md5": ""
       },
       {
-        "name": "YuanShen_Data/Plugins/d3dcompiler_43.dll",
+        "name": "YuanShen_Data/Plugins/metakeeper.dll",
         "md5": ""
       },
       {
-        "name": "YuanShen_Data/blueReporter.exe",
+        "name": "YuanShen_Data/Plugins/sqlite3.dll",
         "md5": ""
       },
       {
@@ -573,6 +573,10 @@
       },
       {
         "name": "YuanShen_Data/Plugins/PCGameSDK.dll",
+        "md5": ""
+      },
+      {
+        "name": "YuanShen_Data/Plugins/xlua.dll",
         "md5": ""
       },
       {
@@ -588,15 +592,11 @@
         "md5": ""
       },
       {
-        "name": "YuanShen_Data/Plugins/metakeeper.dll",
+        "name": "YuanShen_Data/Plugins/d3dcompiler_43.dll",
         "md5": ""
       },
       {
-        "name": "YuanShen_Data/Plugins/sqlite3.dll",
-        "md5": ""
-      },
-      {
-        "name": "YuanShen_Data/Plugins/xlua.dll",
+        "name": "YuanShen_Data/blueReporter.exe",
         "md5": ""
       }
     ]

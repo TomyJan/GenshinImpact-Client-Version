@@ -1,4 +1,5 @@
 import fs from 'fs';
+import push from './push/push.js';
 
 const CN_API_URL = 'https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?channel_id=1&key=eYd89JmJ&launcher_id=18&sub_channel_id=1'
 const OS_API_URL = 'https://sdk-os-static.mihoyo.com/hk4e_global/mdk/launcher/api/resource?channel_id=1&key=gcStgarh&launcher_id=10&sub_channel_id=0'
@@ -59,6 +60,10 @@ async function getWinGameVersion() {
             await fs.writeFileSync(latestVerPath, JSON.stringify(localData, null, 2)+'\n', 'utf-8');
 
             console.log('数据已更新并保存成功。');
+
+            // TODO 后续推送操作
+            push.pushWinGame();
+
         } else {
             console.log('数据无变化，无需更新。');
         }

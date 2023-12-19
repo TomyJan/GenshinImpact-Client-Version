@@ -7,7 +7,6 @@ on:
       - "**/*.js"
     branches:
       - "master"
-      - "dev"
 
 jobs:
   Format-Code:

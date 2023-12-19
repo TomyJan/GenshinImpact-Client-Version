@@ -556,7 +556,15 @@
     "sdk": null,
     "deprecated_files": [
       {
-        "name": "GenshinImpact_Data/Plugins/PCGameSDK.dll",
+        "name": "GenshinImpact_Data/Plugins/InControlNative.dll",
+        "md5": ""
+      },
+      {
+        "name": "GenshinImpact_Data/Plugins/xlua.dll",
+        "md5": ""
+      },
+      {
+        "name": "GenshinImpact_Data/blueReporter.exe",
         "md5": ""
       },
       {
@@ -568,11 +576,15 @@
         "md5": ""
       },
       {
-        "name": "GenshinImpact_Data/Plugins/widevinecdmadapter.dll",
+        "name": "GenshinImpact_Data/Plugins/sqlite3.dll",
         "md5": ""
       },
       {
-        "name": "GenshinImpact_Data/blueReporter.exe",
+        "name": "GenshinImpact_Data/Plugins/XInputInterface64.dll",
+        "md5": ""
+      },
+      {
+        "name": "GenshinImpact_Data/Plugins/widevinecdmadapter.dll",
         "md5": ""
       },
       {
@@ -584,19 +596,7 @@
         "md5": ""
       },
       {
-        "name": "GenshinImpact_Data/Plugins/sqlite3.dll",
-        "md5": ""
-      },
-      {
-        "name": "GenshinImpact_Data/Plugins/InControlNative.dll",
-        "md5": ""
-      },
-      {
-        "name": "GenshinImpact_Data/Plugins/xlua.dll",
-        "md5": ""
-      },
-      {
-        "name": "GenshinImpact_Data/Plugins/XInputInterface64.dll",
+        "name": "GenshinImpact_Data/Plugins/PCGameSDK.dll",
         "md5": ""
       }
     ]

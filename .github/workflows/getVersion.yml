@@ -1,4 +1,4 @@
-name: coupons # yml文件名
+name: Get Game Version # yml文件名
  
 on:
   push:
@@ -27,8 +27,14 @@ jobs:
           run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
           id: extract_branch
         - name: Check CN Game Update
+          env: 
+            TGBotToken: ${{ secrets.TGBotToken }}
+            TGMsgID: ${{ secrets.TGMsgID }}
           run: node ./Scripts/getWinGameVersion.js cn
         - name: Check OS Game Update
+          env: 
+            TGBotToken: ${{ secrets.TGBotToken }}
+            TGMsgID: ${{ secrets.TGMsgID }}
           run: node ./Scripts/getWinGameVersion.js os
         - run: git config --global user.name "github-actions"
         - run: git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"

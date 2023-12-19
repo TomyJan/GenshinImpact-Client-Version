@@ -1,4 +1,5 @@
 import fs from 'fs'
+import fetch from 'node-fetch'
 import push from './push/push.js'
 
 const CN_API_URL =

@@ -1,3 +1,5 @@
+import fetch from 'node-fetch'
+
 const TGBotToken = process.env.TGBotToken
 const TGMsgID = process.env.TGMsgID
 

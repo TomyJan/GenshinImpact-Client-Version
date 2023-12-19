@@ -83,7 +83,7 @@ class Push {
       `\\#预下载 \\#predownload _via [@GenshinVersion](https://t.me/GenshinVersion)_`
     )
 
-    console.log('推送地址:', pushUrl)
+    // console.log('推送地址:', pushUrl)
 
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
@@ -208,16 +208,37 @@ class Push {
       return latestJsonFile
     }
 
-    function escapeCharacters(inputString) {
-      // 定义需要转义的字符集合
-      var charactersToEscape = /[_*\[\]()~`>#\+\-=|{}.!]/g
-
-      // 使用replace方法进行转义
-      var escapedString = inputString.replace(charactersToEscape, '\\$&')
-
-      return escapedString
-    }
+    
   }
+
+  async pushWinLauncher(server, link) {
+    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=${TGMsgID}&text=`
+    pushUrl += encodeURIComponent(`原神 Win ${server} Launcher 更新！\n\n`)
+    pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
+    pushUrl += encodeURIComponent(
+      `\\#预下载 \\#predownload _via [@GenshinVersion](https://t.me/GenshinVersion)_`
+    )
+
+    let rsp = await fetch(pushUrl)
+    if (!rsp.ok) {
+      console.log('推送请求失败:', rsp.status, rsp.statusText)
+      return false
+    }
+
+    // console.log(JSON.stringify(await rsp.json()))
+    let pushJsonData = await rsp.json()
+    console.log('推送结果:', pushJsonData)
+  }
+}
+
+function escapeCharacters(inputString) {
+  // 定义需要转义的字符集合
+  var charactersToEscape = /[_*\[\]()~`>#\+\-=|{}.!]/g
+
+  // 使用replace方法进行转义
+  var escapedString = inputString.replace(charactersToEscape, '\\$&')
+
+  return escapedString
 }
 
 // 直接实例化 Push 类并默认导出

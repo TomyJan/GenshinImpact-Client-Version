@@ -7,7 +7,8 @@ const CN_API_URL =
 const OS_API_URL =
   'https://sdk-os-static.mihoyo.com/hk4e_global/mdk/launcher/api/resource?channel_id=1&key=gcStgarh&launcher_id=10&sub_channel_id=0'
 
-process.argv[2] = 'cn'
+  // 方便测试
+// process.argv[2] = 'cn'
 // 根据命令行参数选择目标链接
 const targetUrl =
   process.argv[2] === 'cn'

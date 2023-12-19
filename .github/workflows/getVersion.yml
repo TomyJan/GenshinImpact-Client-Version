@@ -9,7 +9,7 @@ on:
     - cron: '* */2 * * *'   # 每两小时运行一次
  
 jobs:
-  run-coupons: # 任务名
+  get-Game-Version: # 任务名
     runs-on: ubuntu-latest
     steps:
         - name: Checkout code

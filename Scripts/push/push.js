@@ -237,6 +237,25 @@ class Push {
     let pushJsonData = await rsp.json()
     console.log('推送结果:', pushJsonData)
   }
+
+  async pushAndroidGame(server, link) {
+    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=${TGMsgID}&text=`
+    pushUrl += encodeURIComponent(`原神 Android ${server} Game 更新！\n\n`)
+    pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
+    pushUrl += encodeURIComponent(
+      `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
+    )
+
+    let rsp = await fetch(pushUrl)
+    if (!rsp.ok) {
+      console.log('推送请求失败:', rsp.status, rsp.statusText)
+      return false
+    }
+
+    // console.log(JSON.stringify(await rsp.json()))
+    let pushJsonData = await rsp.json()
+    console.log('推送结果:', pushJsonData)
+  }
 }
 
 function escapeCharacters(inputString) {

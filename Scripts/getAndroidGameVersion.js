@@ -23,7 +23,7 @@ async function getAndroidGameVersion() {
     }
 
     // console.log(JSON.stringify(await rsp.json()))
-    let jsonData = {link: await rsp.url}
+    let jsonData = { link: await rsp.url }
 
     // 读取本地保存的数据
     let localData = {}

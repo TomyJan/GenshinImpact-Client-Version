@@ -556,15 +556,11 @@
     "sdk": null,
     "deprecated_files": [
       {
-        "name": "YuanShen_Data/Plugins/widevinecdmadapter.dll",
+        "name": "YuanShen_Data/Plugins/xlua.dll",
         "md5": ""
       },
       {
-        "name": "YuanShen_Data/Plugins/PCGameSDK.dll",
-        "md5": ""
-      },
-      {
-        "name": "YuanShen_Data/blueReporter.exe",
+        "name": "mhyprot3.Sys",
         "md5": ""
       },
       {
@@ -576,7 +572,7 @@
         "md5": ""
       },
       {
-        "name": "YuanShen_Data/Plugins/d3dcompiler_43.dll",
+        "name": "YuanShen_Data/blueReporter.exe",
         "md5": ""
       },
       {
@@ -584,7 +580,11 @@
         "md5": ""
       },
       {
-        "name": "YuanShen_Data/Plugins/xlua.dll",
+        "name": "YuanShen_Data/Plugins/widevinecdmadapter.dll",
+        "md5": ""
+      },
+      {
+        "name": "YuanShen_Data/Plugins/PCGameSDK.dll",
         "md5": ""
       },
       {
@@ -592,11 +592,11 @@
         "md5": ""
       },
       {
-        "name": "YuanShen_Data/Plugins/InControlNative.dll",
+        "name": "YuanShen_Data/Plugins/d3dcompiler_43.dll",
         "md5": ""
       },
       {
-        "name": "mhyprot3.Sys",
+        "name": "YuanShen_Data/Plugins/InControlNative.dll",
         "md5": ""
       }
     ]

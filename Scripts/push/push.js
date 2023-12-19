@@ -55,7 +55,7 @@ class Push {
       pushUrl += encodeURIComponent(`国际服: \n`)
       pushUrl += encodeURIComponent(`完整包: \n`)
       pushUrl += getEncodedLinkMsgGroupText('OS', 'full', type)
-      pushUrl += encodeURIComponent(`\n差分包: \n`)
+      pushUrl += encodeURIComponent(`差分包: \n`)
       pushUrl += getEncodedLinkMsgGroupText('OS', 'diff', type)
     } else {
       pushUrl += encodeURIComponent(
@@ -72,7 +72,7 @@ class Push {
     }
 
     pushUrl += encodeURIComponent(
-      `\n\n本体为分卷, 共有 ${
+      `\n本体为分卷, 共有 ${
         jsonData.data.pre_download_game.latest.version
           ? jsonData.data.pre_download_game.latest.segments.length
           : jsonData.data.game.latest.segments.length

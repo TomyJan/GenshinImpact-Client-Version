@@ -79,13 +79,19 @@ class Push {
       } 个包, 请自行修改后缀\n\n`
     )
 
-    pushUrl += encodeURIComponent(`\\#${jsonData.data.pre_download_game.latest.version ? escapeCharacters(jsonData.data.pre_download_game.latest.version) : escapeCharacters(jsonData.data.game.latest.version)} `)
+    pushUrl += encodeURIComponent(
+      `\\#${
+        jsonData.data.pre_download_game.latest.version
+          ? escapeCharacters(jsonData.data.pre_download_game.latest.version)
+          : escapeCharacters(jsonData.data.game.latest.version)
+      } `
+    )
 
     if (jsonData.data.pre_download_game.latest.version)
+      pushUrl += encodeURIComponent(`\\#预下载 \\#predownload `)
     pushUrl += encodeURIComponent(
-      `\\#预下载 \\#predownload `
+      `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
     )
-    pushUrl += encodeURIComponent(`\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`)
 
     // console.log('推送地址:', pushUrl)
 
@@ -211,15 +217,15 @@ class Push {
       // 返回最新的 JSON 文件名
       return latestJsonFile
     }
-
-    
   }
 
   async pushWinLauncher(server, link) {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=${TGMsgID}&text=`
     pushUrl += encodeURIComponent(`原神 Win ${server} Launcher 更新！\n\n`)
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
-    pushUrl += encodeURIComponent(`\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`)
+    pushUrl += encodeURIComponent(
+      `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
+    )
 
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {

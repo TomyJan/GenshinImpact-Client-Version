@@ -25,106 +25,100 @@ const targetDir = `./Win/Launcher/${server}/`
 const latestVerPath = `./Scripts/data/latest_Win_Launcher_${server}.json`
 
 async function getWinLauncherVersion() {
-    try {
-      // 发送GET请求获取JSON数据
-      let rsp = await fetchWithTimeout(targetUrl)
+  try {
+    // 发送GET请求获取JSON数据
+    let rsp = await fetchWithTimeout(targetUrl)
+    if (!rsp.ok) {
+      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
+      rsp = await fetchWithTimeout(targetUrl)
       if (!rsp.ok) {
-        console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-        rsp = await fetchWithTimeout(targetUrl)
-        if (!rsp.ok) {
-          console.log('请求失败:', rsp.status, rsp.statusText)
-          return false
-        }
+        console.log('请求失败:', rsp.status, rsp.statusText)
+        return false
       }
-  
-      // console.log(JSON.stringify(await rsp.json()))
-      let jsonData = await rsp.json()
-  
-      // 读取本地保存的数据
-      let localData = {}
-      try {
-        const localDataContent = await fs.readFileSync(latestVerPath, 'utf-8')
-        //console.log('读取本地数据:', localDataContent);
-        localData = JSON.parse(localDataContent)
-      } catch (error) {
-        // 文件不存在或解析错误时，忽略错误
-        console.error('读取本地数据失败:', error.message)
-      }
-  
-      // 提取版本信息
-      const remoteLink = jsonData.data.link
-
-      console.log(
-        '本地最新 Launcher 版本:',
-        localData.link
-      )
-      console.log(
-        '取到最新 Launcher 版本:',
-        remoteLink
-      )
-  
-      // 构建文件名
-      const fileName = await getNowDate()+        '.json'
-      //console.log('文件名:', fileName);
-  
-      // 比较版本并更新本地数据
-      if (localData.link !== remoteLink) {
-        console.log('数据有变化，正在更新...')
-        // 写出JSON文件
-        const outputFilePath = targetDir + fileName
-        await fs.writeFileSync(
-          outputFilePath,
-          JSON.stringify(jsonData, null, 2) + '\n',
-          'utf-8'
-        )
-        console.log('数据已写出到:', outputFilePath)
-  
-        // 更新本地数据
-        localData.link = remoteLink
-  
-        // 写回本地保存的数据文件
-        await fs.writeFileSync(
-          latestVerPath,
-          JSON.stringify(localData, null, 2) + '\n',
-          'utf-8'
-        )
-  
-        console.log('数据已更新并保存成功。')
-  
-        // TODO 后续推送操作
-        push.pushWinLauncher(server, remoteLink)
-      } else {
-        console.log('数据无变化，无需更新。')
-      }
-    } catch (error) {
-      console.error('发生错误:', error.message)
     }
+
+    // console.log(JSON.stringify(await rsp.json()))
+    let jsonData = await rsp.json()
+
+    // 读取本地保存的数据
+    let localData = {}
+    try {
+      const localDataContent = await fs.readFileSync(latestVerPath, 'utf-8')
+      //console.log('读取本地数据:', localDataContent);
+      localData = JSON.parse(localDataContent)
+    } catch (error) {
+      // 文件不存在或解析错误时，忽略错误
+      console.error('读取本地数据失败:', error.message)
+    }
+
+    // 提取版本信息
+    const remoteLink = jsonData.data.link
+
+    console.log('本地最新 Launcher 版本:', localData.link)
+    console.log('取到最新 Launcher 版本:', remoteLink)
+
+    // 构建文件名
+    const fileName = (await getNowDate()) + '.json'
+    //console.log('文件名:', fileName);
+
+    // 比较版本并更新本地数据
+    if (localData.link !== remoteLink) {
+      console.log('数据有变化，正在更新...')
+      // 写出JSON文件
+      const outputFilePath = targetDir + fileName
+      await fs.writeFileSync(
+        outputFilePath,
+        JSON.stringify(jsonData, null, 2) + '\n',
+        'utf-8'
+      )
+      console.log('数据已写出到:', outputFilePath)
+
+      // 更新本地数据
+      localData.link = remoteLink
+
+      // 写回本地保存的数据文件
+      await fs.writeFileSync(
+        latestVerPath,
+        JSON.stringify(localData, null, 2) + '\n',
+        'utf-8'
+      )
+
+      console.log('数据已更新并保存成功。')
+
+      // TODO 后续推送操作
+      push.pushWinLauncher(server, remoteLink)
+    } else {
+      console.log('数据无变化，无需更新。')
+    }
+  } catch (error) {
+    console.error('发生错误:', error.message)
   }
-  
-  // 写一个获取当前utc+8日期时间拼接成纯数字的方法
-  async function getNowDate() {
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1).toString().padStart(2, '0');
-    let day = date.getDate().toString().padStart(2, '0');
-    let hour = date.getHours().toString().padStart(2, '0');
-    let minute = date.getMinutes().toString().padStart(2, '0');
-    let second = date.getSeconds().toString().padStart(2, '0');
-    let nowDate = year + month + day + hour + minute + second;
-    return nowDate;
-  }  
-  
-  async function fetchWithTimeout(resource, options = {}) {
-    const { timeout = 10000 } = options
-    const controller = new AbortController()
-    const id = setTimeout(() => controller.abort(), timeout)
-    const response = await fetch(resource, {
-      ...options,
-      signal: controller.signal,
-    })
-    clearTimeout(id)
-    return response
-  }
-  
-  // 执行函数
-  getWinLauncherVersion()
+}
+
+// 写一个获取当前utc+8日期时间拼接成纯数字的方法
+async function getNowDate() {
+  let date = new Date()
+  let year = date.getFullYear()
+  let month = (date.getMonth() + 1).toString().padStart(2, '0')
+  let day = date.getDate().toString().padStart(2, '0')
+  let hour = date.getHours().toString().padStart(2, '0')
+  let minute = date.getMinutes().toString().padStart(2, '0')
+  let second = date.getSeconds().toString().padStart(2, '0')
+  let nowDate = year + month + day + hour + minute + second
+  return nowDate
+}
+
+async function fetchWithTimeout(resource, options = {}) {
+  const { timeout = 10000 } = options
+  const controller = new AbortController()
+  const id = setTimeout(() => controller.abort(), timeout)
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal,
+  })
+  clearTimeout(id)
+  return response
+}
+
+// 执行函数
+getWinLauncherVersion()

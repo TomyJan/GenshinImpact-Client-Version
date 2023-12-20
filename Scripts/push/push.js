@@ -103,9 +103,9 @@ class Push {
 
     if (jsonData.data.pre_download_game?.latest.version)
       pushUrl += encodeURIComponent(`\\#预下载 \\#predownload `)
-    pushUrl += encodeURIComponent(
-      `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
-    )
+    pushUrl += gameName === '原神'
+      ? encodeURIComponent(`\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`)
+      : encodeURIComponent(`\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`)
 
     console.log('推送地址:', pushUrl)
 
@@ -255,9 +255,9 @@ class Push {
       `${gameName} Win ${server} Launcher 更新！\n\n`
     )
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
-    pushUrl += encodeURIComponent(
-      `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
-    )
+    pushUrl += gameName === '原神'
+      ? encodeURIComponent(`\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`)
+      : encodeURIComponent(`\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`)
 
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
@@ -279,9 +279,9 @@ class Push {
       `${gameName} Android ${server} Game 更新！\n\n`
     )
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
-    pushUrl += encodeURIComponent(
-      `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
-    )
+    pushUrl += gameName === '原神'
+      ? encodeURIComponent(`\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`)
+      : encodeURIComponent(`\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`)
 
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)

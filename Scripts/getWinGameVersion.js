@@ -53,7 +53,7 @@ async function getWinGameVersion() {
 
     // 提取版本信息
     const latestVersion = jsonData.data.game.latest.version
-    const preDownloadVersion = jsonData.data.pre_download_game.latest.version
+    const preDownloadVersion = jsonData.data.pre_download_game?.latest.version
     console.log(
       '本地最新 REL 版本:',
       localData.latestVersion,

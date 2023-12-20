@@ -1,5 +1,5 @@
 import fs, { link } from 'fs'
-
+import path from 'path'
 import fetch from 'node-fetch'
 
 const TGBotToken = process.env.TGBotToken
@@ -33,7 +33,7 @@ class Push {
       console.error('读取本地数据失败:', error.message)
     }
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=${TGMsgID}&text=`
-    let type = jsonData.data.pre_download_game.latest.version ? 'PRE' : 'REL'
+    let type = jsonData.data.pre_download_game?.latest.version ? 'PRE' : 'REL'
     //console.log('latestCN:', JSON.stringify(latestCN))
     if (JSON.stringify(latestCN) === JSON.stringify(latestOS)) {
       console.log('两个服务器都更新了, 一起推送')
@@ -43,7 +43,7 @@ class Push {
         `原神 Win ${
           type === 'REL'
             ? escapeCharacters(jsonData.data.game.latest.version)
-            : escapeCharacters(jsonData.data.pre_download_game.latest.version)
+            : escapeCharacters(jsonData.data.pre_download_game?.latest.version)
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`国服: \n`)
@@ -62,7 +62,7 @@ class Push {
         `原神 Win ${server} ${
           type === 'REL'
             ? escapeCharacters(jsonData.data.game.latest.version)
-            : escapeCharacters(jsonData.data.pre_download_game.latest.version)
+            : escapeCharacters(jsonData.data.pre_download_game?.latest.version)
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`完整包: \n`)
@@ -73,21 +73,21 @@ class Push {
 
     pushUrl += encodeURIComponent(
       `\n本体为分卷, 共有 ${
-        jsonData.data.pre_download_game.latest.version
-          ? jsonData.data.pre_download_game.latest.segments.length
+        jsonData.data.pre_download_game?.latest.version
+          ? jsonData.data.pre_download_game?.latest.segments.length
           : jsonData.data.game.latest.segments.length
       } 个包, 请自行修改后缀\n\n`
     )
 
     pushUrl += encodeURIComponent(
       `\\#${
-        jsonData.data.pre_download_game.latest.version
-          ? escapeCharacters(jsonData.data.pre_download_game.latest.version)
+        jsonData.data.pre_download_game?.latest.version
+          ? escapeCharacters(jsonData.data.pre_download_game?.latest.version)
           : escapeCharacters(jsonData.data.game.latest.version)
       } `
     )
 
-    if (jsonData.data.pre_download_game.latest.version)
+    if (jsonData.data.pre_download_game?.latest.version)
       pushUrl += encodeURIComponent(`\\#预下载 \\#predownload `)
     pushUrl += encodeURIComponent(
       `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
@@ -115,6 +115,7 @@ class Push {
     function getEncodedLinkMsgGroupText(server, linkType, updateType) {
       // 根据传入的 server 值决定读取哪个文件, 解析成json后再根据 linkType 和 updateType 决定读取哪个字段
       let jsonData = {}
+      //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
       try {
         // 获取 /win/Game/CN或OS目录下最新的.json作为传入的文件名
         const jsonDataContent = fs.readFileSync(
@@ -123,14 +124,17 @@ class Push {
           )}`,
           'utf-8'
         )
+        //console.log('读取本地数据:', jsonDataContent);
         jsonData = JSON.parse(jsonDataContent)
       } catch (error) {
         console.error('读取本地数据失败:', error.message)
       }
-      let linkData =
-        updateType === 'rel'
+      //console.log('jsonData:', jsonData)
+      //console.log('updateType:', updateType)
+      let linkData = {...
+        updateType === 'REL'
           ? jsonData.data.game
-          : jsonData.data.pre_download_game
+          : jsonData.data.pre_download_game}
       //console.log('linkData:', linkData)
       let fullLink = '本体: 分卷 '
       if (linkType === 'full') {

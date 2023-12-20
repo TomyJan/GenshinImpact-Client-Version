@@ -1,6 +1,7 @@
 name: Get Game Version # yml文件名
  
 on:
+  workflow_dispatch: ~
   push:
     branches:
       - master

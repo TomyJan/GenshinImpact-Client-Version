@@ -10,13 +10,14 @@ class Push {
     // 在构造函数中进行实例化的其他初始化工作
   }
 
-  async pushWinGame(server, jsonData) {
+  async pushWinGame(gameName, server, jsonData) {
     // 判断本地两个 latest 文件内容是否一样, 一样说明俩服务器都更新了, 一起推送, 否则只推送传入的服务器
     let latestCN = {}
     let latestOS = {}
+    const latestVerPath = gameName ==='原神' ? `./Scripts/data/GI/` : `./Scripts/data/SR/`
     try {
       const latestCNContent = await fs.readFileSync(
-        `./Scripts/data/latest_Win_Game_CN.json`,
+        `${latestVerPath}latest_Win_Game_CN.json`,
         'utf-8'
       )
       latestCN = JSON.parse(latestCNContent)
@@ -25,14 +26,14 @@ class Push {
     }
     try {
       const latestOSContent = await fs.readFileSync(
-        `./Scripts/data/latest_Win_Game_OS.json`,
+        `${latestVerPath}latest_Win_Game_OS.json`,
         'utf-8'
       )
       latestOS = JSON.parse(latestOSContent)
     } catch (error) {
       console.error('读取本地数据失败:', error.message)
     }
-    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=${TGMsgID}&text=`
+    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=${TGMsgID}&text=${gameName}`
     let type = jsonData.data.pre_download_game?.latest.version ? 'PRE' : 'REL'
     //console.log('latestCN:', JSON.stringify(latestCN))
     if (JSON.stringify(latestCN) === JSON.stringify(latestOS)) {
@@ -40,7 +41,7 @@ class Push {
       //await this.pushWinGame('CN', latestCN)
       //await this.pushWinGame('OS', latestOS)
       pushUrl += encodeURIComponent(
-        `原神 Win ${
+        ` Win ${
           type === 'REL'
             ? escapeCharacters(jsonData.data.game.latest.version)
             : escapeCharacters(jsonData.data.pre_download_game?.latest.version)
@@ -59,7 +60,7 @@ class Push {
       pushUrl += getEncodedLinkMsgGroupText('OS', 'diff', type)
     } else {
       pushUrl += encodeURIComponent(
-        `原神 Win ${server} ${
+        ` Win ${server} ${
           type === 'REL'
             ? escapeCharacters(jsonData.data.game.latest.version)
             : escapeCharacters(jsonData.data.pre_download_game?.latest.version)
@@ -71,12 +72,13 @@ class Push {
       pushUrl += getEncodedLinkMsgGroupText(server, 'diff', type)
     }
 
+    if(jsonData.data.pre_download_game?.latest.segments.length>0)// 有分卷包时的提示
     pushUrl += encodeURIComponent(
-      `\n本体为分卷, 共有 ${
+      `\n本体分卷共有 ${
         jsonData.data.pre_download_game?.latest.version
           ? jsonData.data.pre_download_game?.latest.segments.length
           : jsonData.data.game.latest.segments.length
-      } 个包, 请自行修改后缀\n\n`
+      } 个包, 请自行合并\n\n`
     )
 
     pushUrl += encodeURIComponent(

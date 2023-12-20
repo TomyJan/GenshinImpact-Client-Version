@@ -8,21 +8,42 @@ const CN_API_URL =
 const OS_API_URL =
   'https://sdk-os-static.mihoyo.com/hk4e_global/mdk/launcher/api/resource?channel_id=1&key=gcStgarh&launcher_id=10&sub_channel_id=0'
 
+  const ApiInfo = {
+    GI: {
+      CN: 'https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?channel_id=1&key=eYd89JmJ&launcher_id=18&sub_channel_id=1',
+      OS: 'https://sdk-os-static.mihoyo.com/hk4e_global/mdk/launcher/api/resource?channel_id=1&key=gcStgarh&launcher_id=10&sub_channel_id=0',
+      name: '原神'
+    },
+    SR: {
+      CN: 'https://api-launcher-static.mihoyo.com/hkrpg_cn/mdk/launcher/api/resource?channel_id=1&key=6KcVuOkbcqjJomjZ&launcher_id=33&sub_channel_id=1',
+      OS: 'https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/resource?channel_id=1&key=vplOVX8Vn7cwG8yb&launcher_id=35&sub_channel_id=1',
+      name: '崩坏星穹铁道'
+    }
+  }
 // 方便测试
-//process.argv[2] = 'cn'
+process.argv[2] = 'sr'
+process.argv[3] = 'cn'
 // 根据命令行参数选择目标链接
-const server =
-  process.argv[2] === 'cn'
-    ? 'CN'
-    : process.argv[2] === 'os'
-    ? 'OS'
+const game =
+  process.argv[2] === 'gi'
+    ? 'GI'
+    : process.argv[2] === 'sr'
+    ? 'SR'
     : (() => {
         throw new Error('无效的命令行参数: ' + process.argv[2])
       })()
+const server =
+  process.argv[3] === 'cn'
+    ? 'CN'
+    : process.argv[3] === 'os'
+    ? 'OS'
+    : (() => {
+        throw new Error('无效的命令行参数: ' + process.argv[3])
+      })()
 
-const targetUrl = server === 'CN' ? CN_API_URL : OS_API_URL
+const targetUrl = ApiInfo[game][server]
 const targetDir = `./Win/Game/${server}/`
-const latestVerPath = `./Scripts/data/latest_Win_Game_${server}.json`
+const latestVerPath = `./Scripts/data/${game}/latest_Win_Game_${server}.json`
 
 async function getWinGameVersion() {
   try {
@@ -103,7 +124,7 @@ async function getWinGameVersion() {
       console.log('数据已更新并保存成功。')
 
       // TODO 后续推送操作
-      push.pushWinGame(server, jsonData)
+      push.pushWinGame(ApiInfo[game].name, server, jsonData)
     } else {
       console.log('数据无变化，无需更新。')
     }

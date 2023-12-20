@@ -131,10 +131,11 @@ class Push {
       }
       //console.log('jsonData:', jsonData)
       //console.log('updateType:', updateType)
-      let linkData = {...
-        updateType === 'REL'
+      let linkData = {
+        ...(updateType === 'REL'
           ? jsonData.data.game
-          : jsonData.data.pre_download_game}
+          : jsonData.data.pre_download_game),
+      }
       //console.log('linkData:', linkData)
       let fullLink = '本体: 分卷 '
       if (linkType === 'full') {

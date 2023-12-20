@@ -137,15 +137,22 @@ class Push {
           : jsonData.data.pre_download_game),
       }
       //console.log('linkData:', linkData)
-      let fullLink = '本体: 分卷 '
+      let fullLink = '本体: '
+      
       if (linkType === 'full') {
-        for (let i = 0; i < linkData.latest.segments.length; i++) {
-          fullLink += `[${i + 1}](${escapeCharacters(
-            linkData.latest.segments[i].path
-          )})\\|`
+        if(linkData.latest.path)//完整包链接存在
+          fullLink += `[完整包](${escapeCharacters(linkData.latest.path)}) \\| `
+        if(linkData.latest.segments.length >0) {// 分卷包存在
+          fullLink += `分卷`
+          for (let i = 0; i < linkData.latest.segments.length; i++) {
+            fullLink += `[${i + 1}](${escapeCharacters(
+              linkData.latest.segments[i].path
+            )})\\|`
+          }
+          // 去掉最后一个 |
+          fullLink = fullLink.slice(0, -2) + '\n'
         }
-        // 去掉最后一个 |
-        fullLink = fullLink.slice(0, -2) + '\n'
+        
         //return encodeURIComponent(fullLink)
 
         // 拼接语音包链接

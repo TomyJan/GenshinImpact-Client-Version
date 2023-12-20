@@ -111,7 +111,7 @@ class Push {
 
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
-      console.log('推送请求失败:', rsp.status, rsp.statusText)
+      console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
       return false
     }
 
@@ -262,7 +262,7 @@ class Push {
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
-      console.log('推送请求失败:', rsp.status, rsp.statusText)
+      console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
       return false
     }
 
@@ -284,7 +284,7 @@ class Push {
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
-      console.log('推送请求失败:', rsp.status, rsp.statusText)
+      console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
       return false
     }
 

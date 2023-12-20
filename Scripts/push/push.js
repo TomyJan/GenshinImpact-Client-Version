@@ -273,7 +273,7 @@ class Push {
       pushUrl += `${TGMsgID_GI}&text=${gameName}`
     else
       pushUrl += `${TGMsgID_SR}&text=${gameName}`
-    pushUrl += encodeURIComponent(`${gameName} Android ${server} Game 更新！\n\n`)
+    pushUrl += encodeURIComponent(` Android ${server} Game 更新！\n\n`)
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
     pushUrl += encodeURIComponent(
       `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`

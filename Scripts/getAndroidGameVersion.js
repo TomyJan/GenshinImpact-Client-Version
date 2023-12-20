@@ -3,16 +3,40 @@ import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 import push from './push/push.js'
 
-const API_URL =
-  'https://ys-api.mihoyo.com/event/download_porter/link/ys_cn/official/android_default'
+const ApiInfo = {
+  GI: {
+    CN: 'https://ys-api.mihoyo.com/event/download_porter/link/ys_cn/official/android_default',
+    OS: '',
+    name: '原神'
+  },
+  SR: {
+    CN: 'https://api-takumi.mihoyo.com/event/download_porter/link/hkrpg_cn/official/android_default',
+    OS: '',
+    name: '崩坏星穹铁道'
+  }
+}
+// 方便测试
+//process.argv[2] = 'sr'
+//process.argv[3] = 'cn'
+// 根据命令行参数选择目标链接
+const game =
+process.argv[2] === 'gi'
+  ? 'GI'
+  : process.argv[2] === 'sr'
+  ? 'SR'
+  : (() => {
+      throw new Error('无效的命令行参数: ' + process.argv[2])
+    })()
+const server ='CN'
 
-const targetDir = `./Android/Game/CN/`
-const latestVerPath = `./Scripts/data/latest_Android_Game_CN.json`
+    const targetUrl = ApiInfo[game][server]
+    const targetDir = `./${game}/Android/Game/${server}/`
+const latestVerPath = `./Scripts/data/${game}/latest_Android_Game_${server}.json`
 
 async function getAndroidGameVersion() {
   try {
     // 发送GET请求获取JSON数据
-    let rsp = await fetchWithTimeout(API_URL)
+    let rsp = await fetchWithTimeout(targetUrl)
     if (!rsp.ok) {
       console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
       rsp = await fetchWithTimeout(targetUrl)
@@ -71,7 +95,7 @@ async function getAndroidGameVersion() {
       console.log('数据已更新并保存成功。')
 
       // TODO 后续推送操作
-      push.pushAndroidGame('CN', remoteLink)
+        push.pushAndroidGame(ApiInfo[game].name, server, remoteLink)
     } else {
       console.log('数据无变化，无需更新。')
     }

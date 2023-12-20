@@ -3,8 +3,8 @@ import path from 'path'
 import fetch from 'node-fetch'
 
 const TGBotToken = process.env.TGBotToken
-const TGMsgID_GI = process.env.TGMsgID_GI | process.env.TGMsgID
-const TGMsgID_SR = process.env.TGMsgID_SR | process.env.TGMsgID
+const TGMsgID_GI = process.env.TGMsgID_GI || process.env.TGMsgID
+const TGMsgID_SR = process.env.TGMsgID_SR || process.env.TGMsgID
 
 class Push {
   constructor() {

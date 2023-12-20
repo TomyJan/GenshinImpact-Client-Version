@@ -3,30 +3,51 @@ import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 import push from './push/push.js'
 
-const CN_API_URL =
-  'https://api-takumi.mihoyo.com/event/download_porter/time_link/ys_cn/official/default'
-const OS_API_URL =
-  'https://sg-public-api.hoyoverse.com/event/download_porter/time_link/ys_global/genshinimpactpc/default'
-
+const ApiInfo = {
+  GI: {
+    CN: 'https://api-takumi.mihoyo.com/event/download_porter/time_link/ys_cn/official/default',
+    OS: 'https://sg-public-api.hoyoverse.com/event/download_porter/time_link/ys_global/genshinimpactpc/default',
+    name: '原神'
+  },
+  SR: {
+    CN: 'https://api-takumi.mihoyo.com/event/download_porter/link/hkrpg_cn/official/default',
+    OS: 'https://sg-public-api.hoyoverse.com/event/download_porter/trace/hkrpg_global/oswebpc/default',
+    name: '崩坏星穹铁道'
+  }
+}
 // 方便测试
-//process.argv[2] = 'cn'
+//process.argv[2] = 'sr'
+//process.argv[3] = 'cn'
 // 根据命令行参数选择目标链接
+const game =
+process.argv[2] === 'gi'
+  ? 'GI'
+  : process.argv[2] === 'sr'
+  ? 'SR'
+  : (() => {
+      throw new Error('无效的命令行参数: ' + process.argv[2])
+    })()
 const server =
-  process.argv[2] === 'cn'
-    ? 'CN'
-    : process.argv[2] === 'os'
-    ? 'OS'
-    : (() => {
-        throw new Error('无效的命令行参数: ' + process.argv[2])
-      })()
+process.argv[3] === 'cn'
+  ? 'CN'
+  : process.argv[3] === 'os'
+  ? 'OS'
+  : (() => {
+      throw new Error('无效的命令行参数: ' + process.argv[3])
+    })()
 
-const targetUrl = server === 'CN' ? CN_API_URL : OS_API_URL
-const targetDir = `./Win/Launcher/${server}/`
-const latestVerPath = `./Scripts/data/latest_Win_Launcher_${server}.json`
+
+    const targetUrl = ApiInfo[game][server]
+    const targetDir = `./Win/Launcher/${server}/`
+const latestVerPath = `./Scripts/data/${game}/latest_Win_Launcher_${server}.json`
 
 async function getWinLauncherVersion() {
   try {
     // 发送GET请求获取JSON数据
+    // 注意 SR 的 CN time_link 不可用, 故这里使用重定向链接
+    let jsonData = {}
+    if (game === 'SR') {
+
     let rsp = await fetchWithTimeout(targetUrl)
     if (!rsp.ok) {
       console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
@@ -38,7 +59,24 @@ async function getWinLauncherVersion() {
     }
 
     // console.log(JSON.stringify(await rsp.json()))
-    let jsonData = await rsp.json()
+    jsonData = { data: {link: await rsp.url }}
+
+    } else {
+      let rsp = await fetchWithTimeout(targetUrl)
+    if (!rsp.ok) {
+      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
+      rsp = await fetchWithTimeout(targetUrl)
+      if (!rsp.ok) {
+        console.log('请求失败:', rsp.status, rsp.statusText)
+        return false
+      }
+    }
+
+    // console.log(JSON.stringify(await rsp.json()))
+    jsonData = await rsp.json()
+
+    }
+    
 
     // 读取本地保存的数据
     let localData = {}
@@ -86,7 +124,7 @@ async function getWinLauncherVersion() {
       console.log('数据已更新并保存成功。')
 
       // TODO 后续推送操作
-      push.pushWinLauncher(server, remoteLink)
+      push.pushWinLauncher(ApiInfo[game].name, server, remoteLink)
     } else {
       console.log('数据无变化，无需更新。')
     }

@@ -3,11 +3,6 @@ import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 import push from './push/push.js'
 
-const CN_API_URL =
-  'https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?channel_id=1&key=eYd89JmJ&launcher_id=18&sub_channel_id=1'
-const OS_API_URL =
-  'https://sdk-os-static.mihoyo.com/hk4e_global/mdk/launcher/api/resource?channel_id=1&key=gcStgarh&launcher_id=10&sub_channel_id=0'
-
   const ApiInfo = {
     GI: {
       CN: 'https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?channel_id=1&key=eYd89JmJ&launcher_id=18&sub_channel_id=1',
@@ -21,8 +16,8 @@ const OS_API_URL =
     }
   }
 // 方便测试
-process.argv[2] = 'sr'
-process.argv[3] = 'cn'
+//process.argv[2] = 'sr'
+//process.argv[3] = 'cn'
 // 根据命令行参数选择目标链接
 const game =
   process.argv[2] === 'gi'

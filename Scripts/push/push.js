@@ -107,7 +107,7 @@ class Push {
       `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
     )
 
-    // console.log('推送地址:', pushUrl)
+    console.log('推送地址:', pushUrl)
 
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
@@ -259,6 +259,7 @@ class Push {
       `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
     )
 
+    console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
       console.log('推送请求失败:', rsp.status, rsp.statusText)
@@ -280,6 +281,7 @@ class Push {
       `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
     )
 
+    console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
       console.log('推送请求失败:', rsp.status, rsp.statusText)

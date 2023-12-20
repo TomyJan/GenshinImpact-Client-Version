@@ -35,10 +35,15 @@ class Push {
       console.error('读取本地数据失败:', error.message)
     }
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
-    if(gameName ==='原神')
+    let gameId=``
+    if(gameName ==='原神') {
       pushUrl += `${TGMsgID_GI}&text=${gameName}`
-    else
+      gameId = 'GI'
+    }
+    else{
       pushUrl += `${TGMsgID_SR}&text=${gameName}`
+      gameId = 'SR'
+    }
     let type = jsonData.data.pre_download_game?.latest.version ? 'PRE' : 'REL'
     //console.log('latestCN:', JSON.stringify(latestCN))
     if (JSON.stringify(latestCN) === JSON.stringify(latestOS)) {
@@ -54,15 +59,15 @@ class Push {
       )
       pushUrl += encodeURIComponent(`国服: \n`)
       pushUrl += encodeURIComponent(`完整包: \n`)
-      pushUrl += getEncodedLinkMsgGroupText('CN', 'full', type)
+      pushUrl += getEncodedLinkMsgGroupText(gameId, 'CN', 'full', type)
       pushUrl += encodeURIComponent(`差分包: \n`)
-      pushUrl += getEncodedLinkMsgGroupText('CN', 'diff', type)
+      pushUrl += getEncodedLinkMsgGroupText(gameId, 'CN', 'diff', type)
       pushUrl += encodeURIComponent(`\n`)
       pushUrl += encodeURIComponent(`国际服: \n`)
       pushUrl += encodeURIComponent(`完整包: \n`)
-      pushUrl += getEncodedLinkMsgGroupText('OS', 'full', type)
+      pushUrl += getEncodedLinkMsgGroupText(gameId, 'OS', 'full', type)
       pushUrl += encodeURIComponent(`差分包: \n`)
-      pushUrl += getEncodedLinkMsgGroupText('OS', 'diff', type)
+      pushUrl += getEncodedLinkMsgGroupText(gameId, 'OS', 'diff', type)
     } else {
       pushUrl += encodeURIComponent(
         ` Win ${server} ${
@@ -72,9 +77,9 @@ class Push {
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`完整包: \n`)
-      pushUrl += getEncodedLinkMsgGroupText(server, 'full', type)
+      pushUrl += getEncodedLinkMsgGroupText(gameId,server, 'full', type)
       pushUrl += encodeURIComponent(`\n差分包: \n`)
-      pushUrl += getEncodedLinkMsgGroupText(server, 'diff', type)
+      pushUrl += getEncodedLinkMsgGroupText(gameId,server, 'diff', type)
     }
     pushUrl += encodeURIComponent('\n')
 
@@ -120,15 +125,15 @@ class Push {
      * @param {string} updateType 更新类型, REL/PRE
      * @returns {string} 拼好的文本
      */
-    function getEncodedLinkMsgGroupText(server, linkType, updateType) {
+    function getEncodedLinkMsgGroupText(gameId,server, linkType, updateType) {
       // 根据传入的 server 值决定读取哪个文件, 解析成json后再根据 linkType 和 updateType 决定读取哪个字段
       let jsonData = {}
       //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
       try {
         // 获取 /win/Game/CN或OS目录下最新的.json作为传入的文件名
         const jsonDataContent = fs.readFileSync(
-          `./Win/Game/${server}/${getLatestJsonFileName(
-            `./Win/Game/${server}/`
+          `./${gameId}/Win/Game/${server}/${getLatestJsonFileName(
+            `./${gameId}/Win/Game/${server}/`
           )}`,
           'utf-8'
         )

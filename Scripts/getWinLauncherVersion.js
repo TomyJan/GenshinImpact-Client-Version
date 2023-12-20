@@ -38,7 +38,7 @@ process.argv[3] === 'cn'
 
 
     const targetUrl = ApiInfo[game][server]
-    const targetDir = `./Win/Launcher/${server}/`
+    const targetDir = `./${game}/Win/Launcher/${server}/`
 const latestVerPath = `./Scripts/data/${game}/latest_Win_Launcher_${server}.json`
 
 async function getWinLauncherVersion() {

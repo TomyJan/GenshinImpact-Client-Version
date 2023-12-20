@@ -37,7 +37,7 @@ const server =
       })()
 
 const targetUrl = ApiInfo[game][server]
-const targetDir = `./Win/Game/${server}/`
+const targetDir = `./${game}/Win/Game/${server}/`
 const latestVerPath = `./Scripts/data/${game}/latest_Win_Game_${server}.json`
 
 async function getWinGameVersion() {

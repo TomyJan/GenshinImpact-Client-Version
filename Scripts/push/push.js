@@ -3,8 +3,8 @@ import path from 'path'
 import fetch from 'node-fetch'
 
 const TGBotToken = process.env.TGBotToken
-const TGMsgID_GI = process.env.TGMsgID_GI|process.env.TGMsgID
-const TGMsgID_SR = process.env.TGMsgID_SR|process.env.TGMsgID
+const TGMsgID_GI = process.env.TGMsgID_GI | process.env.TGMsgID
+const TGMsgID_SR = process.env.TGMsgID_SR | process.env.TGMsgID
 
 class Push {
   constructor() {
@@ -15,7 +15,8 @@ class Push {
     // 判断本地两个 latest 文件内容是否一样, 一样说明俩服务器都更新了, 一起推送, 否则只推送传入的服务器
     let latestCN = {}
     let latestOS = {}
-    const latestVerPath = gameName ==='原神' ? `./Scripts/data/GI/` : `./Scripts/data/SR/`
+    const latestVerPath =
+      gameName === '原神' ? `./Scripts/data/GI/` : `./Scripts/data/SR/`
     try {
       const latestCNContent = await fs.readFileSync(
         `${latestVerPath}latest_Win_Game_CN.json`,
@@ -35,12 +36,11 @@ class Push {
       console.error('读取本地数据失败:', error.message)
     }
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
-    let gameId=``
-    if(gameName ==='原神') {
+    let gameId = ``
+    if (gameName === '原神') {
       pushUrl += `${TGMsgID_GI}&text=${gameName}`
       gameId = 'GI'
-    }
-    else{
+    } else {
       pushUrl += `${TGMsgID_SR}&text=${gameName}`
       gameId = 'SR'
     }
@@ -77,20 +77,21 @@ class Push {
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`完整包: \n`)
-      pushUrl += getEncodedLinkMsgGroupText(gameId,server, 'full', type)
+      pushUrl += getEncodedLinkMsgGroupText(gameId, server, 'full', type)
       pushUrl += encodeURIComponent(`\n差分包: \n`)
-      pushUrl += getEncodedLinkMsgGroupText(gameId,server, 'diff', type)
+      pushUrl += getEncodedLinkMsgGroupText(gameId, server, 'diff', type)
     }
     pushUrl += encodeURIComponent('\n')
 
-    if(jsonData.data.pre_download_game?.latest.segments.length>0)// 有分卷包时的提示
-    pushUrl += encodeURIComponent(
-      `本体分卷共有 ${
-        jsonData.data.pre_download_game?.latest.version
-          ? jsonData.data.pre_download_game?.latest.segments.length
-          : jsonData.data.game.latest.segments.length
-      } 个包, 请自行合并\n\n`
-    )
+    if (jsonData.data.pre_download_game?.latest.segments.length > 0)
+      // 有分卷包时的提示
+      pushUrl += encodeURIComponent(
+        `本体分卷共有 ${
+          jsonData.data.pre_download_game?.latest.version
+            ? jsonData.data.pre_download_game?.latest.segments.length
+            : jsonData.data.game.latest.segments.length
+        } 个包, 请自行合并\n\n`
+      )
 
     pushUrl += encodeURIComponent(
       `\\#${
@@ -125,7 +126,7 @@ class Push {
      * @param {string} updateType 更新类型, REL/PRE
      * @returns {string} 拼好的文本
      */
-    function getEncodedLinkMsgGroupText(gameId,server, linkType, updateType) {
+    function getEncodedLinkMsgGroupText(gameId, server, linkType, updateType) {
       // 根据传入的 server 值决定读取哪个文件, 解析成json后再根据 linkType 和 updateType 决定读取哪个字段
       let jsonData = {}
       //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
@@ -151,11 +152,13 @@ class Push {
       }
       //console.log('linkData:', linkData)
       let fullLink = '本体: '
-      
+
       if (linkType === 'full') {
-        if(linkData.latest.path)//完整包链接存在
+        if (linkData.latest.path)
+          //完整包链接存在
           fullLink += `[完整包](${escapeCharacters(linkData.latest.path)}) \\| `
-        if(linkData.latest.segments.length >0) {// 分卷包存在
+        if (linkData.latest.segments.length > 0) {
+          // 分卷包存在
           fullLink += `分卷`
           for (let i = 0; i < linkData.latest.segments.length; i++) {
             fullLink += `[${i + 1}](${escapeCharacters(
@@ -165,7 +168,7 @@ class Push {
           // 去掉最后一个 |
           fullLink = fullLink.slice(0, -2) + '\n'
         }
-        
+
         //return encodeURIComponent(fullLink)
 
         // 拼接语音包链接
@@ -246,11 +249,11 @@ class Push {
 
   async pushWinLauncher(gameName, server, link) {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
-    if(gameName ==='原神')
-      pushUrl += `${TGMsgID_GI}&text=`
-    else
-      pushUrl += `${TGMsgID_SR}&text=`
-    pushUrl += encodeURIComponent(`${gameName} Win ${server} Launcher 更新！\n\n`)
+    if (gameName === '原神') pushUrl += `${TGMsgID_GI}&text=`
+    else pushUrl += `${TGMsgID_SR}&text=`
+    pushUrl += encodeURIComponent(
+      `${gameName} Win ${server} Launcher 更新！\n\n`
+    )
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
     pushUrl += encodeURIComponent(
       `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
@@ -269,10 +272,8 @@ class Push {
 
   async pushAndroidGame(gameName, server, link) {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
-    if(gameName ==='原神')
-      pushUrl += `${TGMsgID_GI}&text=${gameName}`
-    else
-      pushUrl += `${TGMsgID_SR}&text=${gameName}`
+    if (gameName === '原神') pushUrl += `${TGMsgID_GI}&text=${gameName}`
+    else pushUrl += `${TGMsgID_SR}&text=${gameName}`
     pushUrl += encodeURIComponent(` Android ${server} Game 更新！\n\n`)
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
     pushUrl += encodeURIComponent(

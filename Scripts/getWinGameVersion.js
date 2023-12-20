@@ -3,18 +3,18 @@ import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 import push from './push/push.js'
 
-  const ApiInfo = {
-    GI: {
-      CN: 'https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?channel_id=1&key=eYd89JmJ&launcher_id=18&sub_channel_id=1',
-      OS: 'https://sdk-os-static.mihoyo.com/hk4e_global/mdk/launcher/api/resource?channel_id=1&key=gcStgarh&launcher_id=10&sub_channel_id=0',
-      name: '原神'
-    },
-    SR: {
-      CN: 'https://api-launcher-static.mihoyo.com/hkrpg_cn/mdk/launcher/api/resource?channel_id=1&key=6KcVuOkbcqjJomjZ&launcher_id=33&sub_channel_id=1',
-      OS: 'https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/resource?channel_id=1&key=vplOVX8Vn7cwG8yb&launcher_id=35&sub_channel_id=1',
-      name: '崩坏星穹铁道'
-    }
-  }
+const ApiInfo = {
+  GI: {
+    CN: 'https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?channel_id=1&key=eYd89JmJ&launcher_id=18&sub_channel_id=1',
+    OS: 'https://sdk-os-static.mihoyo.com/hk4e_global/mdk/launcher/api/resource?channel_id=1&key=gcStgarh&launcher_id=10&sub_channel_id=0',
+    name: '原神',
+  },
+  SR: {
+    CN: 'https://api-launcher-static.mihoyo.com/hkrpg_cn/mdk/launcher/api/resource?channel_id=1&key=6KcVuOkbcqjJomjZ&launcher_id=33&sub_channel_id=1',
+    OS: 'https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/resource?channel_id=1&key=vplOVX8Vn7cwG8yb&launcher_id=35&sub_channel_id=1',
+    name: '崩坏星穹铁道',
+  },
+}
 // 方便测试
 //process.argv[2] = 'sr'
 //process.argv[3] = 'cn'

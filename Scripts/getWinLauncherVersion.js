@@ -7,38 +7,37 @@ const ApiInfo = {
   GI: {
     CN: 'https://api-takumi.mihoyo.com/event/download_porter/time_link/ys_cn/official/default',
     OS: 'https://sg-public-api.hoyoverse.com/event/download_porter/time_link/ys_global/genshinimpactpc/default',
-    name: '原神'
+    name: '原神',
   },
   SR: {
     CN: 'https://api-takumi.mihoyo.com/event/download_porter/link/hkrpg_cn/official/default',
     OS: 'https://sg-public-api.hoyoverse.com/event/download_porter/trace/hkrpg_global/oswebpc/default',
-    name: '崩坏星穹铁道'
-  }
+    name: '崩坏星穹铁道',
+  },
 }
 // 方便测试
 //process.argv[2] = 'sr'
 //process.argv[3] = 'cn'
 // 根据命令行参数选择目标链接
 const game =
-process.argv[2] === 'gi'
-  ? 'GI'
-  : process.argv[2] === 'sr'
-  ? 'SR'
-  : (() => {
-      throw new Error('无效的命令行参数: ' + process.argv[2])
-    })()
+  process.argv[2] === 'gi'
+    ? 'GI'
+    : process.argv[2] === 'sr'
+    ? 'SR'
+    : (() => {
+        throw new Error('无效的命令行参数: ' + process.argv[2])
+      })()
 const server =
-process.argv[3] === 'cn'
-  ? 'CN'
-  : process.argv[3] === 'os'
-  ? 'OS'
-  : (() => {
-      throw new Error('无效的命令行参数: ' + process.argv[3])
-    })()
+  process.argv[3] === 'cn'
+    ? 'CN'
+    : process.argv[3] === 'os'
+    ? 'OS'
+    : (() => {
+        throw new Error('无效的命令行参数: ' + process.argv[3])
+      })()
 
-
-    const targetUrl = ApiInfo[game][server]
-    const targetDir = `./${game}/Win/Launcher/${server}/`
+const targetUrl = ApiInfo[game][server]
+const targetDir = `./${game}/Win/Launcher/${server}/`
 const latestVerPath = `./Scripts/data/${game}/latest_Win_Launcher_${server}.json`
 
 async function getWinLauncherVersion() {
@@ -47,36 +46,32 @@ async function getWinLauncherVersion() {
     // 注意 SR 的 CN time_link 不可用, 故这里使用重定向链接
     let jsonData = {}
     if (game === 'SR') {
-
-    let rsp = await fetchWithTimeout(targetUrl)
-    if (!rsp.ok) {
-      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-      rsp = await fetchWithTimeout(targetUrl)
+      let rsp = await fetchWithTimeout(targetUrl)
       if (!rsp.ok) {
-        console.log('请求失败:', rsp.status, rsp.statusText)
-        return false
+        console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
+        rsp = await fetchWithTimeout(targetUrl)
+        if (!rsp.ok) {
+          console.log('请求失败:', rsp.status, rsp.statusText)
+          return false
+        }
       }
-    }
 
-    // console.log(JSON.stringify(await rsp.json()))
-    jsonData = { data: {link: await rsp.url }}
-
+      // console.log(JSON.stringify(await rsp.json()))
+      jsonData = { data: { link: await rsp.url } }
     } else {
       let rsp = await fetchWithTimeout(targetUrl)
-    if (!rsp.ok) {
-      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-      rsp = await fetchWithTimeout(targetUrl)
       if (!rsp.ok) {
-        console.log('请求失败:', rsp.status, rsp.statusText)
-        return false
+        console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
+        rsp = await fetchWithTimeout(targetUrl)
+        if (!rsp.ok) {
+          console.log('请求失败:', rsp.status, rsp.statusText)
+          return false
+        }
       }
-    }
 
-    // console.log(JSON.stringify(await rsp.json()))
-    jsonData = await rsp.json()
-
+      // console.log(JSON.stringify(await rsp.json()))
+      jsonData = await rsp.json()
     }
-    
 
     // 读取本地保存的数据
     let localData = {}

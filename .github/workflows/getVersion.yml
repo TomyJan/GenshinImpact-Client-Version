@@ -27,31 +27,56 @@ jobs:
           shell: bash
           run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
           id: extract_branch
-        - name: Check Win CN Game Update
+        - name: Check GI Win Game CN Update
           env: 
             TGBotToken: ${{ secrets.TGBotToken }}
             TGMsgID: ${{ secrets.TGMsgID }}
-          run: node ./Scripts/getWinGameVersion.js cn
-        - name: Check Win OS Game Update
+          run: node ./Scripts/getWinGameVersion.js gi cn
+        - name: Check GI Win Game OS Update
           env: 
             TGBotToken: ${{ secrets.TGBotToken }}
             TGMsgID: ${{ secrets.TGMsgID }}
-          run: node ./Scripts/getWinGameVersion.js os
-        - name: Check Win CN Launcher Update
+          run: node ./Scripts/getWinGameVersion.js gi os
+        - name: Check GI Win Launcher CN Update
           env: 
             TGBotToken: ${{ secrets.TGBotToken }}
             TGMsgID: ${{ secrets.TGMsgID }}
-          run: node ./Scripts/getWinLauncherVersion.js cn
-        - name: Check Win OS Launcher Update
+          run: node ./Scripts/getWinLauncherVersion.js gi cn
+        - name: Check GI Win Launcher OS Update
           env: 
             TGBotToken: ${{ secrets.TGBotToken }}
             TGMsgID: ${{ secrets.TGMsgID }}
-          run: node ./Scripts/getWinLauncherVersion.js os
-        - name: Check Android CN Game Update
+          run: node ./Scripts/getWinLauncherVersion.js gi os
+        - name: Check GI Android Game CN Update
           env: 
             TGBotToken: ${{ secrets.TGBotToken }}
             TGMsgID: ${{ secrets.TGMsgID }}
-          run: node ./Scripts/getAndroidGameVersion.js
+          run: node ./Scripts/getAndroidGameVersion.js gi
+        - name: Check SR Win Game CN Update
+          env: 
+            TGBotToken: ${{ secrets.TGBotToken }}
+            TGMsgID: ${{ secrets.TGMsgID }}
+          run: node ./Scripts/getWinGameVersion.js sr cn
+        - name: Check SR Win Game OS Update
+          env: 
+            TGBotToken: ${{ secrets.TGBotToken }}
+            TGMsgID: ${{ secrets.TGMsgID }}
+          run: node ./Scripts/getWinGameVersion.js sr os
+        - name: Check SR Win Launcher CN Update
+          env: 
+            TGBotToken: ${{ secrets.TGBotToken }}
+            TGMsgID: ${{ secrets.TGMsgID }}
+          run: node ./Scripts/getWinLauncherVersion.js sr cn
+        - name: Check SR Win Launcher OS Update
+          env: 
+            TGBotToken: ${{ secrets.TGBotToken }}
+            TGMsgID: ${{ secrets.TGMsgID }}
+          run: node ./Scripts/getWinLauncherVersion.js sr os
+        - name: Check SR Android Game CN Update
+          env: 
+            TGBotToken: ${{ secrets.TGBotToken }}
+            TGMsgID: ${{ secrets.TGMsgID }}
+          run: node ./Scripts/getAndroidGameVersion.js sr
         - run: git config --global user.name "github-actions"
         - run: git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         - run: git checkout -- package-lock.json

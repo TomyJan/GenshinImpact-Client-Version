@@ -275,7 +275,9 @@ class Push {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
     if (gameName === '原神') pushUrl += `${TGMsgID_GI}&text=`
     else pushUrl += `${TGMsgID_SR}&text=`
-    pushUrl += encodeURIComponent(`${gameName} Android ${server} Game 更新！\n\n`)
+    pushUrl += encodeURIComponent(
+      `${gameName} Android ${server} Game 更新！\n\n`
+    )
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
     pushUrl += encodeURIComponent(
       `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`

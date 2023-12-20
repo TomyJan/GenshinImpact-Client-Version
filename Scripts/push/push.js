@@ -38,10 +38,10 @@ class Push {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
     let gameId = ``
     if (gameName === '原神') {
-      pushUrl += `${TGMsgID_GI}&text=${gameName}`
+      pushUrl += `${TGMsgID_GI}&text=${encodeURIComponent(gameName)}`
       gameId = 'GI'
     } else {
-      pushUrl += `${TGMsgID_SR}&text=${gameName}`
+      pushUrl += `${TGMsgID_SR}&text=${encodeURIComponent(gameName)}`
       gameId = 'SR'
     }
     let type = jsonData.data.pre_download_game?.latest.version ? 'PRE' : 'REL'
@@ -273,9 +273,9 @@ class Push {
 
   async pushAndroidGame(gameName, server, link) {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
-    if (gameName === '原神') pushUrl += `${TGMsgID_GI}&text=${gameName}`
-    else pushUrl += `${TGMsgID_SR}&text=${gameName}`
-    pushUrl += encodeURIComponent(` Android ${server} Game 更新！\n\n`)
+    if (gameName === '原神') pushUrl += `${TGMsgID_GI}&text=`
+    else pushUrl += `${TGMsgID_SR}&text=`
+    pushUrl += encodeURIComponent(`${gameName} Android ${server} Game 更新！\n\n`)
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
     pushUrl += encodeURIComponent(
       `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`

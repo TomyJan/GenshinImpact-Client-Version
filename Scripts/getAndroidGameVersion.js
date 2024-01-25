@@ -35,7 +35,7 @@ const latestVerPath = `./Scripts/data/${game}/latest_Android_Game_${server}.json
 
 async function getAndroidGameVersion() {
   try {
-    // 发送GET请求获取JSON数据
+    // 发送 GET 请求获取 302 地址
     let rsp = await fetchWithTimeout(targetUrl)
     if (!rsp.ok) {
       console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')

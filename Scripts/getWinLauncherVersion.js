@@ -5,13 +5,13 @@ import push from './push/push.js'
 
 const ApiInfo = {
   GI: {
-    CN: 'https://api-takumi.mihoyo.com/event/download_porter/time_link/ys_cn/official/default',
-    OS: 'https://sg-public-api.hoyoverse.com/event/download_porter/time_link/ys_global/genshinimpactpc/default',
+    CN: 'https://api-takumi.mihoyo.com/event/download_porter/link/ys_cn/official/default',
+    OS: 'https://sg-public-api.hoyoverse.com/event/download_porter/link/ys_global/genshinimpactpc/default',
     name: '原神',
   },
   SR: {
     CN: 'https://api-takumi.mihoyo.com/event/download_porter/link/hkrpg_cn/official/default',
-    OS: 'https://sg-public-api.hoyoverse.com/event/download_porter/trace/hkrpg_global/oswebpc/default',
+    OS: 'https://sg-public-api.hoyoverse.com/event/download_porter/link/hkrpg_global/oswebpc/default',
     name: '崩坏星穹铁道',
   },
 }
@@ -42,36 +42,20 @@ const latestVerPath = `./Scripts/data/${game}/latest_Win_Launcher_${server}.json
 
 async function getWinLauncherVersion() {
   try {
-    // 发送GET请求获取JSON数据
-    // 注意 SR 的 CN time_link 不可用, 故这里使用重定向链接
+    // 发送 GET请求获取 302 地址
     let jsonData = {}
-    if (game === 'SR') {
-      let rsp = await fetchWithTimeout(targetUrl)
+    let rsp = await fetchWithTimeout(targetUrl)
+    if (!rsp.ok) {
+      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
+      rsp = await fetchWithTimeout(targetUrl)
       if (!rsp.ok) {
-        console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-        rsp = await fetchWithTimeout(targetUrl)
-        if (!rsp.ok) {
-          console.log('请求失败:', rsp.status, rsp.statusText)
-          return false
-        }
+        console.log('请求失败:', rsp.status, rsp.statusText)
+        return false
       }
-
-      // console.log(JSON.stringify(await rsp.json()))
-      jsonData = { data: { link: await rsp.url } }
-    } else {
-      let rsp = await fetchWithTimeout(targetUrl)
-      if (!rsp.ok) {
-        console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-        rsp = await fetchWithTimeout(targetUrl)
-        if (!rsp.ok) {
-          console.log('请求失败:', rsp.status, rsp.statusText)
-          return false
-        }
-      }
-
-      // console.log(JSON.stringify(await rsp.json()))
-      jsonData = await rsp.json()
     }
+
+    // console.log(JSON.stringify(await rsp.json()))
+    jsonData = { data: { link: await rsp.url } }
 
     // 读取本地保存的数据
     let localData = {}

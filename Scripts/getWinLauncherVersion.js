@@ -89,6 +89,10 @@ async function getWinLauncherVersion() {
 
     console.log('本地最新 Launcher 版本:', localData.link)
     console.log('取到最新 Launcher 版本:', remoteLink)
+    if (remoteLink === undefined || remoteLink === '' || remoteLink === null || remoteLink === 'null' || remoteLink === 'undefined') {
+      console.error('最新版本数据获取失败, 程序退出...')
+      process.exit(1)
+    }
 
     // 构建文件名
     const fileName = (await getNowDate()) + '.json'

@@ -65,7 +65,13 @@ async function getAndroidGameVersion() {
 
     console.log('本地最新 Game 版本:', localData.link)
     console.log('取到最新 Game 版本:', remoteLink)
-    if (remoteLink === undefined || remoteLink === '' || remoteLink === null || remoteLink === 'null' || remoteLink === 'undefined') {
+    if (
+      remoteLink === undefined ||
+      remoteLink === '' ||
+      remoteLink === null ||
+      remoteLink === 'null' ||
+      remoteLink === 'undefined'
+    ) {
       logger.error('最新版本数据获取失败, 程序退出...')
       process.exit(1)
     }

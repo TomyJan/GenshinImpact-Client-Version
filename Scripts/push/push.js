@@ -191,7 +191,9 @@ class Push {
           else if (voiceData[i].language === 'ko-kr')
             voiceLink += `[韩文](${escapeCharacters(voiceData[i].path)})\\|`
           else
-            voiceLink += `[${escapeCharacters(voiceData[i].language)}](${escapeCharacters(voiceData[i].path)})\\|`
+            voiceLink += `[${escapeCharacters(
+              voiceData[i].language
+            )}](${escapeCharacters(voiceData[i].path)})\\|`
         }
         // 去掉最后一个 |
         voiceLink = voiceLink.slice(0, -2) + '\n'
@@ -217,7 +219,9 @@ class Push {
             else if (voiceData[j].language === 'ko-kr')
               diffLink += `[韩文](${escapeCharacters(voiceData[j].path)})\\|`
             else
-              diffLink += `[${escapeCharacters(voiceData[j].language)}](${escapeCharacters(voiceData[j].path)})\\|`
+              diffLink += `[${escapeCharacters(
+                voiceData[j].language
+              )}](${escapeCharacters(voiceData[j].path)})\\|`
           }
           // 去掉最后一个 |
           diffLink = diffLink.slice(0, -2) + '\n'

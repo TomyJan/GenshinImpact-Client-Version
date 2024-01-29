@@ -82,7 +82,13 @@ async function getWinGameVersion() {
       '预下载版本:',
       preDownloadVersion
     )
-    if (latestVersion === undefined || latestVersion === '' || latestVersion === null || latestVersion === 'null' || latestVersion === 'undefined') {
+    if (
+      latestVersion === undefined ||
+      latestVersion === '' ||
+      latestVersion === null ||
+      latestVersion === 'null' ||
+      latestVersion === 'undefined'
+    ) {
       logger.error('最新版本数据获取失败, 程序退出...')
       process.exit(1)
     }

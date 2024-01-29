@@ -184,12 +184,14 @@ class Push {
         for (let i = 0; i < voiceData.length; i++) {
           if (voiceData[i].language === 'zh-cn')
             voiceLink += `[中文](${escapeCharacters(voiceData[i].path)})\\|`
-          else if (voiceData[i].language === 'en-us')
-            voiceLink += `[英文](${escapeCharacters(voiceData[i].path)})\\|`
           else if (voiceData[i].language === 'ja-jp')
             voiceLink += `[日文](${escapeCharacters(voiceData[i].path)})\\|`
+          else if (voiceData[i].language === 'en-us')
+            voiceLink += `[英文](${escapeCharacters(voiceData[i].path)})\\|`
           else if (voiceData[i].language === 'ko-kr')
             voiceLink += `[韩文](${escapeCharacters(voiceData[i].path)})\\|`
+          else
+            voiceLink += `[${escapeCharacters(voiceData[i].language)}](${escapeCharacters(voiceData[i].path)})\\|`
         }
         // 去掉最后一个 |
         voiceLink = voiceLink.slice(0, -2) + '\n'
@@ -208,12 +210,14 @@ class Push {
           for (let j = 0; j < voiceData.length; j++) {
             if (voiceData[j].language === 'zh-cn')
               diffLink += `[中文](${escapeCharacters(voiceData[j].path)})\\|`
-            else if (voiceData[j].language === 'en-us')
-              diffLink += `[英文](${escapeCharacters(voiceData[j].path)})\\|`
             else if (voiceData[j].language === 'ja-jp')
               diffLink += `[日文](${escapeCharacters(voiceData[j].path)})\\|`
+            else if (voiceData[j].language === 'en-us')
+              diffLink += `[英文](${escapeCharacters(voiceData[j].path)})\\|`
             else if (voiceData[j].language === 'ko-kr')
               diffLink += `[韩文](${escapeCharacters(voiceData[j].path)})\\|`
+            else
+              diffLink += `[${escapeCharacters(voiceData[j].language)}](${escapeCharacters(voiceData[j].path)})\\|`
           }
           // 去掉最后一个 |
           diffLink = diffLink.slice(0, -2) + '\n'

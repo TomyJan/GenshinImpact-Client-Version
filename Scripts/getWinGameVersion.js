@@ -38,7 +38,8 @@ const server =
 
 const targetUrl = ApiInfo[game][server]
 const targetDir = `./${game}/Win/Game/${server}/`
-const latestVerPath = `./Scripts/data/${game}/latest_Win_Game_${server}.json`
+const scriptDataPath = `./Scripts/data/${game}/`
+const latestVerPath = `${scriptDataPath}latest_Win_Game_${server}.json`
 
 async function getWinGameVersion() {
   try {
@@ -128,8 +129,32 @@ async function getWinGameVersion() {
 
       console.log('数据已更新并保存成功。')
 
-      // TODO 后续推送操作
-      push.pushWinGame(ApiInfo[game].name, server, jsonData)
+      // 如果只有单个服务器更新, 先写一下临时文件, 等两个都更新了再推送
+      // 检查临时文件是否存在
+      const tmpFileName = `${scriptDataPath}tmp-not_pushed_win_${game}_server.txt`
+      if (fs.existsSync(tmpFileName)) {
+        // 读取文件
+        const tmpServer = await fs.readFileSync(
+          tmpFileName,
+          'utf-8'
+        )
+        if (tmpServer !== server) {
+          // 两个都更新了
+          console.log(`从临时文件获取当前已缓存${game} 版本信息: 两个服务器都已更新, 正在推送...`)
+          // 删除缓存的文件
+          await fs.unlinkSync(tmpFileName)
+
+          // 推送
+          push.pushWinGame(ApiInfo[game].name, server, jsonData)
+          return
+        } else { // 这咋回事给我搞懵了, 别推, 等下次再检查吧
+          console.error('意料之外的错误: 临时文件中的服务器信息与当前服务器信息相同')
+          return
+        }
+      } else // 没缓存文件, 说明只检查到了一个服务器的更新, 先不推送, 缓存
+      await fs.writeFileSync(tmpFileName, server, 'utf-8')
+      console.log(`游戏${game}只检查到了${server}服务器的更新, 已缓存, 等待另一个服务器更新后再推送...`)
+
     } else {
       console.log('数据无变化，无需更新。')
     }

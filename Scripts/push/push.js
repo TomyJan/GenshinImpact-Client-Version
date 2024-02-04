@@ -183,11 +183,13 @@ class Push {
         //console.log('voiceData:', voiceData)
         for (let i = 0; i < voiceData.length; i++) {
           if (voiceData[i].language === 'zh-cn')
-            voiceLink += `[中文](${escapeCharacters(voiceData[i].path)})\\|`
-          else if (voiceData[i].language === 'ja-jp')
-            voiceLink += `[日文](${escapeCharacters(voiceData[i].path)})\\|`
+            voiceLink += `[简中](${escapeCharacters(voiceData[i].path)})\\|`
+          else if (voiceData[i].language === 'zh-tw')
+            voiceLink += `[繁中](${escapeCharacters(voiceData[i].path)})\\|`
           else if (voiceData[i].language === 'en-us')
             voiceLink += `[英文](${escapeCharacters(voiceData[i].path)})\\|`
+          else if (voiceData[i].language === 'ja-jp')
+            voiceLink += `[日文](${escapeCharacters(voiceData[i].path)})\\|`
           else if (voiceData[i].language === 'ko-kr')
             voiceLink += `[韩文](${escapeCharacters(voiceData[i].path)})\\|`
           else

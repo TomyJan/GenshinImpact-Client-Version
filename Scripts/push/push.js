@@ -213,11 +213,13 @@ class Push {
           let voiceData = linkData.diffs[i].voice_packs
           for (let j = 0; j < voiceData.length; j++) {
             if (voiceData[j].language === 'zh-cn')
-              diffLink += `[中文](${escapeCharacters(voiceData[j].path)})\\|`
-            else if (voiceData[j].language === 'ja-jp')
-              diffLink += `[日文](${escapeCharacters(voiceData[j].path)})\\|`
+              diffLink += `[简中](${escapeCharacters(voiceData[j].path)})\\|`
+            else if (voiceData[j].language === 'zh-tw')
+              diffLink += `[繁中](${escapeCharacters(voiceData[j].path)})\\|`
             else if (voiceData[j].language === 'en-us')
               diffLink += `[英文](${escapeCharacters(voiceData[j].path)})\\|`
+            else if (voiceData[j].language === 'ja-jp')
+              diffLink += `[日文](${escapeCharacters(voiceData[j].path)})\\|`
             else if (voiceData[j].language === 'ko-kr')
               diffLink += `[韩文](${escapeCharacters(voiceData[j].path)})\\|`
             else

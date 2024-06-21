@@ -100,14 +100,19 @@ async function getWinGameVersion() {
     }
 
     // 检查是否获取到了游戏数据
-    if (jsonData?.retcode !== 0 || jsonData.data.game_packages.length !== 1 || jsonData.data.game_packages[0].game.biz !== gameBiz) {
+    if (
+      jsonData?.retcode !== 0 ||
+      jsonData.data.game_packages.length !== 1 ||
+      jsonData.data.game_packages[0].game.biz !== gameBiz
+    ) {
       console.error('获取到的游戏数据不合法:', JSON.stringify(jsonData))
       process.exit(3)
     }
 
     // 提取版本信息
     const latestVersion = jsonData.data.game_packages[0].main.major.version
-    const preDownloadVersion = jsonData.data.game_packages[0].pre_download?.major?.version
+    const preDownloadVersion =
+      jsonData.data.game_packages[0].pre_download?.major?.version
     console.log(
       '本地最新 REL 版本:',
       localData.latestVersion,

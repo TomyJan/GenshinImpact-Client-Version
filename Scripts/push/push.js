@@ -47,7 +47,9 @@ class Push {
       console.error('无效的游戏名:', gameName)
       process.exit(1)
     }
-    let type = jsonData.data.game_packages[0].pre_download?.major?.version ? 'PRE' : 'REL'
+    let type = jsonData.data.game_packages[0].pre_download?.major?.version
+      ? 'PRE'
+      : 'REL'
     //console.log('latestCN:', JSON.stringify(latestCN))
     if (JSON.stringify(latestCN) === JSON.stringify(latestOS)) {
       console.log('两个服务器都更新了, 一起推送')
@@ -56,8 +58,12 @@ class Push {
       pushUrl += encodeURIComponent(
         ` Win ${
           type === 'REL'
-            ? escapeCharacters(jsonData.data.game_packages[0].main.major.version)
-            : escapeCharacters(jsonData.data.game_packages[0].pre_download?.major?.version)
+            ? escapeCharacters(
+                jsonData.data.game_packages[0].main.major.version
+              )
+            : escapeCharacters(
+                jsonData.data.game_packages[0].pre_download?.major?.version
+              )
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`国服: \n`)
@@ -75,8 +81,12 @@ class Push {
       pushUrl += encodeURIComponent(
         ` Win ${server} ${
           type === 'REL'
-            ? escapeCharacters(jsonData.data.game_packages[0].main.major.version)
-            : escapeCharacters(jsonData.data.game_packages[0].pre_download?.major?.version)
+            ? escapeCharacters(
+                jsonData.data.game_packages[0].main.major.version
+              )
+            : escapeCharacters(
+                jsonData.data.game_packages[0].pre_download?.major?.version
+              )
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`完整包: \n`)
@@ -86,12 +96,15 @@ class Push {
     }
     pushUrl += encodeURIComponent('\n')
 
-    if (jsonData.data.game_packages[0].pre_download?.major?.game_pkgs.length > 1)
+    if (
+      jsonData.data.game_packages[0].pre_download?.major?.game_pkgs.length > 1
+    )
       // 有分卷包时的提示
       pushUrl += encodeURIComponent(
         `本体分卷共有 ${
           jsonData.data.game_packages[0].pre_download?.major?.version
-            ? jsonData.data.game_packages[0].pre_download?.major?.game_pkgs.length
+            ? jsonData.data.game_packages[0].pre_download?.major?.game_pkgs
+                .length
             : jsonData.data.game_packages[0].main.major.game_pkgs.length
         } 个包, 请自行合并\n\n`
       )
@@ -99,7 +112,9 @@ class Push {
     pushUrl += encodeURIComponent(
       `\\#${
         jsonData.data.game_packages[0].pre_download?.major?.version
-          ? escapeCharacters(jsonData.data.game_packages[0].pre_download?.major?.version)
+          ? escapeCharacters(
+              jsonData.data.game_packages[0].pre_download?.major?.version
+            )
           : escapeCharacters(jsonData.data.game_packages[0].main.major.version)
       } `
     )
@@ -162,9 +177,11 @@ class Push {
       let fullLink = '本体: '
 
       if (linkType === 'full') {
-        if (linkData.major.game_pkgs.length = 1) {
+        if ((linkData.major.game_pkgs.length = 1)) {
           //完整包
-          fullLink += `[完整包](${escapeCharacters(linkData.major.game_pkgs[0].url)}) \\| `
+          fullLink += `[完整包](${escapeCharacters(
+            linkData.major.game_pkgs[0].url
+          )}) \\| `
         } else {
           // 分卷包
           fullLink += `分卷 `
@@ -183,7 +200,7 @@ class Push {
         let voiceLink = '语音包: '
         // 按照 audio_pkgs.language 字段区分语言包
         let voiceData = linkData.major.audio_pkgs
-        
+
         // 优先按顺序处理五种已知语音包
         let voiceDataCN = voiceData.find((item) => item.language === 'zh-cn')
         let voiceDataTW = voiceData.find((item) => item.language === 'zh-tw')
@@ -228,9 +245,11 @@ class Push {
           diffLink += `${escapeCharacters(
             linkData.patches[i].version
           )}\\-${escapeCharacters(linkData.major.version)}: `
-          if (linkData.patches[i].game_pkgs.length = 1) {
+          if ((linkData.patches[i].game_pkgs.length = 1)) {
             //完整包
-            diffLink += `[本体](${escapeCharacters(linkData.patches[i].game_pkgs[0].url)}) \\| `
+            diffLink += `[本体](${escapeCharacters(
+              linkData.patches[i].game_pkgs[0].url
+            )}) \\| `
           } else {
             // 分卷包
             diffLink += `本体: 分卷 `

@@ -5,36 +5,67 @@ import push from './push/push.js'
 
 const ApiInfo = {
   GI: {
-    CN: 'https://sdk-static.mihoyo.com/hk4e_cn/mdk/launcher/api/resource?channel_id=1&key=eYd89JmJ&launcher_id=18&sub_channel_id=1',
-    OS: 'https://sdk-os-static.mihoyo.com/hk4e_global/mdk/launcher/api/resource?channel_id=1&key=gcStgarh&launcher_id=10&sub_channel_id=0',
+    CN: 'https://hyp-api.mihoyo.com/hyp/hyp-connect/api/getGamePackages?launcher_id=jGHBHlcOq1&game_ids[]=1Z8W5NHUQb',
+    OS: 'https://sg-hyp-api.hoyoverse.com/hyp/hyp-connect/api/getGamePackages?launcher_id=VYTpXlbWo8&game_ids[]=gopR6Cufr3',
     name: '原神',
   },
   SR: {
-    CN: 'https://api-launcher-static.mihoyo.com/hkrpg_cn/mdk/launcher/api/resource?channel_id=1&key=6KcVuOkbcqjJomjZ&launcher_id=33&sub_channel_id=1',
-    OS: 'https://hkrpg-launcher-static.hoyoverse.com/hkrpg_global/mdk/launcher/api/resource?channel_id=1&key=vplOVX8Vn7cwG8yb&launcher_id=35&sub_channel_id=1',
+    CN: 'https://hyp-api.mihoyo.com/hyp/hyp-connect/api/getGamePackages?launcher_id=jGHBHlcOq1&game_ids[]=64kMb5iAWu',
+    OS: 'https://sg-hyp-api.hoyoverse.com/hyp/hyp-connect/api/getGamePackages?launcher_id=VYTpXlbWo8&game_ids[]=4ziysqXOQ8',
     name: '崩坏星穹铁道',
   },
 }
+
 // 方便测试
-//process.argv[2] = 'sr'
-//process.argv[3] = 'cn'
+// process.argv[2] = 'sr'
+// process.argv[3] = 'os'
+
 // 根据命令行参数选择目标链接
-const game =
-  process.argv[2] === 'gi'
-    ? 'GI'
-    : process.argv[2] === 'sr'
-    ? 'SR'
-    : (() => {
-        throw new Error('无效的命令行参数: ' + process.argv[2])
-      })()
-const server =
-  process.argv[3] === 'cn'
-    ? 'CN'
-    : process.argv[3] === 'os'
-    ? 'OS'
-    : (() => {
-        throw new Error('无效的命令行参数: ' + process.argv[3])
-      })()
+// const game =
+//   process.argv[2] === 'gi'
+//     ? 'GI'
+//     : process.argv[2] === 'sr'
+//     ? 'SR'
+//     : (() => {
+//         throw new Error('无效的命令行参数: ' + process.argv[2])
+//       })()
+let game = null
+let gameBiz = null
+switch (process.argv[2]) {
+  case 'gi':
+    game = 'GI'
+    gameBiz = 'hk4e_'
+    break
+  case 'sr':
+    game = 'SR'
+    gameBiz = 'hkrpg_'
+    break
+  default:
+    console.error('无效的命令行参数: ' + process.argv[2])
+    process.exit(1)
+}
+// const server =
+//   process.argv[3] === 'cn'
+//     ? 'CN'
+//     : process.argv[3] === 'os'
+//     ? 'OS'
+//     : (() => {
+//         throw new Error('无效的命令行参数: ' + process.argv[3])
+//       })()
+let server = null
+switch (process.argv[3]) {
+  case 'cn':
+    server = 'CN'
+    gameBiz += 'cn'
+    break
+  case 'os':
+    server = 'OS'
+    gameBiz += 'global'
+    break
+  default:
+    console.error('无效的命令行参数: ' + process.argv[3])
+    process.exit(1)
+}
 
 const targetUrl = ApiInfo[game][server]
 const targetDir = `./${game}/Win/Game/${server}/`
@@ -46,11 +77,11 @@ async function getWinGameVersion() {
     // 发送GET请求获取JSON数据
     let rsp = await fetchWithTimeout(targetUrl)
     if (!rsp.ok) {
-      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
+      console.error('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
       rsp = await fetchWithTimeout(targetUrl)
       if (!rsp.ok) {
-        console.log('请求失败:', rsp.status, rsp.statusText)
-        return false
+        console.error('请求失败:', rsp.status, rsp.statusText)
+        process.exit(2)
       }
     }
 
@@ -68,9 +99,15 @@ async function getWinGameVersion() {
       console.error('读取本地数据失败:', error.message)
     }
 
+    // 检查是否获取到了游戏数据
+    if (jsonData?.retcode !== 0 || jsonData.data.game_packages.length !== 1 || jsonData.data.game_packages[0].game.biz !== gameBiz) {
+      console.error('获取到的游戏数据不合法:', JSON.stringify(jsonData))
+      process.exit(3)
+    }
+
     // 提取版本信息
-    const latestVersion = jsonData.data.game.latest.version
-    const preDownloadVersion = jsonData.data.pre_download_game?.latest.version
+    const latestVersion = jsonData.data.game_packages[0].main.major.version
+    const preDownloadVersion = jsonData.data.game_packages[0].pre_download?.major?.version
     console.log(
       '本地最新 REL 版本:',
       localData.latestVersion,
@@ -83,15 +120,9 @@ async function getWinGameVersion() {
       '预下载版本:',
       preDownloadVersion
     )
-    if (
-      latestVersion === undefined ||
-      latestVersion === '' ||
-      latestVersion === null ||
-      latestVersion === 'null' ||
-      latestVersion === 'undefined'
-    ) {
-      logger.error('最新版本数据获取失败, 程序退出...')
-      process.exit(1)
+    if (!latestVersion) {
+      logger.error('最新 REL 版本数据获取失败, 程序退出...')
+      process.exit(4)
     }
 
     // 构建文件名
@@ -144,14 +175,14 @@ async function getWinGameVersion() {
           await fs.unlinkSync(tmpFileName)
 
           // 推送
-          push.pushWinGame(ApiInfo[game].name, server, jsonData)
-          return
+          await push.pushWinGame(ApiInfo[game].name, server, jsonData)
+          process.exit(0)
         } else {
           // 这咋回事给我搞懵了, 别推, 等下次再检查吧
           console.error(
             '意料之外的错误: 临时文件中的服务器信息与当前服务器信息相同'
           )
-          return
+          process.exit(5)
         }
       } // 没缓存文件, 说明只检查到了一个服务器的更新, 先不推送, 缓存
       else await fs.writeFileSync(tmpFileName, server, 'utf-8')
@@ -163,6 +194,7 @@ async function getWinGameVersion() {
     }
   } catch (error) {
     console.error('发生错误:', error.message)
+    process.exit(6)
   }
 }
 

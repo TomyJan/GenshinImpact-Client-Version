@@ -40,11 +40,14 @@ class Push {
     if (gameName === '原神') {
       pushUrl += `${TGMsgID_GI}&text=${encodeURIComponent(gameName)}`
       gameId = 'GI'
-    } else {
+    } else if (gameName === '崩坏星穹铁道') {
       pushUrl += `${TGMsgID_SR}&text=${encodeURIComponent(gameName)}`
       gameId = 'SR'
+    } else {
+      console.error('无效的游戏名:', gameName)
+      process.exit(1)
     }
-    let type = jsonData.data.pre_download_game?.latest.version ? 'PRE' : 'REL'
+    let type = jsonData.data.game_packages[0].pre_download?.major?.version ? 'PRE' : 'REL'
     //console.log('latestCN:', JSON.stringify(latestCN))
     if (JSON.stringify(latestCN) === JSON.stringify(latestOS)) {
       console.log('两个服务器都更新了, 一起推送')
@@ -53,8 +56,8 @@ class Push {
       pushUrl += encodeURIComponent(
         ` Win ${
           type === 'REL'
-            ? escapeCharacters(jsonData.data.game.latest.version)
-            : escapeCharacters(jsonData.data.pre_download_game?.latest.version)
+            ? escapeCharacters(jsonData.data.game_packages[0].main.major.version)
+            : escapeCharacters(jsonData.data.game_packages[0].pre_download?.major?.version)
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`国服: \n`)
@@ -72,8 +75,8 @@ class Push {
       pushUrl += encodeURIComponent(
         ` Win ${server} ${
           type === 'REL'
-            ? escapeCharacters(jsonData.data.game.latest.version)
-            : escapeCharacters(jsonData.data.pre_download_game?.latest.version)
+            ? escapeCharacters(jsonData.data.game_packages[0].main.major.version)
+            : escapeCharacters(jsonData.data.game_packages[0].pre_download?.major?.version)
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`完整包: \n`)
@@ -83,25 +86,25 @@ class Push {
     }
     pushUrl += encodeURIComponent('\n')
 
-    if (jsonData.data.pre_download_game?.latest.segments.length > 0)
+    if (jsonData.data.game_packages[0].pre_download?.major?.game_pkgs.length > 1)
       // 有分卷包时的提示
       pushUrl += encodeURIComponent(
         `本体分卷共有 ${
-          jsonData.data.pre_download_game?.latest.version
-            ? jsonData.data.pre_download_game?.latest.segments.length
-            : jsonData.data.game.latest.segments.length
+          jsonData.data.game_packages[0].pre_download?.major?.version
+            ? jsonData.data.game_packages[0].pre_download?.major?.game_pkgs.length
+            : jsonData.data.game_packages[0].main.major.game_pkgs.length
         } 个包, 请自行合并\n\n`
       )
 
     pushUrl += encodeURIComponent(
       `\\#${
-        jsonData.data.pre_download_game?.latest.version
-          ? escapeCharacters(jsonData.data.pre_download_game?.latest.version)
-          : escapeCharacters(jsonData.data.game.latest.version)
+        jsonData.data.game_packages[0].pre_download?.major?.version
+          ? escapeCharacters(jsonData.data.game_packages[0].pre_download?.major?.version)
+          : escapeCharacters(jsonData.data.game_packages[0].main.major.version)
       } `
     )
 
-    if (jsonData.data.pre_download_game?.latest.version)
+    if (jsonData.data.game_packages[0].pre_download?.major?.version)
       pushUrl += encodeURIComponent(`\\#预下载 \\#predownload `)
     pushUrl +=
       gameName === '原神'
@@ -152,50 +155,50 @@ class Push {
       //console.log('updateType:', updateType)
       let linkData = {
         ...(updateType === 'REL'
-          ? jsonData.data.game
-          : jsonData.data.pre_download_game),
+          ? jsonData.data.game_packages[0].main
+          : jsonData.data.game_packages[0].pre_download),
       }
       //console.log('linkData:', linkData)
       let fullLink = '本体: '
 
       if (linkType === 'full') {
-        if (linkData.latest.path)
-          //完整包链接存在
-          fullLink += `[完整包](${escapeCharacters(linkData.latest.path)}) \\| `
-        if (linkData.latest.segments.length > 0) {
-          // 分卷包存在
-          fullLink += `分卷`
-          for (let i = 0; i < linkData.latest.segments.length; i++) {
+        if (linkData.major.game_pkgs.length = 1) {
+          //完整包
+          fullLink += `[完整包](${escapeCharacters(linkData.major.game_pkgs[0].url)}) \\| `
+        } else {
+          // 分卷包
+          fullLink += `分卷 `
+          for (let i = 0; i < linkData.major.game_pkgs.length; i++) {
             fullLink += `[${i + 1}](${escapeCharacters(
-              linkData.latest.segments[i].path
-            )})\\|`
+              linkData.major.game_pkgs[i].url
+            )}) \\| `
           }
           // 去掉最后一个 |
-          fullLink = fullLink.slice(0, -2) + '\n'
+          fullLink = fullLink.slice(0, -3) + '\n'
         }
 
         //return encodeURIComponent(fullLink)
 
         // 拼接语音包链接
         let voiceLink = '语音包: '
-        // 按照 voice_packs.language 字段区分语言包
-        let voiceData = linkData.latest.voice_packs
-        //console.log('voiceData:', voiceData)
+        // 按照 audio_pkgs.language 字段区分语言包
+        let voiceData = linkData.major.audio_pkgs
+        
         for (let i = 0; i < voiceData.length; i++) {
           if (voiceData[i].language === 'zh-cn')
-            voiceLink += `[简中](${escapeCharacters(voiceData[i].path)})\\|`
+            voiceLink += `[简](${escapeCharacters(voiceData[i].url)})\\|`
           else if (voiceData[i].language === 'zh-tw')
-            voiceLink += `[繁中](${escapeCharacters(voiceData[i].path)})\\|`
+            voiceLink += `[繁](${escapeCharacters(voiceData[i].url)})\\|`
           else if (voiceData[i].language === 'en-us')
-            voiceLink += `[英文](${escapeCharacters(voiceData[i].path)})\\|`
+            voiceLink += `[英](${escapeCharacters(voiceData[i].url)})\\|`
           else if (voiceData[i].language === 'ja-jp')
-            voiceLink += `[日文](${escapeCharacters(voiceData[i].path)})\\|`
+            voiceLink += `[日](${escapeCharacters(voiceData[i].url)})\\|`
           else if (voiceData[i].language === 'ko-kr')
-            voiceLink += `[韩文](${escapeCharacters(voiceData[i].path)})\\|`
+            voiceLink += `[韩](${escapeCharacters(voiceData[i].url)})\\|`
           else
             voiceLink += `[${escapeCharacters(
               voiceData[i].language
-            )}](${escapeCharacters(voiceData[i].path)})\\|`
+            )}](${escapeCharacters(voiceData[i].url)})\\|`
         }
         // 去掉最后一个 |
         voiceLink = voiceLink.slice(0, -2) + '\n'
@@ -203,29 +206,43 @@ class Push {
         return encodeURIComponent(fullLink + voiceLink)
       } else {
         //最烦人的差分包
-        // 读取 linkData.diffs数组中成员的 version 作为名字
+        // 读取 linkData.patches 数组中成员的 version 作为名字
         let diffLink = ''
-        for (let i = 0; i < linkData.diffs.length; i++) {
+        for (let i = 0; i < linkData.patches.length; i++) {
           diffLink += `${escapeCharacters(
-            linkData.diffs[i].version
-          )}\\-${escapeCharacters(linkData.latest.version)}: `
-          diffLink += `[本体](${escapeCharacters(linkData.diffs[i].path)})\\|`
-          let voiceData = linkData.diffs[i].voice_packs
+            linkData.patches[i].version
+          )}\\-${escapeCharacters(linkData.major.version)}: `
+          if (linkData.patches[i].game_pkgs.length = 1) {
+            //完整包
+            diffLink += `[本体](${escapeCharacters(linkData.patches[i].game_pkgs[0].url)}) \\| `
+          } else {
+            // 分卷包
+            diffLink += `本体: 分卷 `
+            for (let i = 0; i < linkData.patches[i].game_pkgs.length; i++) {
+              diffLink += `[${i + 1}](${escapeCharacters(
+                linkData.patches[i].game_pkgs[i].url
+              )}) \\| `
+            }
+            // 去掉最后一个 |
+            diffLink = diffLink.slice(0, -3) + '\n'
+          }
+
+          let voiceData = linkData.patches[i].audio_pkgs
           for (let j = 0; j < voiceData.length; j++) {
             if (voiceData[j].language === 'zh-cn')
-              diffLink += `[简中](${escapeCharacters(voiceData[j].path)})\\|`
+              diffLink += `[简](${escapeCharacters(voiceData[j].url)})\\|`
             else if (voiceData[j].language === 'zh-tw')
-              diffLink += `[繁中](${escapeCharacters(voiceData[j].path)})\\|`
+              diffLink += `[繁](${escapeCharacters(voiceData[j].url)})\\|`
             else if (voiceData[j].language === 'en-us')
-              diffLink += `[英文](${escapeCharacters(voiceData[j].path)})\\|`
+              diffLink += `[英](${escapeCharacters(voiceData[j].url)})\\|`
             else if (voiceData[j].language === 'ja-jp')
-              diffLink += `[日文](${escapeCharacters(voiceData[j].path)})\\|`
+              diffLink += `[日](${escapeCharacters(voiceData[j].url)})\\|`
             else if (voiceData[j].language === 'ko-kr')
-              diffLink += `[韩文](${escapeCharacters(voiceData[j].path)})\\|`
+              diffLink += `[韩](${escapeCharacters(voiceData[j].url)})\\|`
             else
               diffLink += `[${escapeCharacters(
                 voiceData[j].language
-              )}](${escapeCharacters(voiceData[j].path)})\\|`
+              )}](${escapeCharacters(voiceData[j].url)})\\|`
           }
           // 去掉最后一个 |
           diffLink = diffLink.slice(0, -2) + '\n'

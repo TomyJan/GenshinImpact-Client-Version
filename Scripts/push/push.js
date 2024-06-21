@@ -47,7 +47,9 @@ class Push {
       console.error('无效的游戏名:', gameName)
       process.exit(1)
     }
-    let type = jsonData.data.game_packages[0].pre_download?.major?.version ? 'PRE' : 'REL'
+    let type = jsonData.data.game_packages[0].pre_download?.major?.version
+      ? 'PRE'
+      : 'REL'
     //console.log('latestCN:', JSON.stringify(latestCN))
     if (JSON.stringify(latestCN) === JSON.stringify(latestOS)) {
       console.log('两个服务器都更新了, 一起推送')
@@ -56,8 +58,12 @@ class Push {
       pushUrl += encodeURIComponent(
         ` Win ${
           type === 'REL'
-            ? escapeCharacters(jsonData.data.game_packages[0].main.major.version)
-            : escapeCharacters(jsonData.data.game_packages[0].pre_download?.major?.version)
+            ? escapeCharacters(
+                jsonData.data.game_packages[0].main.major.version
+              )
+            : escapeCharacters(
+                jsonData.data.game_packages[0].pre_download?.major?.version
+              )
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`国服: \n`)
@@ -75,8 +81,12 @@ class Push {
       pushUrl += encodeURIComponent(
         ` Win ${server} ${
           type === 'REL'
-            ? escapeCharacters(jsonData.data.game_packages[0].main.major.version)
-            : escapeCharacters(jsonData.data.game_packages[0].pre_download?.major?.version)
+            ? escapeCharacters(
+                jsonData.data.game_packages[0].main.major.version
+              )
+            : escapeCharacters(
+                jsonData.data.game_packages[0].pre_download?.major?.version
+              )
         } ${type} 更新！\n\n`
       )
       pushUrl += encodeURIComponent(`完整包: \n`)
@@ -86,12 +96,15 @@ class Push {
     }
     pushUrl += encodeURIComponent('\n')
 
-    if (jsonData.data.game_packages[0].pre_download?.major?.game_pkgs.length > 1)
+    if (
+      jsonData.data.game_packages[0].pre_download?.major?.game_pkgs.length > 1
+    )
       // 有分卷包时的提示
       pushUrl += encodeURIComponent(
         `本体分卷共有 ${
           jsonData.data.game_packages[0].pre_download?.major?.version
-            ? jsonData.data.game_packages[0].pre_download?.major?.game_pkgs.length
+            ? jsonData.data.game_packages[0].pre_download?.major?.game_pkgs
+                .length
             : jsonData.data.game_packages[0].main.major.game_pkgs.length
         } 个包, 请自行合并\n\n`
       )
@@ -99,7 +112,9 @@ class Push {
     pushUrl += encodeURIComponent(
       `\\#${
         jsonData.data.game_packages[0].pre_download?.major?.version
-          ? escapeCharacters(jsonData.data.game_packages[0].pre_download?.major?.version)
+          ? escapeCharacters(
+              jsonData.data.game_packages[0].pre_download?.major?.version
+            )
           : escapeCharacters(jsonData.data.game_packages[0].main.major.version)
       } `
     )
@@ -165,7 +180,9 @@ class Push {
         let fullSize = '大小: '
         if (linkData.major.game_pkgs.length === 1) {
           //完整包
-          fullLink += `[完整包](${escapeCharacters(linkData.major.game_pkgs[0].url)}) \\| `
+          fullLink += `[完整包](${escapeCharacters(
+            linkData.major.game_pkgs[0].url
+          )}) \\| `
           fullSize += `${formatBytes(linkData.major.game_pkgs[0].size)} \\| `
         } else {
           // 分卷包
@@ -176,7 +193,13 @@ class Push {
             )}) \\| `
           }
           // 分卷计算总大小
-          fullSize += `${formatBytes(Number(10737418240 * (linkData.major.game_pkgs.length -1)) + Number(linkData.major.game_pkgs[linkData.major.game_pkgs.length - 1].size))} \\| `
+          fullSize += `${formatBytes(
+            Number(10737418240 * (linkData.major.game_pkgs.length - 1)) +
+              Number(
+                linkData.major.game_pkgs[linkData.major.game_pkgs.length - 1]
+                  .size
+              )
+          )} \\| `
           // 去掉最后一个 |
           fullLink = fullLink.slice(0, -3) + '\n'
         }
@@ -187,7 +210,7 @@ class Push {
         let voiceLink = '语音包: '
         // 按照 audio_pkgs.language 字段区分语言包
         let voiceData = linkData.major.audio_pkgs
-        
+
         // 优先按顺序处理五种已知语音包
         let voiceDataCN = voiceData.find((item) => item.language === 'zh-cn')
         let voiceDataTW = voiceData.find((item) => item.language === 'zh-tw')
@@ -242,8 +265,12 @@ class Push {
           )}\\-${escapeCharacters(linkData.major.version)}: `
           if (linkData.patches[i].game_pkgs.length === 1) {
             //完整包
-            diffLink += `[本体](${escapeCharacters(linkData.patches[i].game_pkgs[0].url)}) \\| `
-            diffSize += `${formatBytes(linkData.patches[i].game_pkgs[0].size)} \\| `
+            diffLink += `[本体](${escapeCharacters(
+              linkData.patches[i].game_pkgs[0].url
+            )}) \\| `
+            diffSize += `${formatBytes(
+              linkData.patches[i].game_pkgs[0].size
+            )} \\| `
           } else {
             // 分卷包
             diffLink += `本体: 分卷 `
@@ -253,7 +280,14 @@ class Push {
               )}) \\| `
             }
             // 分卷计算总大小
-            diffSize += `${formatBytes(Number(10737418240 * (linkData.patches[i].game_pkgs.length - 1)) + Number(linkData.patches[i].game_pkgs[linkData.patches[i].game_pkgs.length - 1].size))} \\| `
+            diffSize += `${formatBytes(
+              Number(10737418240 * (linkData.patches[i].game_pkgs.length - 1)) +
+                Number(
+                  linkData.patches[i].game_pkgs[
+                    linkData.patches[i].game_pkgs.length - 1
+                  ].size
+                )
+            )} \\| `
             // 去掉最后一个 |
             diffLink = diffLink.slice(0, -3) + '\n'
           }
@@ -414,7 +448,9 @@ function formatBytes(bytes, decimals = 3) {
 
   const i = Math.floor(Math.log(bytes) / Math.log(k))
 
-  return escapeCharacters(parseFloat((bytes / Math.pow(k, i)).toPrecision(dm)) + sizes[i])
+  return escapeCharacters(
+    parseFloat((bytes / Math.pow(k, i)).toPrecision(dm)) + sizes[i]
+  )
 }
 
 // 直接实例化 Push 类并默认导出

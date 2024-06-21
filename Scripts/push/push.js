@@ -159,12 +159,14 @@ class Push {
           : jsonData.data.game_packages[0].pre_download),
       }
       //console.log('linkData:', linkData)
-      let fullLink = '本体: '
 
       if (linkType === 'full') {
-        if (linkData.major.game_pkgs.length = 1) {
+        let fullLink = '本体: '
+        let fullSize = '大小: '
+        if (linkData.major.game_pkgs.length === 1) {
           //完整包
           fullLink += `[完整包](${escapeCharacters(linkData.major.game_pkgs[0].url)}) \\| `
+          fullSize += `${formatBytes(linkData.major.game_pkgs[0].size)} \\| `
         } else {
           // 分卷包
           fullLink += `分卷 `
@@ -173,6 +175,8 @@ class Push {
               linkData.major.game_pkgs[i].url
             )}) \\| `
           }
+          // 分卷计算总大小
+          fullSize += `${formatBytes(Number(10737418240 * (linkData.major.game_pkgs.length -1)) + Number(linkData.major.game_pkgs[linkData.major.game_pkgs.length - 1].size))} \\| `
           // 去掉最后一个 |
           fullLink = fullLink.slice(0, -3) + '\n'
         }
@@ -192,22 +196,27 @@ class Push {
         let voiceDataKR = voiceData.find((item) => item.language === 'ko-kr')
         if (voiceDataCN) {
           voiceLink += `[简](${escapeCharacters(voiceDataCN.url)})\\|`
+          fullSize += `${formatBytes(voiceDataCN.size)}\\|`
           voiceData = voiceData.filter((item) => item.language !== 'zh-cn')
         }
         if (voiceDataTW) {
           voiceLink += `[繁](${escapeCharacters(voiceDataTW.url)})\\|`
+          fullSize += `${formatBytes(voiceDataTW.size)}\\|`
           voiceData = voiceData.filter((item) => item.language !== 'zh-tw')
         }
         if (voiceDataJP) {
           voiceLink += `[日](${escapeCharacters(voiceDataJP.url)})\\|`
+          fullSize += `${formatBytes(voiceDataJP.size)}\\|`
           voiceData = voiceData.filter((item) => item.language !== 'ja-jp')
         }
         if (voiceDataEN) {
           voiceLink += `[英](${escapeCharacters(voiceDataEN.url)})\\|`
+          fullSize += `${formatBytes(voiceDataEN.size)}\\|`
           voiceData = voiceData.filter((item) => item.language !== 'en-us')
         }
         if (voiceDataKR) {
           voiceLink += `[韩](${escapeCharacters(voiceDataKR.url)})\\|`
+          fullSize += `${formatBytes(voiceDataKR.size)}\\|`
           voiceData = voiceData.filter((item) => item.language !== 'ko-kr')
         }
         // 处理剩余的语音包
@@ -215,22 +224,26 @@ class Push {
           voiceLink += `[${escapeCharacters(
             voiceData[i].language
           )}](${escapeCharacters(voiceData[i].url)})\\|`
+          fullSize += `${formatBytes(voiceData[i].size)}\\|`
         }
         // 去掉最后一个 |
         voiceLink = voiceLink.slice(0, -2) + '\n'
+        fullSize = fullSize.slice(0, -2) + '\n'
 
-        return encodeURIComponent(fullLink + voiceLink)
+        return encodeURIComponent(fullLink + voiceLink + fullSize)
       } else {
         //最烦人的差分包
         // 读取 linkData.patches 数组中成员的 version 作为名字
         let diffLink = ''
         for (let i = 0; i < linkData.patches.length; i++) {
+          let diffSize = '          '
           diffLink += `${escapeCharacters(
             linkData.patches[i].version
           )}\\-${escapeCharacters(linkData.major.version)}: `
-          if (linkData.patches[i].game_pkgs.length = 1) {
+          if (linkData.patches[i].game_pkgs.length === 1) {
             //完整包
             diffLink += `[本体](${escapeCharacters(linkData.patches[i].game_pkgs[0].url)}) \\| `
+            diffSize += `${formatBytes(linkData.patches[i].game_pkgs[0].size)} \\| `
           } else {
             // 分卷包
             diffLink += `本体: 分卷 `
@@ -239,6 +252,8 @@ class Push {
                 linkData.patches[i].game_pkgs[i].url
               )}) \\| `
             }
+            // 分卷计算总大小
+            diffSize += `${formatBytes(Number(10737418240 * (linkData.patches[i].game_pkgs.length - 1)) + Number(linkData.patches[i].game_pkgs[linkData.patches[i].game_pkgs.length - 1].size))} \\| `
             // 去掉最后一个 |
             diffLink = diffLink.slice(0, -3) + '\n'
           }
@@ -252,22 +267,27 @@ class Push {
           let voiceDataKR = voiceData.find((item) => item.language === 'ko-kr')
           if (voiceDataCN) {
             diffLink += `[简](${escapeCharacters(voiceDataCN.url)})\\|`
+            diffSize += `${formatBytes(voiceDataCN.size)}\\|`
             voiceData = voiceData.filter((item) => item.language !== 'zh-cn')
           }
           if (voiceDataTW) {
             diffLink += `[繁](${escapeCharacters(voiceDataTW.url)})\\|`
+            diffSize += `${formatBytes(voiceDataTW.size)}\\|`
             voiceData = voiceData.filter((item) => item.language !== 'zh-tw')
           }
           if (voiceDataJP) {
             diffLink += `[日](${escapeCharacters(voiceDataJP.url)})\\|`
+            diffSize += `${formatBytes(voiceDataJP.size)}\\|`
             voiceData = voiceData.filter((item) => item.language !== 'ja-jp')
           }
           if (voiceDataEN) {
             diffLink += `[英](${escapeCharacters(voiceDataEN.url)})\\|`
+            diffSize += `${formatBytes(voiceDataEN.size)}\\|`
             voiceData = voiceData.filter((item) => item.language !== 'en-us')
           }
           if (voiceDataKR) {
             diffLink += `[韩](${escapeCharacters(voiceDataKR.url)})\\|`
+            diffSize += `${formatBytes(voiceDataKR.size)}\\|`
             voiceData = voiceData.filter((item) => item.language !== 'ko-kr')
           }
           // 处理剩余的语音包
@@ -275,9 +295,10 @@ class Push {
             diffLink += `[${escapeCharacters(
               voiceData[j].language
             )}](${escapeCharacters(voiceData[j].url)})\\|`
+            diffSize += `${formatBytes(voiceData[j].size)}\\|`
           }
           // 去掉最后一个 |
-          diffLink = diffLink.slice(0, -2) + '\n'
+          diffLink = diffLink.slice(0, -2) + '\n' + diffSize.slice(0, -2) + '\n'
         }
         return encodeURIComponent(diffLink)
       }
@@ -380,6 +401,20 @@ function escapeCharacters(inputString) {
   var escapedString = inputString.replace(charactersToEscape, '\\$&')
 
   return escapedString
+}
+
+// 把传入的单位为 B 的数字格式化成可读的 K, M, G 形式, 保留三位有效数字, 转义并返回
+function formatBytes(bytes, decimals = 3) {
+  console.log('bytes:', bytes)
+  if (bytes === 0) return escapeCharacters('0B')
+
+  const k = 1024
+  const dm = decimals < 0 ? 0 : decimals
+  const sizes = ['B', 'K', 'M', 'G', 'T']
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+  return escapeCharacters(parseFloat((bytes / Math.pow(k, i)).toPrecision(dm)) + sizes[i])
 }
 
 // 直接实例化 Push 类并默认导出

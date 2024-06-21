@@ -16,8 +16,8 @@ const ApiInfo = {
   },
 }
 // 方便测试
-//process.argv[2] = 'sr'
-//process.argv[3] = 'cn'
+// process.argv[2] = 'sr'
+// process.argv[3] = 'cn'
 // 根据命令行参数选择目标链接
 const game =
   process.argv[2] === 'gi'

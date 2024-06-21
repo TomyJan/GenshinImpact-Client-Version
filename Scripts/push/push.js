@@ -184,21 +184,37 @@ class Push {
         // 按照 audio_pkgs.language 字段区分语言包
         let voiceData = linkData.major.audio_pkgs
         
+        // 优先按顺序处理五种已知语音包
+        let voiceDataCN = voiceData.find((item) => item.language === 'zh-cn')
+        let voiceDataTW = voiceData.find((item) => item.language === 'zh-tw')
+        let voiceDataJP = voiceData.find((item) => item.language === 'ja-jp')
+        let voiceDataEN = voiceData.find((item) => item.language === 'en-us')
+        let voiceDataKR = voiceData.find((item) => item.language === 'ko-kr')
+        if (voiceDataCN) {
+          voiceLink += `[简](${escapeCharacters(voiceDataCN.url)})\\|`
+          voiceData = voiceData.filter((item) => item.language !== 'zh-cn')
+        }
+        if (voiceDataTW) {
+          voiceLink += `[繁](${escapeCharacters(voiceDataTW.url)})\\|`
+          voiceData = voiceData.filter((item) => item.language !== 'zh-tw')
+        }
+        if (voiceDataJP) {
+          voiceLink += `[日](${escapeCharacters(voiceDataJP.url)})\\|`
+          voiceData = voiceData.filter((item) => item.language !== 'ja-jp')
+        }
+        if (voiceDataEN) {
+          voiceLink += `[英](${escapeCharacters(voiceDataEN.url)})\\|`
+          voiceData = voiceData.filter((item) => item.language !== 'en-us')
+        }
+        if (voiceDataKR) {
+          voiceLink += `[韩](${escapeCharacters(voiceDataKR.url)})\\|`
+          voiceData = voiceData.filter((item) => item.language !== 'ko-kr')
+        }
+        // 处理剩余的语音包
         for (let i = 0; i < voiceData.length; i++) {
-          if (voiceData[i].language === 'zh-cn')
-            voiceLink += `[简](${escapeCharacters(voiceData[i].url)})\\|`
-          else if (voiceData[i].language === 'zh-tw')
-            voiceLink += `[繁](${escapeCharacters(voiceData[i].url)})\\|`
-          else if (voiceData[i].language === 'en-us')
-            voiceLink += `[英](${escapeCharacters(voiceData[i].url)})\\|`
-          else if (voiceData[i].language === 'ja-jp')
-            voiceLink += `[日](${escapeCharacters(voiceData[i].url)})\\|`
-          else if (voiceData[i].language === 'ko-kr')
-            voiceLink += `[韩](${escapeCharacters(voiceData[i].url)})\\|`
-          else
-            voiceLink += `[${escapeCharacters(
-              voiceData[i].language
-            )}](${escapeCharacters(voiceData[i].url)})\\|`
+          voiceLink += `[${escapeCharacters(
+            voiceData[i].language
+          )}](${escapeCharacters(voiceData[i].url)})\\|`
         }
         // 去掉最后一个 |
         voiceLink = voiceLink.slice(0, -2) + '\n'
@@ -228,21 +244,37 @@ class Push {
           }
 
           let voiceData = linkData.patches[i].audio_pkgs
+          // 优先按顺序处理五种已知语音包
+          let voiceDataCN = voiceData.find((item) => item.language === 'zh-cn')
+          let voiceDataTW = voiceData.find((item) => item.language === 'zh-tw')
+          let voiceDataJP = voiceData.find((item) => item.language === 'ja-jp')
+          let voiceDataEN = voiceData.find((item) => item.language === 'en-us')
+          let voiceDataKR = voiceData.find((item) => item.language === 'ko-kr')
+          if (voiceDataCN) {
+            diffLink += `[简](${escapeCharacters(voiceDataCN.url)})\\|`
+            voiceData = voiceData.filter((item) => item.language !== 'zh-cn')
+          }
+          if (voiceDataTW) {
+            diffLink += `[繁](${escapeCharacters(voiceDataTW.url)})\\|`
+            voiceData = voiceData.filter((item) => item.language !== 'zh-tw')
+          }
+          if (voiceDataJP) {
+            diffLink += `[日](${escapeCharacters(voiceDataJP.url)})\\|`
+            voiceData = voiceData.filter((item) => item.language !== 'ja-jp')
+          }
+          if (voiceDataEN) {
+            diffLink += `[英](${escapeCharacters(voiceDataEN.url)})\\|`
+            voiceData = voiceData.filter((item) => item.language !== 'en-us')
+          }
+          if (voiceDataKR) {
+            diffLink += `[韩](${escapeCharacters(voiceDataKR.url)})\\|`
+            voiceData = voiceData.filter((item) => item.language !== 'ko-kr')
+          }
+          // 处理剩余的语音包
           for (let j = 0; j < voiceData.length; j++) {
-            if (voiceData[j].language === 'zh-cn')
-              diffLink += `[简](${escapeCharacters(voiceData[j].url)})\\|`
-            else if (voiceData[j].language === 'zh-tw')
-              diffLink += `[繁](${escapeCharacters(voiceData[j].url)})\\|`
-            else if (voiceData[j].language === 'en-us')
-              diffLink += `[英](${escapeCharacters(voiceData[j].url)})\\|`
-            else if (voiceData[j].language === 'ja-jp')
-              diffLink += `[日](${escapeCharacters(voiceData[j].url)})\\|`
-            else if (voiceData[j].language === 'ko-kr')
-              diffLink += `[韩](${escapeCharacters(voiceData[j].url)})\\|`
-            else
-              diffLink += `[${escapeCharacters(
-                voiceData[j].language
-              )}](${escapeCharacters(voiceData[j].url)})\\|`
+            diffLink += `[${escapeCharacters(
+              voiceData[j].language
+            )}](${escapeCharacters(voiceData[j].url)})\\|`
           }
           // 去掉最后一个 |
           diffLink = diffLink.slice(0, -2) + '\n'

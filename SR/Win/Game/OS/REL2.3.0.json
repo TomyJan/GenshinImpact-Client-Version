@@ -1,0 +1,120 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "game_packages": [
+      {
+        "game": {
+          "id": "4ziysqXOQ8",
+          "biz": "hkrpg_global"
+        },
+        "main": {
+          "major": {
+            "version": "2.3.0",
+            "game_pkgs": [
+              {
+                "url": "https://autopatchos.starrails.com/client/download/20240608160515_WaNfKntJ7dt6k6rt/PC/StarRail_2.3.0.zip",
+                "md5": "4b35f72f69119b19ecf0c4f8dc91d257",
+                "size": "35308485742",
+                "decompressed_size": "70627457244"
+              }
+            ],
+            "audio_pkgs": [
+              {
+                "language": "zh-cn",
+                "url": "https://autopatchos.starrails.com/client/download/20240608160515_WaNfKntJ7dt6k6rt/PC/Chinese.zip",
+                "md5": "a67f7c4729f78d37444ca63bcd29996a",
+                "size": "4781237787",
+                "decompressed_size": "9572961334"
+              },
+              {
+                "language": "zh-tw",
+                "url": "https://autopatchos.starrails.com/client/download/20240608160515_WaNfKntJ7dt6k6rt/PC/Chinese.zip",
+                "md5": "a67f7c4729f78d37444ca63bcd29996a",
+                "size": "4781237787",
+                "decompressed_size": "9572961334"
+              },
+              {
+                "language": "en-us",
+                "url": "https://autopatchos.starrails.com/client/download/20240608160515_WaNfKntJ7dt6k6rt/PC/English.zip",
+                "md5": "e342e0441786ee64edf3367fe5df8bac",
+                "size": "5676154808",
+                "decompressed_size": "11362795376"
+              },
+              {
+                "language": "ja-jp",
+                "url": "https://autopatchos.starrails.com/client/download/20240608160515_WaNfKntJ7dt6k6rt/PC/Japanese.zip",
+                "md5": "2a47b18df89fa23075f5ac9305b6ab0c",
+                "size": "6071277521",
+                "decompressed_size": "12153040802"
+              },
+              {
+                "language": "ko-kr",
+                "url": "https://autopatchos.starrails.com/client/download/20240608160515_WaNfKntJ7dt6k6rt/PC/Korean.zip",
+                "md5": "4b76f48d141cffb6daf953e7d068afb3",
+                "size": "4821826098",
+                "decompressed_size": "9654137956"
+              }
+            ],
+            "res_list_url": "https://autopatchos.starrails.com/client/download/20240608160515_WaNfKntJ7dt6k6rt/PC/unzip"
+          },
+          "patches": [
+            {
+              "version": "2.2.0",
+              "game_pkgs": [
+                {
+                  "url": "https://autopatchos.starrails.com/client/diff/hkrpg_global/game_2.2.0_2.3.0_hdiff_WwevYToSIVWLRkDA.zip",
+                  "md5": "e1131485bba22f1721f0aa6b47af1c0b",
+                  "size": "22635251797",
+                  "decompressed_size": "47963087723"
+                }
+              ],
+              "audio_pkgs": [
+                {
+                  "language": "zh-cn",
+                  "url": "https://autopatchos.starrails.com/client/diff/hkrpg_global/audio_zh-cn_2.2.0_2.3.0_hdiff_LRjKxodieEGIvihp.zip",
+                  "md5": "1486ab2fcafe10f6570bd94213350851",
+                  "size": "233315579",
+                  "decompressed_size": "477245282"
+                },
+                {
+                  "language": "zh-tw",
+                  "url": "https://autopatchos.starrails.com/client/diff/hkrpg_global/audio_zh-tw_2.2.0_2.3.0_hdiff_CwllgevcmHwxhzDo.zip",
+                  "md5": "24543e30e1b87513958e23764358e1b1",
+                  "size": "233315579",
+                  "decompressed_size": "477245282"
+                },
+                {
+                  "language": "ko-kr",
+                  "url": "https://autopatchos.starrails.com/client/diff/hkrpg_global/audio_ko-kr_2.2.0_2.3.0_hdiff_SuitLwSAzZXXXFLX.zip",
+                  "md5": "f56a1ef6ce31eda1a72c730a35007b7d",
+                  "size": "238191368",
+                  "decompressed_size": "487040497"
+                },
+                {
+                  "language": "ja-jp",
+                  "url": "https://autopatchos.starrails.com/client/diff/hkrpg_global/audio_ja-jp_2.2.0_2.3.0_hdiff_lLfHxWLEsHrwcKPJ.zip",
+                  "md5": "ed935ddcbafa6ddb54a4f0b28cebe0fe",
+                  "size": "282483948",
+                  "decompressed_size": "575637594"
+                },
+                {
+                  "language": "en-us",
+                  "url": "https://autopatchos.starrails.com/client/diff/hkrpg_global/audio_en-us_2.2.0_2.3.0_hdiff_IIqIrAnQHWgoHAvv.zip",
+                  "md5": "cdfb99e14b9a63517190ffb4e7fed04e",
+                  "size": "258699468",
+                  "decompressed_size": "528031062"
+                }
+              ],
+              "res_list_url": ""
+            }
+          ]
+        },
+        "pre_download": {
+          "major": null,
+          "patches": []
+        }
+      }
+    ]
+  }
+}

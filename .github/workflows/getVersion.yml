@@ -82,6 +82,18 @@ jobs:
             TGMsgID: ${{ secrets.TGMsgID }}
             TGMsgID_SR: ${{ secrets.TGMsgID_SR }}
           run: node ./Scripts/getWinLauncherVersion.js sr os
+        - name: Check WW Win Launcher CN Update
+          env: 
+            TGBotToken: ${{ secrets.TGBotToken }}
+            TGMsgID: ${{ secrets.TGMsgID }}
+            TGMsgID_SR: ${{ secrets.TGMsgID_SR }}
+          run: node ./Scripts/getWWWinLauncherVersion.js cn
+        - name: Check WW Win Launcher OS Update
+          env: 
+            TGBotToken: ${{ secrets.TGBotToken }}
+            TGMsgID: ${{ secrets.TGMsgID }}
+            TGMsgID_SR: ${{ secrets.TGMsgID_SR }}
+          run: node ./Scripts/getWWWinLauncherVersion.js os
         - name: Check SR Android Game CN Update
           env: 
             TGBotToken: ${{ secrets.TGBotToken }}

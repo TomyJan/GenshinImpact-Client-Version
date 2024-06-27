@@ -1,0 +1,57 @@
+{
+  "default": {
+    "cdnList": [
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 0,
+        "url": "https://pcdownload-huoshan.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 4181,
+        "url": "https://pcdownload-wangsu.aki-game.com/"
+      }
+    ],
+    "changelog": {
+      "zh-Hans": "优化了部分功能"
+    },
+    "installer": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/1.5.3.0/UVZiNS72MhyMfDGncdjAXTm7i3POD1yz/installer.exe",
+    "installerMD5": "d974f53397d5d1354319a7a0ec393d29",
+    "installerSize": 92469016,
+    "version": "1.5.3.0"
+  },
+  "crashInitSwitch": 1,
+  "animateBgSwitch": 1,
+  "animateBackground": {
+    "url": "pcstarter/prod/starter/10003/background/cLvFOmhAUC.zip",
+    "md5": "e43da9cd946fea63c74ff459a02e9f4d",
+    "frameRate": 1,
+    "durationInSecond": 1
+  },
+  "animateBackgroundLanguage": {
+    "zh-Hans": {
+      "url": "pcstarter/prod/starter/10003/background/cLvFOmhAUC.zip",
+      "md5": "e43da9cd946fea63c74ff459a02e9f4d",
+      "frameRate": 1,
+      "durationInSecond": 1
+    }
+  },
+  "navigationBarSwitch": 1,
+  "navigationBarLanguage": {
+    "zh-Hans": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/zh-Hans.json",
+    "en": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/en.json",
+    "ja": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/ja.json",
+    "ko": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/ko.json",
+    "zh-Hant": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/zh-Hant.json",
+    "fr": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/fr.json",
+    "de": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/de.json",
+    "es": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/es.json",
+    "ru": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/ru.json",
+    "pt": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/pt.json",
+    "id": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/id.json",
+    "vi": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/vi.json",
+    "th": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/guidance/th.json"
+  }
+}

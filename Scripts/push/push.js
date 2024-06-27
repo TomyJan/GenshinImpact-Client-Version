@@ -5,6 +5,7 @@ import fetch from 'node-fetch'
 const TGBotToken = process.env.TGBotToken
 const TGMsgID_GI = process.env.TGMsgID_GI || process.env.TGMsgID
 const TGMsgID_SR = process.env.TGMsgID_SR || process.env.TGMsgID
+const TGMsgID_WW = process.env.TGMsgID_WW || process.env.TGMsgID
 
 class Push {
   constructor() {
@@ -368,21 +369,52 @@ class Push {
     }
   }
 
-  async pushWinLauncher(gameName, server, link) {
+  async pushWinLauncher(gameName, server, link, isKuroGame = false) {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
+    
+    // 库洛游戏的解析
+    if (isKuroGame) {
+      console.log('link:', JSON.stringify(link))
+      if (gameName === '鸣潮') pushUrl += `${TGMsgID_WW}&text=`
+      else {
+        console.error('无效的游戏名:', gameName)
+        process.exit(2)
+      }
+      pushUrl += encodeURIComponent(
+        `${gameName} Win ${server} Launcher 更新！\n\n`
+      )
+      pushUrl += `版本: ${link.old.version ? `[${escapeCharacters(link.old.version)}](${escapeCharacters(link.old.url)}) \\=\\> ` : ''}[${escapeCharacters(link.new.version)}](${escapeCharacters(link.new.url)})%0A`
+      pushUrl += `大小: ${link.old.size ? `\`${formatBytes(link.old.size)}\` \\=\\> ` : ''}\`${formatBytes(link.new.size)}\`%0A`
+      pushUrl += `更新日志: \`${escapeCharacters(link.changelog)}\`%0A`
+      pushUrl += encodeURIComponent(`\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`)
+
+      console.log('推送地址:', pushUrl)
+      let rsp = await fetch(pushUrl)
+      if (!rsp.ok) {
+        console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
+        process.exit(3)
+      }
+
+      // console.log(JSON.stringify(await rsp.json()))
+      let pushJsonData = await rsp.json()
+      console.log('推送结果:', pushJsonData)
+      process.exit(0)
+    }
+
+    // 米哈游游戏的解析
     if (gameName === '原神') pushUrl += `${TGMsgID_GI}&text=`
     else pushUrl += `${TGMsgID_SR}&text=`
     pushUrl += encodeURIComponent(
       `${gameName} Win ${server} Launcher 更新！\n\n`
     )
-    pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
+    pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})`
     pushUrl +=
       gameName === '原神'
         ? encodeURIComponent(
-            `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
+            `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
           )
         : encodeURIComponent(
-            `\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`
+            `\n\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`
           )
 
     console.log('推送地址:', pushUrl)
@@ -428,6 +460,7 @@ class Push {
 }
 
 function escapeCharacters(inputString) {
+  if (!inputString) inputString = ''
   // 定义需要转义的字符集合
   var charactersToEscape = /[_*\[\]()~`>#\+\-=|{}.!]/g
 

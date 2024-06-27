@@ -36,7 +36,7 @@ class Push {
     } catch (error) {
       console.error('读取本地数据失败:', error.message)
     }
-    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
+    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
     let gameId = ``
     if (gameName === '原神') {
       pushUrl += `${TGMsgID_GI}&text=${encodeURIComponent(gameName)}`
@@ -370,7 +370,7 @@ class Push {
   }
 
   async pushWinLauncher(gameName, server, link, isKuroGame = false) {
-    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
+    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
     
     // 库洛游戏的解析
     if (isKuroGame) {
@@ -430,7 +430,7 @@ class Push {
   }
 
   async pushAndroidGame(gameName, server, link) {
-    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&chat_id=`
+    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
     if (gameName === '原神') pushUrl += `${TGMsgID_GI}&text=`
     else pushUrl += `${TGMsgID_SR}&text=`
     pushUrl += encodeURIComponent(

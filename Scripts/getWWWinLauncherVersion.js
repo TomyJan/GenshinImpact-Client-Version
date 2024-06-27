@@ -29,91 +29,113 @@ const latestVerPath = `./Scripts/data/${game}/latest_Win_Launcher_${server}.json
 
 async function getWinLauncherVersion() {
   // try {
-    // 发送 GET 请求获取 JSON 响应
-    let jsonData = {}
-    let rsp = await fetchWithTimeout(targetUrl)
+  // 发送 GET 请求获取 JSON 响应
+  let jsonData = {}
+  let rsp = await fetchWithTimeout(targetUrl)
+  if (!rsp.ok) {
+    console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
+    rsp = await fetchWithTimeout(targetUrl)
     if (!rsp.ok) {
-      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-      rsp = await fetchWithTimeout(targetUrl)
-      if (!rsp.ok) {
-        console.log('请求失败:', rsp.status, rsp.statusText)
-        process.exit(1)
-      }
+      console.log('请求失败:', rsp.status, rsp.statusText)
+      process.exit(1)
     }
+  }
 
-    try {
-      jsonData = await rsp.json()
-    } catch (error) {
-      console.error('返回数据不是json格式:', error.message, '返回内容:', await rsp.text())
-      process.exit(2)
-    }
+  try {
+    jsonData = await rsp.json()
+  } catch (error) {
+    console.error(
+      '返回数据不是json格式:',
+      error.message,
+      '返回内容:',
+      await rsp.text()
+    )
+    process.exit(2)
+  }
 
-    if(!jsonData.hasOwnProperty('default')) {
-      console.error('返回数据不包含default属性:', jsonData)
-      process.exit(3)
-    }
+  if (!jsonData.hasOwnProperty('default')) {
+    console.error('返回数据不包含default属性:', jsonData)
+    process.exit(3)
+  }
 
-    // 读取本地保存的数据
-    let localData = {}
-    try {
-      const localDataContent = await fs.readFileSync(latestVerPath, 'utf-8')
-      //console.log('读取本地数据:', localDataContent);
-      localData = JSON.parse(localDataContent)
-    } catch (error) {
-      // 文件不存在或解析错误时，忽略错误
-      console.error('读取本地数据失败:', error.message)
-    }
+  // 读取本地保存的数据
+  let localData = {}
+  try {
+    const localDataContent = await fs.readFileSync(latestVerPath, 'utf-8')
+    //console.log('读取本地数据:', localDataContent);
+    localData = JSON.parse(localDataContent)
+  } catch (error) {
+    // 文件不存在或解析错误时，忽略错误
+    console.error('读取本地数据失败:', error.message)
+  }
 
-    // 提取版本信息
-    const remoteLink = jsonData.default.version
+  // 提取版本信息
+  const remoteLink = jsonData.default.version
 
-    console.log('本地最新 Launcher 版本:', localData?.default?.version)
-    console.log('取到最新 Launcher 版本:', remoteLink)
-    if (
-      remoteLink === undefined ||
-      remoteLink === '' ||
-      remoteLink === null ||
-      remoteLink === 'null' ||
-      remoteLink === 'undefined'
-    ) {
-      console.error('最新版本数据获取失败, 程序退出...')
-      process.exit(4)
-    }
+  console.log('本地最新 Launcher 版本:', localData?.default?.version)
+  console.log('取到最新 Launcher 版本:', remoteLink)
+  if (
+    remoteLink === undefined ||
+    remoteLink === '' ||
+    remoteLink === null ||
+    remoteLink === 'null' ||
+    remoteLink === 'undefined'
+  ) {
+    console.error('最新版本数据获取失败, 程序退出...')
+    process.exit(4)
+  }
 
-    // 构建文件名
-    const fileName = (await getNowDate()) + '.json'
-    //console.log('文件名:', fileName);
+  // 构建文件名
+  const fileName = (await getNowDate()) + '.json'
+  //console.log('文件名:', fileName);
 
-    // 比较版本并更新本地数据
-    if (localData?.default?.version !== remoteLink) {
-      console.log('数据有变化，正在更新...')
-      // 写出JSON文件
-      const outputFilePath = targetDir + fileName
-      await fs.writeFileSync(
-        outputFilePath,
-        JSON.stringify(jsonData, null, 2) + '\n',
-        'utf-8'
-      )
-      console.log('数据已写出到:', outputFilePath)
+  // 比较版本并更新本地数据
+  if (localData?.default?.version !== remoteLink) {
+    console.log('数据有变化，正在更新...')
+    // 写出JSON文件
+    const outputFilePath = targetDir + fileName
+    await fs.writeFileSync(
+      outputFilePath,
+      JSON.stringify(jsonData, null, 2) + '\n',
+      'utf-8'
+    )
+    console.log('数据已写出到:', outputFilePath)
 
-      // 后续推送操作
-      push.pushWinLauncher(ApiInfo[game].name, server, { new: {version: remoteLink, size: jsonData.default.installerSize, url: jsonData.default.cdnList[0].url + jsonData.default.installer}, old: {version: localData?.default?.version, size: localData?.default?.installerSize, url: localData?.default?.cdnList[0]?.url + localData?.default?.installer}, changelog: jsonData.default.changelog['zh-Hans'] }, true)
+    // 后续推送操作
+    push.pushWinLauncher(
+      ApiInfo[game].name,
+      server,
+      {
+        new: {
+          version: remoteLink,
+          size: jsonData.default.installerSize,
+          url: jsonData.default.cdnList[0].url + jsonData.default.installer,
+        },
+        old: {
+          version: localData?.default?.version,
+          size: localData?.default?.installerSize,
+          url:
+            localData?.default?.cdnList[0]?.url + localData?.default?.installer,
+        },
+        changelog: jsonData.default.changelog['zh-Hans'],
+      },
+      true
+    )
 
-      // 更新本地数据
-      localData = jsonData
+    // 更新本地数据
+    localData = jsonData
 
-      // 写回本地保存的数据文件
-      await fs.writeFileSync(
-        latestVerPath,
-        JSON.stringify(localData, null, 2) + '\n',
-        'utf-8'
-      )
+    // 写回本地保存的数据文件
+    await fs.writeFileSync(
+      latestVerPath,
+      JSON.stringify(localData, null, 2) + '\n',
+      'utf-8'
+    )
 
-      console.log('数据已更新并保存成功。')
-      
-    } else {
-      console.log('数据无变化，无需更新。')
-    }
+    console.log('数据已更新并保存成功。')
+  } else {
+    console.log('数据无变化，无需更新。')
+  }
   // } catch (error) {
   //   console.error('发生错误:', error.message)
   // }

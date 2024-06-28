@@ -118,6 +118,7 @@ class Push {
             )}`,
             'utf-8'
           )
+          jsonData = JSON.parse(jsonDataContent)
           //console.log('读取本地数据:', jsonDataContent);
           pushUrl += encodeURIComponent(
             `版本: \`${jsonData.default.version}\`\n`

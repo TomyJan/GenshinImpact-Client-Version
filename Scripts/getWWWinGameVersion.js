@@ -118,6 +118,18 @@ async function getWinGameVersion() {
     )
     console.log('数据已写出到:', outputFilePath)
 
+    // 更新本地数据
+    localData = jsonData
+
+    // 写回本地保存的数据文件
+    await fs.writeFileSync(
+      latestVerPath,
+      JSON.stringify(localData, null, 2) + '\n',
+      'utf-8'
+    )
+
+    console.log('数据已更新并保存成功。')
+
     // 如果只有单个服务器更新, 先写一下临时文件, 等两个都更新了再推送
     // 检查临时文件是否存在
     const tmpFileName = `${scriptDataPath}tmp-not_pushed_win_${game}_server.txt`
@@ -149,17 +161,6 @@ async function getWinGameVersion() {
       `游戏 ${game} 只检查到了 ${server} 服务器的更新, 已缓存, 等待另一个服务器更新后再推送...`
     )
 
-    // 更新本地数据
-    localData = jsonData
-
-    // 写回本地保存的数据文件
-    await fs.writeFileSync(
-      latestVerPath,
-      JSON.stringify(localData, null, 2) + '\n',
-      'utf-8'
-    )
-
-    console.log('数据已更新并保存成功。')
   } else {
     console.log('数据无变化，无需更新。')
   }

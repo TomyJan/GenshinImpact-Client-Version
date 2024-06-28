@@ -1,0 +1,40 @@
+{
+  "hashCacheCheckAccSwitch": 1,
+  "default": {
+    "cdnList": [
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 0,
+        "url": "https://pcdownload-huoshan.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 4181,
+        "url": "https://pcdownload-wangsu.aki-game.com/"
+      }
+    ],
+    "changelog": {
+      "zh-Hans": "修复了部分已知的崩溃问题。"
+    },
+    "resources": "pcstarter/prod/game/G152/1.0.2/vs1OuYFIFHCqDUwXEo6GCiiwJ5I5ELZU/resource.json",
+    "resourcesBasePath": "pcstarter/prod/game/G152/1.0.2/vs1OuYFIFHCqDUwXEo6GCiiwJ5I5ELZU/zip",
+    "resourcesDiff": {
+      "currentGameInfo": {
+        "fileName": "Wuthering Waves.zip",
+        "md5": "df7124ed31f3aea39bf23730b318fb39",
+        "version": "1.0.2"
+      },
+      "previousGameInfo": {
+        "fileName": "Wuthering Waves.zip",
+        "md5": "0f9e8be19e075adf348e1193ca2638e0",
+        "version": "1.0.0"
+      }
+    },
+    "resourcesExcludePath": [],
+    "resourcesExcludePathNeedUpdate": [],
+    "sampleHashSwitch": 0,
+    "version": "1.0.2"
+  }
+}

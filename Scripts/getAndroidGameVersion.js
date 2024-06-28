@@ -18,7 +18,7 @@ const ApiInfo = {
     CN: 'https://api.kurobbs.com/user/center/init',
     OS: '',
     name: '鸣潮',
-  }
+  },
 }
 // 方便测试
 // process.argv[2] = 'sr'
@@ -65,7 +65,10 @@ async function getAndroidGameVersion() {
       jsonData.link = await rsp.url
     } else {
       let kuroRsp = await rsp.json()
-      if (kuroRsp?.code !== 200 || !kuroRsp?.data?.gameEnterInfo?.game3CenterInfo?.downLoadUrl[0]) {
+      if (
+        kuroRsp?.code !== 200 ||
+        !kuroRsp?.data?.gameEnterInfo?.game3CenterInfo?.downLoadUrl[0]
+      ) {
         console.error('响应错误:', JSON.stringify(kuroRsp))
         process.exit(1)
       }

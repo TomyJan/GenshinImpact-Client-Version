@@ -113,7 +113,7 @@ class Push {
       }
     }
 
-    pushUrl += encodeURIComponent(`\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`)
+    pushUrl += encodeURIComponent(`\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`)
 
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
@@ -502,7 +502,7 @@ class Push {
       pushUrl += `版本: ${link.old.version ? `[${escapeCharacters(link.old.version)}](${escapeCharacters(link.old.url)}) \\=\\> ` : ''}[${escapeCharacters(link.new.version)}](${escapeCharacters(link.new.url)})%0A`
       pushUrl += `大小: ${link.old.size ? `\`${formatBytes(link.old.size)}\` \\=\\> ` : ''}\`${formatBytes(link.new.size)}\`%0A`
       pushUrl += `更新日志: \`${escapeCharacters(link.changelog)}\`%0A`
-      pushUrl += encodeURIComponent(`\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`)
+      pushUrl += encodeURIComponent(`\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`)
 
       console.log('推送地址:', pushUrl)
       let rsp = await fetch(pushUrl)

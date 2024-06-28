@@ -32,6 +32,7 @@ class Push {
         latestCN = JSON.parse(latestCNContent)
       } catch (error) {
         console.error('读取本地数据失败1:', error.message)
+        process.exit(2)
       }
       try {
         const latestOSContent = await fs.readFileSync(
@@ -41,6 +42,7 @@ class Push {
         latestOS = JSON.parse(latestOSContent)
       } catch (error) {
         console.error('读取本地数据失败2:', error.message)
+        process.exit(3)
       }
       let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
       let gameId = ``
@@ -49,7 +51,7 @@ class Push {
         gameId = 'WW'
       } else {
         console.error('无效的游戏名:', gameName)
-        process.exit(2)
+        process.exit(4)
       }
       // TODO: 根据传入 jsonData 判断更新类型是 REL 还是 PRE
       // pushUrl += ' Win REL 更新！\n\n'
@@ -102,6 +104,7 @@ class Push {
           }
         } catch (error) {
           console.error('读取本地数据失败3:', error.message)
+          process.exit(5)
         }
       } else {
         pushUrl += encodeURIComponent(` Win ${server} REL 更新！\n\n`)
@@ -124,6 +127,7 @@ class Push {
           )
         } catch (error) {
           console.error('读取本地数据失败4:', error.message)
+          process.exit(6)
         }
       }
 
@@ -140,7 +144,7 @@ class Push {
           rsp.statusText,
           await rsp.text()
         )
-        process.exit(3)
+        process.exit(7)
       }
 
       // console.log(JSON.stringify(await rsp.json()))
@@ -163,6 +167,7 @@ class Push {
       latestCN = JSON.parse(latestCNContent)
     } catch (error) {
       console.error('读取本地数据失败5:', error.message)
+      process.exit(8)
     }
     try {
       const latestOSContent = await fs.readFileSync(
@@ -172,6 +177,7 @@ class Push {
       latestOS = JSON.parse(latestOSContent)
     } catch (error) {
       console.error('读取本地数据失败6:', error.message)
+      process.exit(9)
     }
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
     let gameId = ``
@@ -183,7 +189,7 @@ class Push {
       gameId = 'SR'
     } else {
       console.error('无效的游戏名:', gameName)
-      process.exit(1)
+      process.exit(10)
     }
     let type = jsonData.data.game_packages[0].pre_download?.major?.version
       ? 'PRE'
@@ -273,7 +279,7 @@ class Push {
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
       console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
-      return false
+      process.exit(11)
     }
 
     // console.log(JSON.stringify(await rsp.json()))
@@ -303,6 +309,7 @@ class Push {
         jsonData = JSON.parse(jsonDataContent)
       } catch (error) {
         console.error('读取本地数据失败7:', error.message)
+        process.exit(12)
       }
       //console.log('jsonData:', jsonData)
       //console.log('updateType:', updateType)
@@ -487,7 +494,8 @@ class Push {
 
       // 如果没有找到任何 JSON 文件，则返回 null
       if (jsonFiles.length === 0) {
-        return null
+        console.error('未找到任何 JSON 文件:', directoryPath)
+        process.exit(13)
       }
 
       // 根据文件的修改时间排序文件列表，获取最新的文件
@@ -515,7 +523,7 @@ class Push {
       if (gameName === '鸣潮') pushUrl += `${TGMsgID_WW}&text=`
       else {
         console.error('无效的游戏名:', gameName)
-        process.exit(2)
+        process.exit(14)
       }
       pushUrl += encodeURIComponent(
         `${gameName} Win ${server} Launcher 更新！\n\n`
@@ -546,7 +554,7 @@ class Push {
           rsp.statusText,
           await rsp.text()
         )
-        process.exit(3)
+        process.exit(15)
       }
 
       // console.log(JSON.stringify(await rsp.json()))
@@ -574,8 +582,8 @@ class Push {
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
-      console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
-      return false
+      console.error('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
+      process.exit(16)
     }
 
     // console.log(JSON.stringify(await rsp.json()))
@@ -603,8 +611,8 @@ class Push {
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
-      console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
-      return false
+      console.error('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
+      process.exit(17)
     }
 
     // console.log(JSON.stringify(await rsp.json()))

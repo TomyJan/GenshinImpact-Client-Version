@@ -14,19 +14,32 @@ const ApiInfo = {
     OS: '',
     name: '崩坏星穹铁道',
   },
+  WW: {
+    CN: 'https://api.kurobbs.com/user/center/init',
+    OS: '',
+    name: '鸣潮',
+  }
 }
 // 方便测试
-//process.argv[2] = 'sr'
-//process.argv[3] = 'cn'
+// process.argv[2] = 'sr'
+// process.argv[3] = 'cn'
+
 // 根据命令行参数选择目标链接
-const game =
-  process.argv[2] === 'gi'
-    ? 'GI'
-    : process.argv[2] === 'sr'
-    ? 'SR'
-    : (() => {
-        throw new Error('无效的命令行参数: ' + process.argv[2])
-      })()
+let game = ''
+switch (process.argv[2]) {
+  case 'gi':
+    game = 'GI'
+    break
+  case 'sr':
+    game = 'SR'
+    break
+  case 'ww':
+    game = 'WW'
+    break
+  default:
+    console.error('不支持的游戏:', process.argv[2])
+    process.exit(1)
+}
 const server = 'CN'
 
 const targetUrl = ApiInfo[game][server]
@@ -35,7 +48,7 @@ const latestVerPath = `./Scripts/data/${game}/latest_Android_Game_${server}.json
 
 async function getAndroidGameVersion() {
   try {
-    // 发送 GET 请求获取 302 地址
+    // 发送 GET 请求获取包体直链, 米哈游为 302 , 库洛为 json
     let rsp = await fetchWithTimeout(targetUrl)
     if (!rsp.ok) {
       console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
@@ -47,7 +60,17 @@ async function getAndroidGameVersion() {
     }
 
     // console.log(JSON.stringify(await rsp.json()))
-    let jsonData = { link: await rsp.url }
+    let jsonData = { link: null }
+    if (game !== 'WW') {
+      jsonData.link = await rsp.url
+    } else {
+      let kuroRsp = await rsp.json()
+      if (kuroRsp?.code !== 200 || !kuroRsp?.data?.gameEnterInfo?.game3CenterInfo?.downLoadUrl[0]) {
+        console.error('响应错误:', JSON.stringify(kuroRsp))
+        process.exit(1)
+      }
+      jsonData.link = kuroRsp.data.gameEnterInfo.game3CenterInfo.downLoadUrl[0]
+    }
 
     // 读取本地保存的数据
     let localData = {}

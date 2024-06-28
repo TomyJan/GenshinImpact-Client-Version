@@ -759,15 +759,27 @@ class Push {
     pushUrl += encodeURIComponent(
       `${gameName} Android ${server} Game 更新！\n\n`
     )
-    pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})\n`
-    pushUrl +=
-      gameName === '原神'
-        ? encodeURIComponent(
-            `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
-          )
-        : encodeURIComponent(
-            `\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`
-          )
+    pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})%0A`
+    switch (gameName) {
+      case '原神':
+        pushUrl += encodeURIComponent(
+          `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
+        )
+        break
+      case '崩坏星穹铁道':
+        pushUrl += encodeURIComponent(
+          `\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`
+        )
+        break
+      case '鸣潮':
+        pushUrl += encodeURIComponent(
+          `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`
+        )
+        break
+      default:
+        console.error('无效的游戏名:', gameName)
+        process.exit(17)
+    }
 
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)

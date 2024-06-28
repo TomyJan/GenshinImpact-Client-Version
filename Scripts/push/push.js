@@ -754,8 +754,20 @@ class Push {
 
   async pushAndroidGame(gameName, server, link) {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
-    if (gameName === '原神') pushUrl += `${TGMsgID_GI}&text=`
-    else pushUrl += `${TGMsgID_SR}&text=`
+    switch (gameName) {
+      case '原神':
+        pushUrl += `${TGMsgID_GI}&text=`
+        break
+      case '崩坏星穹铁道':
+        pushUrl += `${TGMsgID_SR}&text=`
+        break
+      case '鸣潮':
+        pushUrl += `${TGMsgID_WW}&text=`
+        break
+      default:
+        console.error('无效的游戏名:', gameName)
+        process.exit(17)
+    }
     pushUrl += encodeURIComponent(
       `${gameName} Android ${server} Game 更新！\n\n`
     )

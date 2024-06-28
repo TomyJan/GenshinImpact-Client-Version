@@ -140,10 +140,19 @@ async function getWinGameVersion() {
 
     // 获取资源数据
     let resJsonData = {}
-    let rsp_res = await fetchWithTimeout(jsonData.default.cdnList[0].url + jsonData.default.resources)
+    let rsp_res = await fetchWithTimeout(
+      jsonData.default.cdnList[0].url + jsonData.default.resources
+    )
     if (!rsp_res.ok) {
-      console.error('请求失败:', rsp_res.status, rsp_res.statusText, ', 重试一次...')
-      rsp_res = await fetchWithTimeout(jsonData.default.cdnList[0].url + jsonData.default.resources)
+      console.error(
+        '请求失败:',
+        rsp_res.status,
+        rsp_res.statusText,
+        ', 重试一次...'
+      )
+      rsp_res = await fetchWithTimeout(
+        jsonData.default.cdnList[0].url + jsonData.default.resources
+      )
       if (!rsp_res.ok) {
         console.error('请求失败:', rsp_res.status, rsp_res.statusText)
         process.exit(2)
@@ -215,7 +224,6 @@ async function getWinGameVersion() {
     console.log(
       `游戏 ${game} 只检查到了 ${server} 服务器的更新, 已缓存, 等待另一个服务器更新后再推送...`
     )
-
   } else {
     console.log('数据无变化，无需更新。')
   }

@@ -84,12 +84,24 @@ class Push {
             )}`,
             'utf-8'
           )
-          const jsonDataContentCNRes = fs.readFileSync(`./Scripts/data/${gameId}/latest_Win_Game_CN_Res.json`,)
-          const jsonDataContentOSRes = fs.readFileSync(`./Scripts/data/${gameId}/latest_Win_Game_OS_Res.json`,)
-          const jsonDataContentCNLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_CN.json`,)
-          const jsonDataContentOSLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_OS.json`,)
-          const jsonDataContentCNResLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_CN_Res.json`,)
-          const jsonDataContentOSResLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_OS_Res.json`,)
+          const jsonDataContentCNRes = fs.readFileSync(
+            `./Scripts/data/${gameId}/latest_Win_Game_CN_Res.json`
+          )
+          const jsonDataContentOSRes = fs.readFileSync(
+            `./Scripts/data/${gameId}/latest_Win_Game_OS_Res.json`
+          )
+          const jsonDataContentCNLast = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_CN.json`
+          )
+          const jsonDataContentOSLast = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_OS.json`
+          )
+          const jsonDataContentCNResLast = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_CN_Res.json`
+          )
+          const jsonDataContentOSResLast = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_OS_Res.json`
+          )
           //console.log('读取本地数据:', jsonDataContent);
           jsonDataCN = JSON.parse(jsonDataContentCN)
           jsonDataOS = JSON.parse(jsonDataContentOS)
@@ -100,26 +112,58 @@ class Push {
           jsonDataCNResLast = JSON.parse(jsonDataContentCNResLast)
           jsonDataOSResLast = JSON.parse(jsonDataContentOSResLast)
 
-          if (jsonDataCN?.default?.version === jsonDataOS?.default?.version && jsonDataCNLast?.default?.version === jsonDataOSLast?.default?.version) {
+          if (
+            jsonDataCN?.default?.version === jsonDataOS?.default?.version &&
+            jsonDataCNLast?.default?.version ===
+              jsonDataOSLast?.default?.version
+          ) {
             pushUrl += encodeURIComponent(
-              `版本: ${jsonDataCNLast.default.version ? `\`${jsonDataCNLast.default.version}\` \\=\\> ` : ''}\`${jsonDataCN.default.version}\`\n`
+              `版本: ${
+                jsonDataCNLast.default.version
+                  ? `\`${jsonDataCNLast.default.version}\` \\=\\> `
+                  : ''
+              }\`${jsonDataCN.default.version}\`\n`
             )
           } else {
             pushUrl += encodeURIComponent(
-              `CN 版本: ${jsonDataCNLast.default.version ? `\`${jsonDataCNLast.default.version}\` \\=\\> ` : ''}\`${jsonDataCN.default.version}\`\nOS 版本: ${jsonDataOSLast.default.version ? `\`${jsonDataOSLast.default.version}\` \\=\\> ` : ''}\`${jsonDataOS.default.version}\`\n`
+              `CN 版本: ${
+                jsonDataCNLast.default.version
+                  ? `\`${jsonDataCNLast.default.version}\` \\=\\> `
+                  : ''
+              }\`${jsonDataCN.default.version}\`\nOS 版本: ${
+                jsonDataOSLast.default.version
+                  ? `\`${jsonDataOSLast.default.version}\` \\=\\> `
+                  : ''
+              }\`${jsonDataOS.default.version}\`\n`
             )
           }
 
-          if (jsonDataCNRes.resource.length === jsonDataOSRes.resource.length && jsonDataCNResLast.resource.length === jsonDataOSResLast.resource.length) {
+          if (
+            jsonDataCNRes.resource.length === jsonDataOSRes.resource.length &&
+            jsonDataCNResLast.resource.length ===
+              jsonDataOSResLast.resource.length
+          ) {
             pushUrl += encodeURIComponent(
-              `文件数: ${Array.isArray(jsonDataCNResLast?.resource) ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> ` : ''}\`${jsonDataCNRes.resource.length}\`\n`
+              `文件数: ${
+                Array.isArray(jsonDataCNResLast?.resource)
+                  ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> `
+                  : ''
+              }\`${jsonDataCNRes.resource.length}\`\n`
             )
           } else {
             pushUrl += encodeURIComponent(
-              `CN 文件数: ${Array.isArray(jsonDataCNResLast?.resource) ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> ` : ''}\`${jsonDataCNRes.resource.length}\`\nOS 文件数: ${Array.isArray(jsonDataOSResLast?.resource) ? `\`${jsonDataOSResLast.resource.length}\` \\=\\> ` : ''}\`${jsonDataOSRes.resource.length}\`\n`
+              `CN 文件数: ${
+                Array.isArray(jsonDataCNResLast?.resource)
+                  ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> `
+                  : ''
+              }\`${jsonDataCNRes.resource.length}\`\nOS 文件数: ${
+                Array.isArray(jsonDataOSResLast?.resource)
+                  ? `\`${jsonDataOSResLast.resource.length}\` \\=\\> `
+                  : ''
+              }\`${jsonDataOSRes.resource.length}\`\n`
             )
           }
-          
+
           // 计算大小
           let lastSizeCN = 0
           let lastSizeOS = 0
@@ -143,11 +187,17 @@ class Push {
           }
           if (lastSizeCN === lastSizeOS && sizeCN === sizeOS) {
             pushUrl += encodeURIComponent(
-              `大小: ${lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''}\`${formatBytes(sizeCN)}\`\n`
+              `大小: ${
+                lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
+              }\`${formatBytes(sizeCN)}\`\n`
             )
           } else {
             pushUrl += encodeURIComponent(
-              `CN 大小: ${lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''}\`${formatBytes(sizeCN)}\`\nOS 大小: ${lastSizeOS ? `\`${formatBytes(lastSizeOS)}\` \\=\\> ` : ''}\`${formatBytes(sizeOS)}\`\n`
+              `CN 大小: ${
+                lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
+              }\`${formatBytes(sizeCN)}\`\nOS 大小: ${
+                lastSizeOS ? `\`${formatBytes(lastSizeOS)}\` \\=\\> ` : ''
+              }\`${formatBytes(sizeOS)}\`\n`
             )
           }
 
@@ -182,19 +232,33 @@ class Push {
             )}`,
             'utf-8'
           )
-          const jsonDataContentRes = fs.readFileSync(`./Scripts/data/${gameId}/latest_Win_Game_${server}_Res.json`,)
-          const jsonDataContentLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_${server}.json`,)
-          const jsonDataContentResLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_${server}_Res.json`,)
+          const jsonDataContentRes = fs.readFileSync(
+            `./Scripts/data/${gameId}/latest_Win_Game_${server}_Res.json`
+          )
+          const jsonDataContentLast = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_${server}.json`
+          )
+          const jsonDataContentResLast = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_${server}_Res.json`
+          )
           jsonData = JSON.parse(jsonDataContent)
           jsonDataRes = JSON.parse(jsonDataContentRes)
           jsonDataLast = JSON.parse(jsonDataContentLast)
           jsonDataResLast = JSON.parse(jsonDataContentResLast)
           //console.log('读取本地数据:', jsonDataContent);
           pushUrl += encodeURIComponent(
-            `版本: ${jsonDataLast.default.version ? `\`${jsonDataLast.default.version}\` \\=\\> ` : ''}\`${jsonData.default.version}\`\n`
+            `版本: ${
+              jsonDataLast.default.version
+                ? `\`${jsonDataLast.default.version}\` \\=\\> `
+                : ''
+            }\`${jsonData.default.version}\`\n`
           )
           pushUrl += encodeURIComponent(
-            `文件数: ${Array.isArray(jsonDataResLast?.resource) ? `\`${jsonDataResLast.resource.length}\` \\=\\> ` : ''}\`${jsonDataRes.resource.length}\`\n`
+            `文件数: ${
+              Array.isArray(jsonDataResLast?.resource)
+                ? `\`${jsonDataResLast.resource.length}\` \\=\\> `
+                : ''
+            }\`${jsonDataRes.resource.length}\`\n`
           )
           // 计算大小
           let lastSize = 0
@@ -208,7 +272,9 @@ class Push {
             size += jsonDataRes.resource[i].size
           }
           pushUrl += encodeURIComponent(
-            `大小: ${lastSize ? `\`${formatBytes(lastSize)}\` \\=\\> ` : ''}\`${formatBytes(size)}\`\n`
+            `大小: ${
+              lastSize ? `\`${formatBytes(lastSize)}\` \\=\\> ` : ''
+            }\`${formatBytes(size)}\`\n`
           )
           pushUrl += encodeURIComponent(
             `更新日志: \n\`\`\`${jsonData.default.changelog['zh-Hans']}\`\`\`\n`
@@ -672,7 +738,12 @@ class Push {
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
-      console.error('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
+      console.error(
+        '推送请求失败:',
+        rsp.status,
+        rsp.statusText,
+        await rsp.text()
+      )
       process.exit(16)
     }
 
@@ -701,7 +772,12 @@ class Push {
     console.log('推送地址:', pushUrl)
     let rsp = await fetch(pushUrl)
     if (!rsp.ok) {
-      console.error('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
+      console.error(
+        '推送请求失败:',
+        rsp.status,
+        rsp.statusText,
+        await rsp.text()
+      )
       process.exit(17)
     }
 

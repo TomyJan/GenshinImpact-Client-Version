@@ -16,117 +16,138 @@ class Push {
     // 库洛游戏的解析
     if (isKuroGame) {
       // 判断本地两个 latest 文件内容是否一样, 一样说明俩服务器都更新了, 一起推送, 否则只推送传入的服务器
-    let latestCN = {}
-    let latestOS = {}
-    let latestVerPath = ''
-    if (gameName === '鸣潮' ) latestVerPath = `./Scripts/data/WW/`
-    else   {
-      console.error('无效的游戏名:', gameName)
-      process.exit(1)
-    }
-    try {
-      const latestCNContent = await fs.readFileSync(
-        `${latestVerPath}latest_Win_Game_CN.json`,
-        'utf-8'
-      )
-      latestCN = JSON.parse(latestCNContent)
-    } catch (error) {
-      console.error('读取本地数据失败1:', error.message)
-    }
-    try {
-      const latestOSContent = await fs.readFileSync(
-        `${latestVerPath}latest_Win_Game_OS.json`,
-        'utf-8'
-      )
-      latestOS = JSON.parse(latestOSContent)
-    } catch (error) {
-      console.error('读取本地数据失败2:', error.message)
-    }
-    let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
-    let gameId = ``
-    if (gameName === '鸣潮') {
-      pushUrl += `${TGMsgID_WW}&text=${encodeURIComponent(gameName)}`
-      gameId = 'WW'
-    } else {
-      console.error('无效的游戏名:', gameName)
-      process.exit(2)
-    }
-    // TODO: 根据传入 jsonData 判断更新类型是 REL 还是 PRE
-    // pushUrl += ' Win REL 更新！\n\n'
-    if (JSON.stringify(latestCN?.default?.version) === JSON.stringify(latestOS?.default?.version)) {
-      // 两个服务器都更新了, 一起推送
-      pushUrl += encodeURIComponent(` Win REL 更新！\n\n`)
-      let jsonDataCN = {}
-      let jsonDataOS = {}
-      //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
-      try {
-        // 获取 /win/Game/CN 和 OS 目录下最新的 .json 作为传入的文件名
-        const jsonDataContentCN = fs.readFileSync(
-          `./${gameId}/Win/Game/CN/${getLatestJsonFileName(
-            `./${gameId}/Win/Game/CN/`
-          )}`,
-          'utf-8'
-        )
-        const jsonDataContentOS = fs.readFileSync(
-          `./${gameId}/Win/Game/OS/${getLatestJsonFileName(
-            `./${gameId}/Win/Game/OS/`
-          )}`,
-          'utf-8'
-        )
-        //console.log('读取本地数据:', jsonDataContent);
-        jsonDataCN = JSON.parse(jsonDataContentCN)
-        jsonDataOS = JSON.parse(jsonDataContentOS)
-        if (jsonDataCN?.default?.version === jsonDataOS?.default?.version) {
-          pushUrl += encodeURIComponent(`版本: \`${jsonDataCN.default.version}\`\n`)
-        } else {
-          pushUrl += encodeURIComponent(
-            `CN 版本: \`${jsonDataCN.default.version}\`\nOS 版本: \`${jsonDataOS.default.version}\`\n`
-          )
-        }
-        if (jsonDataCN?.default?.changelog?.['zh-Hans'] === jsonDataOS?.default?.changelog?.['zh-Hans']) {
-          pushUrl += encodeURIComponent(`更新日志: \n\`\`\`\n${jsonDataCN.default.changelog['zh-Hans']}\n\`\`\`\n`)
-        } else {
-          pushUrl += encodeURIComponent(
-            `CN 更新日志: \n\`\`\`\n${jsonDataCN.default.changelog['zh-Hans']}\n\`\`\`\nOS 更新日志: \n\`\`\`\n${jsonDataOS.default.changelog['zh-Hans']}\n\`\`\`\n`
-          )
-        }
-      } catch (error) {
-        console.error('读取本地数据失败3:', error.message)
+      let latestCN = {}
+      let latestOS = {}
+      let latestVerPath = ''
+      if (gameName === '鸣潮') latestVerPath = `./Scripts/data/WW/`
+      else {
+        console.error('无效的游戏名:', gameName)
+        process.exit(1)
       }
-    } else {
-      pushUrl += encodeURIComponent(` Win ${server} REL 更新！\n\n`)
-      let jsonData = {}
-      //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
       try {
-        // 获取 /win/Game/CN 和 OS 目录下最新的 .json 作为传入的文件名
-        const jsonDataContent = fs.readFileSync(
-          `./${gameId}/Win/Game/${server}/${getLatestJsonFileName(
-            `./${gameId}/Win/Game/${server}/`
-          )}`,
+        const latestCNContent = await fs.readFileSync(
+          `${latestVerPath}latest_Win_Game_CN.json`,
           'utf-8'
         )
-        //console.log('读取本地数据:', jsonDataContent);
-        pushUrl += encodeURIComponent(`版本: \`${jsonData.default.version}\`\n`)
-        pushUrl += encodeURIComponent(`更新日志: \n\`\`\`${jsonData.default.changelog['zh-Hans']}\`\`\`\n`)
+        latestCN = JSON.parse(latestCNContent)
       } catch (error) {
-        console.error('读取本地数据失败4:', error.message)
+        console.error('读取本地数据失败1:', error.message)
       }
+      try {
+        const latestOSContent = await fs.readFileSync(
+          `${latestVerPath}latest_Win_Game_OS.json`,
+          'utf-8'
+        )
+        latestOS = JSON.parse(latestOSContent)
+      } catch (error) {
+        console.error('读取本地数据失败2:', error.message)
+      }
+      let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
+      let gameId = ``
+      if (gameName === '鸣潮') {
+        pushUrl += `${TGMsgID_WW}&text=${encodeURIComponent(gameName)}`
+        gameId = 'WW'
+      } else {
+        console.error('无效的游戏名:', gameName)
+        process.exit(2)
+      }
+      // TODO: 根据传入 jsonData 判断更新类型是 REL 还是 PRE
+      // pushUrl += ' Win REL 更新！\n\n'
+      if (
+        JSON.stringify(latestCN?.default?.version) ===
+        JSON.stringify(latestOS?.default?.version)
+      ) {
+        // 两个服务器都更新了, 一起推送
+        pushUrl += encodeURIComponent(` Win REL 更新！\n\n`)
+        let jsonDataCN = {}
+        let jsonDataOS = {}
+        //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
+        try {
+          // 获取 /win/Game/CN 和 OS 目录下最新的 .json 作为传入的文件名
+          const jsonDataContentCN = fs.readFileSync(
+            `./${gameId}/Win/Game/CN/${getLatestJsonFileName(
+              `./${gameId}/Win/Game/CN/`
+            )}`,
+            'utf-8'
+          )
+          const jsonDataContentOS = fs.readFileSync(
+            `./${gameId}/Win/Game/OS/${getLatestJsonFileName(
+              `./${gameId}/Win/Game/OS/`
+            )}`,
+            'utf-8'
+          )
+          //console.log('读取本地数据:', jsonDataContent);
+          jsonDataCN = JSON.parse(jsonDataContentCN)
+          jsonDataOS = JSON.parse(jsonDataContentOS)
+          if (jsonDataCN?.default?.version === jsonDataOS?.default?.version) {
+            pushUrl += encodeURIComponent(
+              `版本: \`${jsonDataCN.default.version}\`\n`
+            )
+          } else {
+            pushUrl += encodeURIComponent(
+              `CN 版本: \`${jsonDataCN.default.version}\`\nOS 版本: \`${jsonDataOS.default.version}\`\n`
+            )
+          }
+          if (
+            jsonDataCN?.default?.changelog?.['zh-Hans'] ===
+            jsonDataOS?.default?.changelog?.['zh-Hans']
+          ) {
+            pushUrl += encodeURIComponent(
+              `更新日志: \n\`\`\`\n${jsonDataCN.default.changelog['zh-Hans']}\n\`\`\`\n`
+            )
+          } else {
+            pushUrl += encodeURIComponent(
+              `CN 更新日志: \n\`\`\`\n${jsonDataCN.default.changelog['zh-Hans']}\n\`\`\`\nOS 更新日志: \n\`\`\`\n${jsonDataOS.default.changelog['zh-Hans']}\n\`\`\`\n`
+            )
+          }
+        } catch (error) {
+          console.error('读取本地数据失败3:', error.message)
+        }
+      } else {
+        pushUrl += encodeURIComponent(` Win ${server} REL 更新！\n\n`)
+        let jsonData = {}
+        //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
+        try {
+          // 获取 /win/Game/CN 和 OS 目录下最新的 .json 作为传入的文件名
+          const jsonDataContent = fs.readFileSync(
+            `./${gameId}/Win/Game/${server}/${getLatestJsonFileName(
+              `./${gameId}/Win/Game/${server}/`
+            )}`,
+            'utf-8'
+          )
+          //console.log('读取本地数据:', jsonDataContent);
+          pushUrl += encodeURIComponent(
+            `版本: \`${jsonData.default.version}\`\n`
+          )
+          pushUrl += encodeURIComponent(
+            `更新日志: \n\`\`\`${jsonData.default.changelog['zh-Hans']}\`\`\`\n`
+          )
+        } catch (error) {
+          console.error('读取本地数据失败4:', error.message)
+        }
+      }
+
+      pushUrl += encodeURIComponent(
+        `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`
+      )
+
+      console.log('推送地址:', pushUrl)
+      let rsp = await fetch(pushUrl)
+      if (!rsp.ok) {
+        console.log(
+          '推送请求失败:',
+          rsp.status,
+          rsp.statusText,
+          await rsp.text()
+        )
+        process.exit(3)
+      }
+
+      // console.log(JSON.stringify(await rsp.json()))
+      let pushJsonData = await rsp.json()
+      console.log('推送结果:', pushJsonData)
+      process.exit(0)
     }
-
-    pushUrl += encodeURIComponent(`\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`)
-
-    console.log('推送地址:', pushUrl)
-    let rsp = await fetch(pushUrl)
-    if (!rsp.ok) {
-      console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
-      process.exit(3)
-    }
-
-    // console.log(JSON.stringify(await rsp.json()))
-    let pushJsonData = await rsp.json()
-    console.log('推送结果:', pushJsonData)
-    process.exit(0)
-  }
 
     // 米哈游游戏的解析
     // 判断本地两个 latest 文件内容是否一样, 一样说明俩服务器都更新了, 一起推送, 否则只推送传入的服务器
@@ -512,7 +533,9 @@ class Push {
         link.old.size ? `\`${formatBytes(link.old.size)}\` \\=\\> ` : ''
       }\`${formatBytes(link.new.size)}\`%0A`
       pushUrl += `更新日志: \`${escapeCharacters(link.changelog)}\`%0A`
-      pushUrl += encodeURIComponent(`\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`)
+      pushUrl += encodeURIComponent(
+        `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`
+      )
 
       console.log('推送地址:', pushUrl)
       let rsp = await fetch(pushUrl)

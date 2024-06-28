@@ -32,6 +32,9 @@ const targetUrl = ApiInfo[game][server]
 const targetDir = `./${game}/Win/Game/${server}/`
 const scriptDataPath = `./Scripts/data/${game}/`
 const latestVerPath = `${scriptDataPath}latest_Win_Game_${server}.json`
+const lastVerPath = `${scriptDataPath}last_Win_Game_${server}.json`
+const latestVerResPath = `${scriptDataPath}latest_Win_Game_${server}_Res.json`
+const lastVerResPath = `${scriptDataPath}last_Win_Game_${server}_Res.json`
 
 async function getWinGameVersion() {
   // try {
@@ -116,19 +119,71 @@ async function getWinGameVersion() {
       JSON.stringify(jsonData, null, 2) + '\n',
       'utf-8'
     )
-    console.log('数据已写出到:', outputFilePath)
+    console.log('版本数据已写出到:', outputFilePath)
 
     // 更新本地数据
     localData = jsonData
 
     // 写回本地保存的数据文件
+    // 先把 latestVerPath 文件的内容读出来写到 lastVerPath
+    if (!fs.existsSync(latestVerPath)) {
+      fs.writeFileSync(latestVerPath, '{}', 'utf-8')
+    }
+    const lastDataContent = await fs.readFileSync(latestVerPath, 'utf-8')
+    await fs.writeFileSync(lastVerPath, lastDataContent, 'utf-8')
     await fs.writeFileSync(
       latestVerPath,
       JSON.stringify(localData, null, 2) + '\n',
       'utf-8'
     )
+    console.log('脚本版本数据已更新并保存成功。')
 
-    console.log('数据已更新并保存成功。')
+    // 获取资源数据
+    let resJsonData = {}
+    let rsp_res = await fetchWithTimeout(jsonData.default.cdnList[0].url + jsonData.default.resources)
+    if (!rsp_res.ok) {
+      console.error('请求失败:', rsp_res.status, rsp_res.statusText, ', 重试一次...')
+      rsp_res = await fetchWithTimeout(jsonData.default.cdnList[0].url + jsonData.default.resources)
+      if (!rsp_res.ok) {
+        console.error('请求失败:', rsp_res.status, rsp_res.statusText)
+        process.exit(2)
+      }
+    }
+
+    try {
+      resJsonData = await rsp_res.json()
+    } catch (error) {
+      console.error(
+        '返回数据不是json格式:',
+        error.message,
+        '返回内容:',
+        await rsp_res.text()
+      )
+      process.exit(3)
+    }
+
+    // 将 latestVerResPath 文件的内容读出来写到 lastVerResPath
+    if (!fs.existsSync(latestVerResPath)) {
+      fs.writeFileSync(latestVerResPath, '{}', 'utf-8')
+    }
+    const lastResDataContent = await fs.readFileSync(latestVerResPath, 'utf-8')
+    await fs.writeFileSync(lastVerResPath, lastResDataContent, 'utf-8')
+    await fs.writeFileSync(
+      latestVerResPath,
+      JSON.stringify(resJsonData, null, 2) + '\n',
+      'utf-8'
+    )
+    console.log('脚本资源数据已更新并保存成功。')
+
+    const outputResFilePath = targetDir + fileName.replace('.json', '_Res.json')
+    await fs.writeFileSync(
+      outputResFilePath,
+      JSON.stringify(resJsonData, null, 2) + '\n',
+      'utf-8'
+    )
+    console.log('资源数据已写出到:', outputResFilePath)
+
+    console.log('所有数据已更新并保存成功。')
 
     // 如果只有单个服务器更新, 先写一下临时文件, 等两个都更新了再推送
     // 检查临时文件是否存在

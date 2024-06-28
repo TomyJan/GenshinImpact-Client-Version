@@ -63,6 +63,12 @@ class Push {
         pushUrl += encodeURIComponent(` Win REL 更新！\n\n`)
         let jsonDataCN = {}
         let jsonDataOS = {}
+        let jsonDataCNRes = {}
+        let jsonDataOSRes = {}
+        let jsonDataCNLast = {}
+        let jsonDataOSLast = {}
+        let jsonDataCNResLast = {}
+        let jsonDataOSResLast = {}
         //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
         try {
           // 获取 /win/Game/CN 和 OS 目录下最新的 .json 作为传入的文件名
@@ -78,28 +84,83 @@ class Push {
             )}`,
             'utf-8'
           )
+          const jsonDataContentCNRes = fs.readFileSync(`./Scripts/data/${gameId}/latest_Win_Game_CN_Res.json`,)
+          const jsonDataContentOSRes = fs.readFileSync(`./Scripts/data/${gameId}/latest_Win_Game_OS_Res.json`,)
+          const jsonDataContentCNLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_CN.json`,)
+          const jsonDataContentOSLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_OS.json`,)
+          const jsonDataContentCNResLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_CN_Res.json`,)
+          const jsonDataContentOSResLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_OS_Res.json`,)
           //console.log('读取本地数据:', jsonDataContent);
           jsonDataCN = JSON.parse(jsonDataContentCN)
           jsonDataOS = JSON.parse(jsonDataContentOS)
-          if (jsonDataCN?.default?.version === jsonDataOS?.default?.version) {
+          jsonDataCNRes = JSON.parse(jsonDataContentCNRes)
+          jsonDataOSRes = JSON.parse(jsonDataContentOSRes)
+          jsonDataCNLast = JSON.parse(jsonDataContentCNLast)
+          jsonDataOSLast = JSON.parse(jsonDataContentOSLast)
+          jsonDataCNResLast = JSON.parse(jsonDataContentCNResLast)
+          jsonDataOSResLast = JSON.parse(jsonDataContentOSResLast)
+
+          if (jsonDataCN?.default?.version === jsonDataOS?.default?.version && jsonDataCNLast?.default?.version === jsonDataOSLast?.default?.version) {
             pushUrl += encodeURIComponent(
-              `版本: \`${jsonDataCN.default.version}\`\n`
+              `版本: ${jsonDataCNLast.default.version ? `\`${jsonDataCNLast.default.version}\` \\=\\> ` : ''}\`${jsonDataCN.default.version}\`\n`
             )
           } else {
             pushUrl += encodeURIComponent(
-              `CN 版本: \`${jsonDataCN.default.version}\`\nOS 版本: \`${jsonDataOS.default.version}\`\n`
+              `CN 版本: ${jsonDataCNLast.default.version ? `\`${jsonDataCNLast.default.version}\` \\=\\> ` : ''}\`${jsonDataCN.default.version}\`\nOS 版本: ${jsonDataOSLast.default.version ? `\`${jsonDataOSLast.default.version}\` \\=\\> ` : ''}\`${jsonDataOS.default.version}\`\n`
             )
           }
+
+          if (jsonDataCNRes.resource.length === jsonDataOSRes.resource.length && jsonDataCNResLast.resource.length === jsonDataOSResLast.resource.length) {
+            pushUrl += encodeURIComponent(
+              `文件数: ${Array.isArray(jsonDataCNResLast?.resource) ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> ` : ''}\`${jsonDataCNRes.resource.length}\`\n`
+            )
+          } else {
+            pushUrl += encodeURIComponent(
+              `CN 文件数: ${Array.isArray(jsonDataCNResLast?.resource) ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> ` : ''}\`${jsonDataCNRes.resource.length}\`\nOS 文件数: ${Array.isArray(jsonDataOSResLast?.resource) ? `\`${jsonDataOSResLast.resource.length}\` \\=\\> ` : ''}\`${jsonDataOSRes.resource.length}\`\n`
+            )
+          }
+          
+          // 计算大小
+          let lastSizeCN = 0
+          let lastSizeOS = 0
+          let sizeCN = 0
+          let sizeOS = 0
+          if (Array.isArray(jsonDataCNResLast?.resource)) {
+            for (let i = 0; i < jsonDataCNResLast.resource.length; i++) {
+              lastSizeCN += jsonDataCNResLast.resource[i].size
+            }
+          }
+          if (Array.isArray(jsonDataOSResLast?.resource)) {
+            for (let i = 0; i < jsonDataOSResLast.resource.length; i++) {
+              lastSizeOS += jsonDataOSResLast.resource[i].size
+            }
+          }
+          for (let i = 0; i < jsonDataCNRes.resource.length; i++) {
+            sizeCN += jsonDataCNRes.resource[i].size
+          }
+          for (let i = 0; i < jsonDataOSRes.resource.length; i++) {
+            sizeOS += jsonDataOSRes.resource[i].size
+          }
+          if (lastSizeCN === lastSizeOS && sizeCN === sizeOS) {
+            pushUrl += encodeURIComponent(
+              `大小: ${lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''}\`${formatBytes(sizeCN)}\`\n`
+            )
+          } else {
+            pushUrl += encodeURIComponent(
+              `CN 大小: ${lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''}\`${formatBytes(sizeCN)}\`\nOS 大小: ${lastSizeOS ? `\`${formatBytes(lastSizeOS)}\` \\=\\> ` : ''}\`${formatBytes(sizeOS)}\`\n`
+            )
+          }
+
           if (
             jsonDataCN?.default?.changelog?.['zh-Hans'] ===
             jsonDataOS?.default?.changelog?.['zh-Hans']
           ) {
             pushUrl += encodeURIComponent(
-              `更新日志: \n\`\`\`\n${jsonDataCN.default.changelog['zh-Hans']}\n\`\`\`\n`
+              `更新日志: \n\`\`\`${jsonDataCN.default.changelog['zh-Hans']}\`\`\`\n`
             )
           } else {
             pushUrl += encodeURIComponent(
-              `CN 更新日志: \n\`\`\`\n${jsonDataCN.default.changelog['zh-Hans']}\n\`\`\`\nOS 更新日志: \n\`\`\`\n${jsonDataOS.default.changelog['zh-Hans']}\n\`\`\`\n`
+              `CN 更新日志: \n\`\`\`${jsonDataCN.default.changelog['zh-Hans']}\`\`\`\nOS 更新日志: \n\`\`\`${jsonDataOS.default.changelog['zh-Hans']}\`\`\`\n`
             )
           }
         } catch (error) {
@@ -109,6 +170,9 @@ class Push {
       } else {
         pushUrl += encodeURIComponent(` Win ${server} REL 更新！\n\n`)
         let jsonData = {}
+        let jsonDataRes = {}
+        let jsonDataLast = {}
+        let jsonDataResLast = {}
         //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
         try {
           // 获取 /win/Game/CN 和 OS 目录下最新的 .json 作为传入的文件名
@@ -118,10 +182,33 @@ class Push {
             )}`,
             'utf-8'
           )
+          const jsonDataContentRes = fs.readFileSync(`./Scripts/data/${gameId}/latest_Win_Game_${server}_Res.json`,)
+          const jsonDataContentLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_${server}.json`,)
+          const jsonDataContentResLast = fs.readFileSync(`./Scripts/data/${gameId}/last_Win_Game_${server}_Res.json`,)
           jsonData = JSON.parse(jsonDataContent)
+          jsonDataRes = JSON.parse(jsonDataContentRes)
+          jsonDataLast = JSON.parse(jsonDataContentLast)
+          jsonDataResLast = JSON.parse(jsonDataContentResLast)
           //console.log('读取本地数据:', jsonDataContent);
           pushUrl += encodeURIComponent(
-            `版本: \`${jsonData.default.version}\`\n`
+            `版本: ${jsonDataLast.default.version ? `\`${jsonDataLast.default.version}\` \\=\\> ` : ''}\`${jsonData.default.version}\`\n`
+          )
+          pushUrl += encodeURIComponent(
+            `文件数: ${Array.isArray(jsonDataResLast?.resource) ? `\`${jsonDataResLast.resource.length}\` \\=\\> ` : ''}\`${jsonDataRes.resource.length}\`\n`
+          )
+          // 计算大小
+          let lastSize = 0
+          let size = 0
+          if (Array.isArray(jsonDataResLast?.resource)) {
+            for (let i = 0; i < jsonDataResLast.resource.length; i++) {
+              lastSize += jsonDataResLast.resource[i].size
+            }
+          }
+          for (let i = 0; i < jsonDataRes.resource.length; i++) {
+            size += jsonDataRes.resource[i].size
+          }
+          pushUrl += encodeURIComponent(
+            `大小: ${lastSize ? `\`${formatBytes(lastSize)}\` \\=\\> ` : ''}\`${formatBytes(size)}\`\n`
           )
           pushUrl += encodeURIComponent(
             `更新日志: \n\`\`\`${jsonData.default.changelog['zh-Hans']}\`\`\`\n`
@@ -133,7 +220,7 @@ class Push {
       }
 
       pushUrl += encodeURIComponent(
-        `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`
+        `\n\\*文件数和大小仅计算本体\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`
       )
 
       console.log('推送地址:', pushUrl)
@@ -490,8 +577,10 @@ class Push {
       // 读取目录中的所有文件
       const files = fs.readdirSync(directoryPath)
 
-      // 筛选出所有以 '.json' 结尾的文件
-      const jsonFiles = files.filter((file) => file.endsWith('.json'))
+      // 筛选出所有以 '.json' 结尾, 但不以 _Res.json 结尾的文件
+      const jsonFiles = files.filter(
+        (file) => file.endsWith('.json') && !file.endsWith('_Res.json')
+      )
 
       // 如果没有找到任何 JSON 文件，则返回 null
       if (jsonFiles.length === 0) {

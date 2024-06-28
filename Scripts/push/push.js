@@ -487,7 +487,7 @@ class Push {
 
   async pushWinLauncher(gameName, server, link, isKuroGame = false) {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
-    
+
     // 库洛游戏的解析
     if (isKuroGame) {
       console.log('link:', JSON.stringify(link))
@@ -499,15 +499,30 @@ class Push {
       pushUrl += encodeURIComponent(
         `${gameName} Win ${server} Launcher 更新！\n\n`
       )
-      pushUrl += `版本: ${link.old.version ? `[${escapeCharacters(link.old.version)}](${escapeCharacters(link.old.url)}) \\=\\> ` : ''}[${escapeCharacters(link.new.version)}](${escapeCharacters(link.new.url)})%0A`
-      pushUrl += `大小: ${link.old.size ? `\`${formatBytes(link.old.size)}\` \\=\\> ` : ''}\`${formatBytes(link.new.size)}\`%0A`
+      pushUrl += `版本: ${
+        link.old.version
+          ? `[${escapeCharacters(link.old.version)}](${escapeCharacters(
+              link.old.url
+            )}) \\=\\> `
+          : ''
+      }[${escapeCharacters(link.new.version)}](${escapeCharacters(
+        link.new.url
+      )})%0A`
+      pushUrl += `大小: ${
+        link.old.size ? `\`${formatBytes(link.old.size)}\` \\=\\> ` : ''
+      }\`${formatBytes(link.new.size)}\`%0A`
       pushUrl += `更新日志: \`${escapeCharacters(link.changelog)}\`%0A`
       pushUrl += encodeURIComponent(`\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`)
 
       console.log('推送地址:', pushUrl)
       let rsp = await fetch(pushUrl)
       if (!rsp.ok) {
-        console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
+        console.log(
+          '推送请求失败:',
+          rsp.status,
+          rsp.statusText,
+          await rsp.text()
+        )
         process.exit(3)
       }
 

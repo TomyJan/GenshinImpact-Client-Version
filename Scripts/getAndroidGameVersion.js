@@ -49,7 +49,17 @@ const latestVerPath = `./Scripts/data/${game}/latest_Android_Game_${server}.json
 async function getAndroidGameVersion() {
   try {
     // 发送 GET 请求获取包体直链, 米哈游为 302 , 库洛为 json
-    let rsp = await fetchWithTimeout(targetUrl)
+    let rsp
+    // 库洛取游戏信息现在要带上请求头 channelid
+    if (game === 'WW') {
+      rsp = await fetchWithTimeout(targetUrl, {
+        headers: {
+          'channelid': 2,
+        },
+      })
+    } else {
+      rsp = await fetchWithTimeout(targetUrl)
+    }
     if (!rsp.ok) {
       console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
       rsp = await fetchWithTimeout(targetUrl)

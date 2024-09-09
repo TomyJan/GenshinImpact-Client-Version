@@ -54,7 +54,7 @@ async function getAndroidGameVersion() {
     if (game === 'WW') {
       rsp = await fetchWithTimeout(targetUrl, {
         headers: {
-          'channelid': 2,
+          channelid: 2,
         },
       })
     } else {

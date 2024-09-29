@@ -206,11 +206,11 @@ class Push {
             jsonDataOS?.default?.changelog?.['zh-Hans']
           ) {
             pushUrl += encodeURIComponent(
-              `更新日志: \n\`\`\`${jsonDataCN.default.changelog['zh-Hans']}\`\`\`\n`
+              `更新日志: \n\`\`\`${jsonDataCN.default.changelog['zh-Hans'] || '暂无'}\`\`\`\n`
             )
           } else {
             pushUrl += encodeURIComponent(
-              `CN 更新日志: \n\`\`\`${jsonDataCN.default.changelog['zh-Hans']}\`\`\`\nOS 更新日志: \n\`\`\`${jsonDataOS.default.changelog['zh-Hans']}\`\`\`\n`
+              `CN 更新日志: \n\`\`\`${jsonDataCN.default.changelog['zh-Hans'] || '暂无'}\`\`\`\nOS 更新日志: \n\`\`\`${jsonDataOS.default.changelog['zh-Hans'] || '暂无'}\`\`\`\n`
             )
           }
         } catch (error) {
@@ -696,7 +696,7 @@ class Push {
       pushUrl += `大小: ${
         link.old.size ? `\`${formatBytes(link.old.size)}\` \\=\\> ` : ''
       }\`${formatBytes(link.new.size)}\`%0A`
-      pushUrl += `更新日志: \`${escapeCharacters(link.changelog)}\`%0A`
+      pushUrl += `更新日志: \`${escapeCharacters(link.changelog || '暂无')}\`%0A`
       pushUrl += encodeURIComponent(
         `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`
       )

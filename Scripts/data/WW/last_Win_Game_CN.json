@@ -17,13 +17,7 @@
       {
         "K1": 1,
         "K2": 1,
-        "P": 4181,
-        "url": "https://pcdownload-qiniu.aki-game.com/"
-      },
-      {
-        "K1": 1,
-        "K2": 1,
-        "P": 2937,
+        "P": 1717,
         "url": "https://pcdownload-qcloud.aki-game.com/"
       },
       {
@@ -80,5 +74,42 @@
   "resourcesLogin": {
     "host": "",
     "loginSwitch": 0
+  },
+  "checkExeIsRunning": 0,
+  "keyFileCheckSwitch": 0,
+  "keyFileCheckList": [
+    "/Client/Binaries/Win64/Client-Win64-Shipping.exe",
+    "/Client/Binaries/Win64/Client-Win64-ShippingBase.dll",
+    "/Wuthering Waves.exe",
+    "/Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKConfig.json"
+  ],
+  "predownload": {
+    "changelog": {},
+    "resourceChunk": {
+      "lastMd5": "",
+      "lastResourceChunkPath": "",
+      "lastResources": "",
+      "lastVersion": "",
+      "md5": "4b80b488ebea080de92714befb39103c",
+      "resourceChunkPath": "pcstarter/prod/game/G152/1.4.0/4XUthMde5uOseH100lztW5VOTizfkWf8/resourceChunk.json"
+    },
+    "resources": "pcstarter/prod/game/G152/1.4.0/EYvxh8s8wHyL10WlhmfB52qa6N1CQDfO/resource.json",
+    "resourcesBasePath": "pcstarter/prod/game/G152/1.4.0/EYvxh8s8wHyL10WlhmfB52qa6N1CQDfO/zip",
+    "resourcesDiff": {
+      "currentGameInfo": {
+        "fileName": "Wuthering Waves.zip",
+        "md5": "89f4806f6752af0ef7d96e053ef88fb1",
+        "version": "1.4.0"
+      },
+      "previousGameInfo": {
+        "fileName": "Wuthering Waves.zip",
+        "md5": "500cef4065674095c8fea144b921f4ff",
+        "version": "1.3.0"
+      }
+    },
+    "resourcesExcludePath": [],
+    "resourcesExcludePathNeedUpdate": [],
+    "sampleHashSwitch": 0,
+    "version": "1.4.0"
   }
 }

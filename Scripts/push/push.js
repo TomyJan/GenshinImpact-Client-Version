@@ -2,7 +2,8 @@ import fs, { link } from 'fs'
 import path from 'path'
 import fetch from 'node-fetch'
 
-const TGBotToken = process.env.TGBotToken || '5680978316:AAFjPWjc5RBcCcS6jwkuhitt1vNJKORk1eo'
+const TGBotToken =
+  process.env.TGBotToken || '5680978316:AAFjPWjc5RBcCcS6jwkuhitt1vNJKORk1eo'
 const TGMsgID_GI = process.env.TGMsgID_GI || process.env.TGMsgID
 const TGMsgID_SR = process.env.TGMsgID_SR || process.env.TGMsgID
 const TGMsgID_WW = process.env.TGMsgID_WW || process.env.TGMsgID || '915891411'
@@ -54,9 +55,7 @@ class Push {
         process.exit(4)
       }
       // 根据传入 jsonData 判断更新类型是 REL 还是 PRE
-      let type = jsonData.predownload?.version
-        ? 'PRE'
-        : 'REL'
+      let type = jsonData.predownload?.version ? 'PRE' : 'REL'
       // pushUrl += ' Win REL 更新！\n\n'
       if (
         JSON.stringify(latestCN?.default?.version) ===
@@ -221,15 +220,21 @@ class Push {
           ) {
             pushUrl += encodeURIComponent(
               `更新日志: \n\`\`\`${
-                jsonDataCN.default.changelog['zh-Hans'] ? jsonDataCN.default.changelog['zh-Hans'] : '暂无'
+                jsonDataCN.default.changelog['zh-Hans']
+                  ? jsonDataCN.default.changelog['zh-Hans']
+                  : '暂无'
               }\`\`\`\n`
             )
           } else {
             pushUrl += encodeURIComponent(
               `CN 更新日志: \n\`\`\`${
-                jsonDataCN.default.changelog['zh-Hans'] ? jsonDataCN.default.changelog['zh-Hans'] : '暂无'
+                jsonDataCN.default.changelog['zh-Hans']
+                  ? jsonDataCN.default.changelog['zh-Hans']
+                  : '暂无'
               }\`\`\`\nOS 更新日志: \n\`\`\`${
-                jsonDataOS.default.changelog ? jsonDataOS.default.changelog['zh-Hans'] : '暂无'
+                jsonDataOS.default.changelog
+                  ? jsonDataOS.default.changelog['zh-Hans']
+                  : '暂无'
               }\`\`\`\n`
             )
           }
@@ -297,7 +302,11 @@ class Push {
             }\`${formatBytes(size)}\`\n`
           )
           pushUrl += encodeURIComponent(
-            `更新日志: \n\`\`\`${jsonData.default.changelog ? jsonData.default.changelog['zh-Hans'] : '暂无'}\`\`\`\n`
+            `更新日志: \n\`\`\`${
+              jsonData.default.changelog
+                ? jsonData.default.changelog['zh-Hans']
+                : '暂无'
+            }\`\`\`\n`
           )
         } catch (error) {
           console.error('读取本地数据失败4:', error.message)

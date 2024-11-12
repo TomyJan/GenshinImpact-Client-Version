@@ -177,7 +177,11 @@ async function getWinGameVersion() {
             jsonData.default.cdnList[0].url + jsonData.predownload.resources
           )
           if (!rsp_res_pre.ok) {
-            console.error('请求失败:', rsp_res_pre.status, rsp_res_pre.statusText)
+            console.error(
+              '请求失败:',
+              rsp_res_pre.status,
+              rsp_res_pre.statusText
+            )
             process.exit(2)
           }
         }

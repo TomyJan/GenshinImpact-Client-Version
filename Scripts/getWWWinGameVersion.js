@@ -87,7 +87,7 @@ async function getWinGameVersion() {
     '本地最新 REL 版本:',
     localData.default?.version,
     '预下载版本:',
-    localData.preDownloadVersion // TODO
+    localData.predownload?.version
   )
   console.log(
     '取到最新 REL 版本:',
@@ -110,7 +110,7 @@ async function getWinGameVersion() {
   // 比较版本并更新本地数据
   if (
     localData.default?.version !== latestVersion ||
-    localData.preDownloadVersion !== preDownloadVersion
+    localData.predownload?.version !== preDownloadVersion
   ) {
     console.log('数据有变化，正在更新...')
     // 写出JSON文件

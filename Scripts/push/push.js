@@ -2,10 +2,10 @@ import fs, { link } from 'fs'
 import path from 'path'
 import fetch from 'node-fetch'
 
-const TGBotToken = process.env.TGBotToken
+const TGBotToken = process.env.TGBotToken || '5680978316:AAFjPWjc5RBcCcS6jwkuhitt1vNJKORk1eo'
 const TGMsgID_GI = process.env.TGMsgID_GI || process.env.TGMsgID
 const TGMsgID_SR = process.env.TGMsgID_SR || process.env.TGMsgID
-const TGMsgID_WW = process.env.TGMsgID_WW || process.env.TGMsgID
+const TGMsgID_WW = process.env.TGMsgID_WW || process.env.TGMsgID || '915891411'
 
 class Push {
   constructor() {
@@ -53,14 +53,17 @@ class Push {
         console.error('无效的游戏名:', gameName)
         process.exit(4)
       }
-      // TODO: 根据传入 jsonData 判断更新类型是 REL 还是 PRE
+      // 根据传入 jsonData 判断更新类型是 REL 还是 PRE
+      let type = jsonData.predownload?.version
+        ? 'PRE'
+        : 'REL'
       // pushUrl += ' Win REL 更新！\n\n'
       if (
         JSON.stringify(latestCN?.default?.version) ===
         JSON.stringify(latestOS?.default?.version)
       ) {
         // 两个服务器都更新了, 一起推送
-        pushUrl += encodeURIComponent(` Win REL 更新！\n\n`)
+        pushUrl += encodeURIComponent(` Win ${type} 更新！\n\n`)
         let jsonDataCN = {}
         let jsonDataOS = {}
         let jsonDataCNRes = {}
@@ -103,14 +106,25 @@ class Push {
             `./Scripts/data/${gameId}/last_Win_Game_OS_Res.json`
           )
           //console.log('读取本地数据:', jsonDataContent);
-          jsonDataCN = JSON.parse(jsonDataContentCN)
-          jsonDataOS = JSON.parse(jsonDataContentOS)
-          jsonDataCNRes = JSON.parse(jsonDataContentCNRes)
-          jsonDataOSRes = JSON.parse(jsonDataContentOSRes)
-          jsonDataCNLast = JSON.parse(jsonDataContentCNLast)
-          jsonDataOSLast = JSON.parse(jsonDataContentOSLast)
-          jsonDataCNResLast = JSON.parse(jsonDataContentCNResLast)
-          jsonDataOSResLast = JSON.parse(jsonDataContentOSResLast)
+          if (type === 'REL') {
+            jsonDataCN = JSON.parse(jsonDataContentCN)
+            jsonDataOS = JSON.parse(jsonDataContentOS)
+            jsonDataCNRes = JSON.parse(jsonDataContentCNRes)
+            jsonDataOSRes = JSON.parse(jsonDataContentOSRes)
+            jsonDataCNLast = JSON.parse(jsonDataContentCNLast)
+            jsonDataOSLast = JSON.parse(jsonDataContentOSLast)
+            jsonDataCNResLast = JSON.parse(jsonDataContentCNResLast)
+            jsonDataOSResLast = JSON.parse(jsonDataContentOSResLast)
+          } else {
+            jsonDataCN = { default: JSON.parse(jsonDataContentCN).predownload }
+            jsonDataOS = { default: JSON.parse(jsonDataContentOS).predownload }
+            jsonDataCNRes = JSON.parse(jsonDataContentCNRes).predownload
+            jsonDataOSRes = JSON.parse(jsonDataContentOSRes).predownload
+            jsonDataCNLast = JSON.parse(jsonDataContentCN)
+            jsonDataOSLast = JSON.parse(jsonDataContentOS)
+            jsonDataCNResLast = JSON.parse(jsonDataContentCNRes)
+            jsonDataOSResLast = JSON.parse(jsonDataContentOSRes)
+          }
 
           if (
             jsonDataCN?.default?.version === jsonDataOS?.default?.version &&
@@ -207,13 +221,13 @@ class Push {
           ) {
             pushUrl += encodeURIComponent(
               `更新日志: \n\`\`\`${
-                jsonDataCN.default.changelog ? jsonDataCN.default.changelog['zh-Hans'] : '暂无'
+                jsonDataCN.default.changelog['zh-Hans'] ? jsonDataCN.default.changelog['zh-Hans'] : '暂无'
               }\`\`\`\n`
             )
           } else {
             pushUrl += encodeURIComponent(
               `CN 更新日志: \n\`\`\`${
-                jsonDataCN.default.changelog ? jsonDataCN.default.changelog['zh-Hans'] : '暂无'
+                jsonDataCN.default.changelog['zh-Hans'] ? jsonDataCN.default.changelog['zh-Hans'] : '暂无'
               }\`\`\`\nOS 更新日志: \n\`\`\`${
                 jsonDataOS.default.changelog ? jsonDataOS.default.changelog['zh-Hans'] : '暂无'
               }\`\`\`\n`
@@ -292,7 +306,7 @@ class Push {
       }
 
       pushUrl += encodeURIComponent(
-        `\n\\*文件数和大小仅计算本体\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`
+        `\n\\*文件数和大小仅计算本体\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`
       )
 
       console.log('推送地址:', pushUrl)
@@ -706,7 +720,7 @@ class Push {
         link.changelog || '暂无'
       )}\`%0A`
       pushUrl += encodeURIComponent(
-        `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`
+        `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`
       )
 
       console.log('推送地址:', pushUrl)
@@ -793,7 +807,7 @@ class Push {
         break
       case '鸣潮':
         pushUrl += encodeURIComponent(
-          `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion) Beta Version_`
+          `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`
         )
         break
       default:

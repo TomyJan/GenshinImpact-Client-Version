@@ -81,7 +81,8 @@ async function getWinGameVersion() {
 
   // 提取版本信息
   const latestVersion = jsonData.default?.version
-  const preDownloadVersion = undefined // TODO
+  const preDownloadVersion = jsonData.predownload?.version
+
   console.log(
     '本地最新 REL 版本:',
     localData.default?.version,
@@ -161,12 +162,43 @@ async function getWinGameVersion() {
 
     try {
       resJsonData = await rsp_res.json()
+      if (preDownloadVersion) {
+        let rsp_res_pre = await fetchWithTimeout(
+          jsonData.default.cdnList[0].url + jsonData.predownload.resources
+        )
+        if (!rsp_res_pre.ok) {
+          console.error(
+            '请求失败:',
+            rsp_res_pre.status,
+            rsp_res_pre.statusText,
+            ', 重试一次...'
+          )
+          rsp_res_pre = await fetchWithTimeout(
+            jsonData.default.cdnList[0].url + jsonData.predownload.resources
+          )
+          if (!rsp_res_pre.ok) {
+            console.error('请求失败:', rsp_res_pre.status, rsp_res_pre.statusText)
+            process.exit(2)
+          }
+        }
+        try {
+          resJsonData.predownload = await rsp_res_pre.json()
+        } catch (error) {
+          console.error(
+            '返回数据不是json格式:',
+            error.message,
+            '返回内容:',
+            resJsonData
+          )
+          process.exit(3)
+        }
+      }
     } catch (error) {
       console.error(
         '返回数据不是json格式:',
         error.message,
         '返回内容:',
-        await rsp_res.text()
+        resJsonData
       )
       process.exit(3)
     }

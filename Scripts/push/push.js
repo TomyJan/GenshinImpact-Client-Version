@@ -207,15 +207,15 @@ class Push {
           ) {
             pushUrl += encodeURIComponent(
               `更新日志: \n\`\`\`${
-                jsonDataCN.default.changelog['zh-Hans'] || '暂无'
+                jsonDataCN.default.changelog ? jsonDataCN.default.changelog['zh-Hans'] : '暂无'
               }\`\`\`\n`
             )
           } else {
             pushUrl += encodeURIComponent(
               `CN 更新日志: \n\`\`\`${
-                jsonDataCN.default.changelog['zh-Hans'] || '暂无'
+                jsonDataCN.default.changelog ? jsonDataCN.default.changelog['zh-Hans'] : '暂无'
               }\`\`\`\nOS 更新日志: \n\`\`\`${
-                jsonDataOS.default.changelog['zh-Hans'] || '暂无'
+                jsonDataOS.default.changelog ? jsonDataOS.default.changelog['zh-Hans'] : '暂无'
               }\`\`\`\n`
             )
           }
@@ -283,7 +283,7 @@ class Push {
             }\`${formatBytes(size)}\`\n`
           )
           pushUrl += encodeURIComponent(
-            `更新日志: \n\`\`\`${jsonData.default.changelog['zh-Hans']}\`\`\`\n`
+            `更新日志: \n\`\`\`${jsonData.default.changelog ? jsonData.default.changelog['zh-Hans'] : '暂无'}\`\`\`\n`
           )
         } catch (error) {
           console.error('读取本地数据失败4:', error.message)

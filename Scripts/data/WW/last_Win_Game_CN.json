@@ -11,31 +11,74 @@
       {
         "K1": 1,
         "K2": 1,
-        "P": 0,
+        "P": 10614,
         "url": "https://pcdownload-wangsu.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 4181,
+        "url": "https://pcdownload-qiniu.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 2937,
+        "url": "https://pcdownload-qcloud.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 0,
+        "url": "https://pcdownload-aliyun.aki-game.com/"
       }
     ],
-    "changelog": {
-      "zh-Hans": "《鸣潮》1.2版本 天上月华人如愿 更新内容 \n维护结束后，请您通过对应下载链接，重新下载安装最新客户端后继续体验。 \n【全新角色】\n5星角色「折枝」：冷凝，武器音感仪。\n5星角色「相里要」：导电，武器臂铠。 \n【全新武器】\n5星武器「琼枝冰绡·音感仪」\n5星武器「诸方玄枢·臂铠」 \n【主题活动】\n「月华如愿」追月节主题活动\n「宵月赠礼」七日签到活动\n「幕后同行」追月节庆典筹备，参与领取5星角色「相里要」！ \n【版本活动】\n「深坠异想奇境」 共赴梦宴\n「仿声骸会梦到电子羊么」限时防守活动\n「合金试冶Ⅱ」限时战斗活动\n「潮汐觅闻」限时勘察活动\n「回音盈域」「声弦涤荡」材料限时双倍活动也将开放！ \n【全新剧情】\n新增折枝伴星任务「自问丹青」\n新增危行任务「守望永恒」 \n【其他内容】\n新增回归系统「海歌重奏」\n新增声骸异相「异相·无妄者」 \n更多活动内容请持续关注《鸣潮》官方公告。 "
-    },
-    "resources": "pcstarter/prod/game/G152/1.2.0/q2NeSDor6HI5AKPoesZar8951wbbKaGv/resource.json",
-    "resourcesBasePath": "pcstarter/prod/game/G152/1.2.0/q2NeSDor6HI5AKPoesZar8951wbbKaGv/zip",
+    "changelog": {},
+    "changelogVisible": 0,
+    "resources": "pcstarter/prod/game/G152/1.3.0/xZnXWq0k2gcdGmGs9XJgVaNGxD9OG2Ep/resource.json",
+    "resourcesBasePath": "pcstarter/prod/game/G152/1.3.0/xZnXWq0k2gcdGmGs9XJgVaNGxD9OG2Ep/zip",
     "resourcesDiff": {
       "currentGameInfo": {
         "fileName": "Wuthering Waves.zip",
-        "md5": "95554f61e771b3f909517ee53318e61b",
-        "version": "1.2.0"
+        "md5": "500cef4065674095c8fea144b921f4ff",
+        "version": "1.3.0"
       },
       "previousGameInfo": {
         "fileName": "Wuthering Waves.zip",
-        "md5": "53d4b33ecc67bd897f9bc3d00b528f66",
-        "version": "1.1.0"
+        "md5": "95554f61e771b3f909517ee53318e61b",
+        "version": "1.2.0"
       }
     },
     "resourcesExcludePath": [],
     "resourcesExcludePathNeedUpdate": [],
     "sampleHashSwitch": 0,
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
-  "predownloadSwitch": 1
+  "predownloadSwitch": 1,
+  "RHIOptionSwitch": 1,
+  "RHIOptionList": [
+    {
+      "cmdOption": "-dx12",
+      "isShow": 0,
+      "text": {}
+    },
+    {
+      "cmdOption": "-dx11",
+      "isShow": 1,
+      "text": {
+        "zh-Hans": "使用DX11启动（游戏异常时选择）",
+        "de": "Start mit DX11 (bei Anomalie)",
+        "zh-Hant": "使用DX11啟動（遊戲異常時選擇）",
+        "ko": "DX11로 시작하기 (게임 에러 시 선택)",
+        "ja": "DX11起動（異常発生時に選択）",
+        "en": "Launch with DirectX 11 (in case of game anomalies)",
+        "fr": "Démarrer en DX11 (à choisir en cas d'anomalie)",
+        "es": "Iniciar con DirectX 11 (si hay problemas)"
+      }
+    }
+  ],
+  "resourcesLogin": {
+    "host": "",
+    "loginSwitch": 0
+  }
 }

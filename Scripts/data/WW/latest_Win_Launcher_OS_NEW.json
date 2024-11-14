@@ -1,0 +1,118 @@
+{
+  "default": {
+    "cdnList": [
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 0,
+        "url": "https://hw-pcdownload-qcloud.aki-game.net/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 829,
+        "url": "https://hw-pcdownload-aws.aki-game.net/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 262,
+        "url": "https://hw-pcdownload-akamai.aki-game.net/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 4810,
+        "url": "https://hw-pcdownload-cf.aki-game.net/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 829,
+        "url": "https://pcdownload-huoshan.aki-game.net/"
+      }
+    ],
+    "changelog": {
+      "zh-Hans": "优化了部分功能",
+      "de": "Funktionen teilweise optimiert",
+      "zh-Hant": "優化了部分功能",
+      "ko": "일부 기능을 최적화함",
+      "ja": "ゲーム動作改善",
+      "en": "Part of the functions optimized",
+      "fr": "Partie des fonctions optimisées",
+      "es": "Optimizadas algunas funciones"
+    },
+    "installer": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/1.6.4.0/MrIcwwaXl9ZUpxvm0PflbnxhdqndfZCb/installer.exe",
+    "installerMD5": "38c37084833ab6bf9ef9efee8efd56d0",
+    "installerSize": 97937352,
+    "version": "1.6.4.0"
+  },
+  "crashInitSwitch": 1,
+  "animateBgSwitch": 1,
+  "animateBackground": {
+    "url": "pcstarter/prod/starter/background/fwcVMeyOBZ.zip",
+    "md5": "2fa88488a12e409c8092cfb46ad8e64d",
+    "frameRate": 20,
+    "durationInSecond": 7
+  },
+  "animateBackgroundLanguage": {
+    "de": {
+      "url": "pcstarter/prod/starter/background/fwcVMeyOBZ.zip",
+      "md5": "2fa88488a12e409c8092cfb46ad8e64d",
+      "frameRate": 20,
+      "durationInSecond": 7
+    },
+    "en": {
+      "url": "pcstarter/prod/starter/background/jWujdGRhWm.zip",
+      "md5": "400d1777d38b77680616fc2edebe40f5",
+      "frameRate": 20,
+      "durationInSecond": 7
+    },
+    "es": {
+      "url": "pcstarter/prod/starter/background/QucfiIojHO.zip",
+      "md5": "57710c99d4276ce532671e880c8e37f8",
+      "frameRate": 20,
+      "durationInSecond": 7
+    },
+    "fr": {
+      "url": "pcstarter/prod/starter/background/hpOsBmBapU.zip",
+      "md5": "7f38b5bf51540ef01bf263b1989f14f7",
+      "frameRate": 20,
+      "durationInSecond": 7
+    },
+    "ja": {
+      "url": "pcstarter/prod/starter/background/wKWHZaWssY.zip",
+      "md5": "58b7fba756df1cb8f95e025412c5c197",
+      "frameRate": 20,
+      "durationInSecond": 7
+    },
+    "ko": {
+      "url": "pcstarter/prod/starter/background/NfmLYdvGKF.zip",
+      "md5": "47c6d269dc1624611c085efc9a9933a7",
+      "frameRate": 20,
+      "durationInSecond": 7
+    },
+    "zh-Hant": {
+      "url": "pcstarter/prod/starter/background/ShOSGgaWyO.zip",
+      "md5": "4cc6dea027d6f5599ca0398fd3c5e6b0",
+      "frameRate": 20,
+      "durationInSecond": 7
+    }
+  },
+  "navigationBarSwitch": 1,
+  "navigationBarLanguage": {
+    "zh-Hans": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/zh-Hans.json",
+    "en": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/en.json",
+    "ja": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/ja.json",
+    "ko": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/ko.json",
+    "zh-Hant": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/zh-Hant.json",
+    "fr": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/fr.json",
+    "de": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/de.json",
+    "es": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/es.json",
+    "ru": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/ru.json",
+    "pt": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/pt.json",
+    "id": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/id.json",
+    "vi": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/vi.json",
+    "th": "pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/guidance/th.json"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "default": {
+    "cdnList": [
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 0,
+        "url": "https://pcdownload-huoshan.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 10614,
+        "url": "https://pcdownload-wangsu.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 4181,
+        "url": "https://pcdownload-qiniu.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 2937,
+        "url": "https://pcdownload-qcloud.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 0,
+        "url": "https://pcdownload-aliyun.aki-game.com/"
+      }
+    ],
+    "changelog": {
+      "zh-Hans": "优化了部分功能"
+    },
+    "installer": "pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/1.6.4.0/IyPJTfnOnb5OP0ETmpYyzL54SAXjiFUk/installer.exe",
+    "installerMD5": "ed3a09e9d399cc3b99498c41d9756f7b",
+    "installerSize": 101615440,
+    "version": "1.6.4.0"
+  },
+  "crashInitSwitch": 1,
+  "animateBgSwitch": 1,
+  "animateBackground": {
+    "url": "pcstarter/prod/starter/background/lLEOzGGQui.zip",
+    "md5": "1d489fd4331c6932fa7e355f50db5c20",
+    "frameRate": 20,
+    "durationInSecond": 7
+  },
+  "animateBackgroundLanguage": {
+    "zh-Hans": {
+      "url": "pcstarter/prod/starter/background/lLEOzGGQui.zip",
+      "md5": "1d489fd4331c6932fa7e355f50db5c20",
+      "frameRate": 20,
+      "durationInSecond": 7
+    }
+  }
+}

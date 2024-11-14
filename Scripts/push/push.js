@@ -13,7 +13,7 @@ class Push {
     // 在构造函数中进行实例化的其他初始化工作
   }
 
-  async pushWinGame(gameName, server, jsonData, isKuroGame = false) {
+  async pushWinGame(gameName, server, jsonData, isKuroGame = false, isKuroNewApi = false) {
     // 库洛游戏的解析
     if (isKuroGame) {
       // 判断本地两个 latest 文件内容是否一样, 一样说明俩服务器都更新了, 一起推送, 否则只推送传入的服务器
@@ -48,7 +48,8 @@ class Push {
       let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
       let gameId = ``
       if (gameName === '鸣潮') {
-        pushUrl += `${TGMsgID_WW}&text=${encodeURIComponent(gameName)}`
+        if (isKuroNewApi) pushUrl += `${TGMsgID_WW}&text=${encodeURIComponent('[灰度] ' + gameName)}`
+        else pushUrl += `${TGMsgID_WW}&text=${encodeURIComponent(gameName)}`
         gameId = 'WW'
       } else {
         console.error('无效的游戏名:', gameName)
@@ -699,7 +700,7 @@ class Push {
     }
   }
 
-  async pushWinLauncher(gameName, server, link, isKuroGame = false) {
+  async pushWinLauncher(gameName, server, link, isKuroGame = false, isKuroNewApi = false) {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
 
     // 库洛游戏的解析
@@ -710,9 +711,15 @@ class Push {
         console.error('无效的游戏名:', gameName)
         process.exit(14)
       }
-      pushUrl += encodeURIComponent(
-        `${gameName} Win ${server} Launcher 更新！\n\n`
-      )
+      if (isKuroNewApi) {
+        pushUrl += encodeURIComponent(
+          `[灰度] ${gameName} Win ${server} Launcher 更新！\n\n`
+        )
+      } else {
+        pushUrl += encodeURIComponent(
+          `${gameName} Win ${server} Launcher 更新！\n\n`
+        )
+      }
       pushUrl += `版本: ${
         link.old.version
           ? `[${escapeCharacters(link.old.version)}](${escapeCharacters(

@@ -6,7 +6,9 @@ import push from './push/push.js'
 const ApiInfo = {
   WW: {
     CN: 'https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json',
+    CN_NEW: 'https://starter-server-api.kurogame.com/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G152&appId=10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5&identify=installer',
     OS: 'https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json',
+    OS_NEW: 'https://starter-server-api.kurogame.net/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G153&appId=50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c&identify=installer',
     name: '鸣潮',
   },
 }
@@ -14,14 +16,29 @@ const ApiInfo = {
 // process.argv[2] = 'cn'
 
 let game = 'WW'
-const server =
-  process.argv[2] === 'cn'
-    ? 'CN'
-    : process.argv[2] === 'os'
-    ? 'OS'
-    : (() => {
-        throw new Error('无效的命令行参数: ' + process.argv[2])
-      })()
+let server = null
+let isNewApi = false
+switch (process.argv[2]) {
+  case 'cn':
+    server = 'CN'
+    break
+  case 'os':
+    server = 'OS'
+    break
+  default:
+    console.error('无效的命令行参数: ' + process.argv[2])
+    process.exit(1)
+}
+switch (process.argv[3]) {
+  case 'new':
+    isNewApi = true
+    break
+  default:
+    break
+}
+if (isNewApi) {
+  server += '_NEW'
+}
 
 const targetUrl = ApiInfo[game][server]
 const targetDir = `./${game}/Win/Launcher/${server}/`
@@ -43,6 +60,13 @@ async function getWinLauncherVersion() {
 
   try {
     jsonData = await rsp.json()
+    if (isNewApi) {
+      jsonData = jsonData.data
+      if (!jsonData) {
+        console.error('返回数据不包含data属性, 灰度未在进行')
+        process.exit(0)
+      }
+    }
   } catch (error) {
     console.error(
       '返回数据不是json格式:',
@@ -119,7 +143,8 @@ async function getWinLauncherVersion() {
         },
         changelog: jsonData.default.changelog['zh-Hans'],
       },
-      true
+      true,
+      isNewApi
     )
 
     // 更新本地数据

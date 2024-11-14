@@ -6,9 +6,11 @@ import push from './push/push.js'
 const ApiInfo = {
   WW: {
     CN: 'https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json',
-    CN_NEW: 'https://starter-server-api.kurogame.com/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G152&appId=10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5&identify=game',
+    CN_NEW:
+      'https://starter-server-api.kurogame.com/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G152&appId=10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5&identify=game',
     OS: 'https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json',
-    OS_NEW: 'https://starter-server-api.kurogame.net/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G153&appId=50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c&identify=game',
+    OS_NEW:
+      'https://starter-server-api.kurogame.net/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G153&appId=50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c&identify=game',
     name: '鸣潮',
   },
 }
@@ -266,7 +268,13 @@ async function getWinGameVersion() {
 
         // 推送
         let gameData = jsonData
-        await push.pushWinGame(ApiInfo[game].name, server, gameData, true, isNewApi)
+        await push.pushWinGame(
+          ApiInfo[game].name,
+          server,
+          gameData,
+          true,
+          isNewApi
+        )
         process.exit(0)
       } else {
         // 这咋回事给我搞懵了, 别推, 等下次再检查吧

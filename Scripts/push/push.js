@@ -56,7 +56,7 @@ class Push {
       if (gameName === '鸣潮') {
         if (isKuroNewApi)
           pushUrl += `${TGMsgID_WW}&text=${encodeURIComponent(
-            '[灰度] ' + gameName
+            '\\[灰度\\] ' + gameName
           )}`
         else pushUrl += `${TGMsgID_WW}&text=${encodeURIComponent(gameName)}`
         gameId = 'WW'
@@ -721,6 +721,7 @@ class Push {
     // 库洛游戏的解析
     if (isKuroGame) {
       console.log('link:', JSON.stringify(link))
+      server = server.replace('_NEW', '') // 灰度这里用 _NEW 标识要删掉否则会被认为是标识符
       if (gameName === '鸣潮') pushUrl += `${TGMsgID_WW}&text=`
       else {
         console.error('无效的游戏名:', gameName)
@@ -728,7 +729,7 @@ class Push {
       }
       if (isKuroNewApi) {
         pushUrl += encodeURIComponent(
-          `[灰度] ${gameName} Win ${server} Launcher 更新！\n\n`
+          `\\[灰度\\] ${gameName} Win ${server} Launcher 更新！\n\n`
         )
       } else {
         pushUrl += encodeURIComponent(

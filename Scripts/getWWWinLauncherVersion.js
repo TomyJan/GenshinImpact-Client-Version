@@ -120,6 +120,10 @@ async function getWinLauncherVersion() {
     console.log('数据有变化，正在更新...')
     // 写出JSON文件
     const outputFilePath = targetDir + fileName
+    // 检查目录是否存在, 不存在则先递归创建
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true })
+    }
     await fs.writeFileSync(
       outputFilePath,
       JSON.stringify(jsonData, null, 2) + '\n',

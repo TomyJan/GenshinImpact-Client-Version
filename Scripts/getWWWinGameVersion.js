@@ -135,6 +135,10 @@ async function getWinGameVersion() {
     localData.predownload?.version !== preDownloadVersion
   ) {
     console.log('数据有变化，正在更新...')
+    // 先检查目标目录是否存在
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true })
+    }
     // 写出JSON文件
     const outputFilePath = targetDir + fileName
     await fs.writeFileSync(

@@ -33,7 +33,7 @@ class Push {
       }
       try {
         const latestCNContent = await fs.readFileSync(
-          `${latestVerPath}latest_Win_Game_CN.json`,
+          `${latestVerPath}latest_Win_Game_CN${isKuroNewApi ? '_NEW' : ''}.json`,
           'utf-8'
         )
         latestCN = JSON.parse(latestCNContent)
@@ -43,7 +43,7 @@ class Push {
       }
       try {
         const latestOSContent = await fs.readFileSync(
-          `${latestVerPath}latest_Win_Game_OS.json`,
+          `${latestVerPath}latest_Win_Game_OS${isKuroNewApi ? '_NEW' : ''}.json`,
           'utf-8'
         )
         latestOS = JSON.parse(latestOSContent)
@@ -253,7 +253,7 @@ class Push {
           process.exit(5)
         }
       } else {
-        pushUrl += encodeURIComponent(` Win ${server} REL 更新！\n\n`)
+        pushUrl += encodeURIComponent(` Win ${server.replace('_NEW', '')} REL 更新！\n\n`)
         let jsonData = {}
         let jsonDataRes = {}
         let jsonDataLast = {}
@@ -313,7 +313,7 @@ class Push {
           )
           pushUrl += encodeURIComponent(
             `更新日志: \n\`\`\`${
-              jsonData.default.changelog
+              jsonData.default.changelog['zh-Hans']
                 ? jsonData.default.changelog['zh-Hans']
                 : '暂无'
             }\`\`\`\n`
@@ -749,7 +749,7 @@ class Push {
         link.old.size ? `\`${formatBytes(link.old.size)}\` \\=\\> ` : ''
       }\`${formatBytes(link.new.size)}\`%0A`
       pushUrl += `更新日志: \`${escapeCharacters(
-        link.changelog || '暂无'
+        link.changelog ?? '暂无'
       )}\`%0A`
       pushUrl += encodeURIComponent(
         `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`

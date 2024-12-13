@@ -259,15 +259,15 @@ async function getWinGameVersion() {
     // 如果只有单个服务器更新, 先写一下临时文件, 等两个都更新了再推送
     // 但是 WW 灰度不用此逻辑
     if (isNewApi) {
-      console.log(`游戏 ${game} 的新API ${server} 服务器已更新, 正在推送...`);
+      console.log(`游戏 ${game} 的新API ${server} 服务器已更新, 正在推送...`)
       await push.pushWinGame(
         ApiInfo[game].name,
         server,
         jsonData,
         true,
         isNewApi
-      );
-      process.exit(0);
+      )
+      process.exit(0)
     }
     // 检查临时文件是否存在
     const tmpFileName = `${scriptDataPath}tmp-not_pushed_win_${game}_server.txt`

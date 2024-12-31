@@ -100,34 +100,5 @@
       "dropWrongContentLength": 1,
       "dropWrongContentEncoding": 1
     }
-  },
-  "predownload": {
-    "changelog": {},
-    "resourceChunk": {
-      "lastMd5": "5280346324c048c2430dbe63de2d4fe4",
-      "lastResourceChunkPath": "pcstarter/prod/game/G152/1.4.3/BrDOxoX0X7OvQSVb5zvZm4Wir96sOK5h/resourceChunk.json",
-      "lastResources": "pcstarter/prod/game/G152/1.4.3/2ZzvVjzQwdW0n1WJfwVPMB02ykAWqSnu/resource.json",
-      "lastVersion": "1.4.3",
-      "md5": "3311de42c9f15d1ea32bd1dd18ce8e96",
-      "resourceChunkPath": "pcstarter/prod/game/G152/2.0.0/EW712wwzJIb5COAZbUJg3DCrdDcb2X32/resourceChunk.json"
-    },
-    "resources": "pcstarter/prod/game/G152/2.0.0/WatnFnudCyaviYfWSRMGpaunniRKFbf2/resource.json",
-    "resourcesBasePath": "pcstarter/prod/game/G152/2.0.0/WatnFnudCyaviYfWSRMGpaunniRKFbf2/zip",
-    "resourcesDiff": {
-      "currentGameInfo": {
-        "fileName": "Wuthering Waves.zip",
-        "md5": "0c2686cc055bbe978a1cd388bb07a5f4",
-        "version": "2.0.0"
-      },
-      "previousGameInfo": {
-        "fileName": "Wuthering Waves.zip",
-        "md5": "bd3bd7734e97707670e8ec048363c48c",
-        "version": "1.4.3"
-      }
-    },
-    "resourcesExcludePath": [],
-    "resourcesExcludePathNeedUpdate": [],
-    "sampleHashSwitch": 0,
-    "version": "2.0.0"
   }
 }

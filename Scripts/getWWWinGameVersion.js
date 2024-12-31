@@ -2,6 +2,7 @@ import fs from 'fs'
 import fetch from 'node-fetch'
 import AbortController from 'abort-controller'
 import push from './push/push.js'
+import path from 'path'
 
 const ApiInfo = {
   WW: {
@@ -50,6 +51,37 @@ const latestVerPath = `${scriptDataPath}latest_Win_Game_${server}.json`
 const lastVerPath = `${scriptDataPath}last_Win_Game_${server}.json`
 const latestVerResPath = `${scriptDataPath}latest_Win_Game_${server}_Res.json`
 const lastVerResPath = `${scriptDataPath}last_Win_Game_${server}_Res.json`
+
+// 获取目录下最新的JSON文件名
+function getLatestJsonFileName(directoryPath) {
+  // 读取目录中的所有文件
+  const files = fs.readdirSync(directoryPath)
+
+  // 筛选出所有以 '.json' 结尾, 但不以 _Res.json 结尾的文件
+  const jsonFiles = files.filter(
+    (file) => file.endsWith('.json') && !file.endsWith('_Res.json')
+  )
+
+  // 如果没有找到任何 JSON 文件，则返回 null
+  if (jsonFiles.length === 0) {
+    console.error('未找到任何 JSON 文件:', directoryPath)
+    process.exit(13)
+  }
+
+  // 根据文件的修改时间排序文件列表，获取最新的文件
+  const latestJsonFile = jsonFiles.reduce((latestFile, currentFile) => {
+    const currentFilePath = path.join(directoryPath, currentFile)
+    const latestFilePath = path.join(directoryPath, latestFile)
+
+    return fs.statSync(currentFilePath).mtime >
+      fs.statSync(latestFilePath).mtime
+      ? currentFile
+      : latestFile
+  })
+
+  // 返回最新的 JSON 文件名
+  return latestJsonFile
+}
 
 async function getWinGameVersion() {
   // try {
@@ -277,19 +309,27 @@ async function getWinGameVersion() {
       if (tmpServer !== server) {
         // 两个都更新了
         console.log(
-          `从临时文件获取当前已缓存 ${game} 版本信息: 两个服务器都已更新, 正在推送...`
+          `从临时文件获取当前已缓存${game} 版本信息: 两个服务器都已更新, 正在推送...`
         )
         // 删除缓存的文件
         await fs.unlinkSync(tmpFileName)
 
-        // 推送
-        let gameData = jsonData
+        // 获取另一个服务器的数据
+        const otherServer = tmpServer
+        const otherServerPath = `./${game}/Win/Game/${otherServer}/${getLatestJsonFileName(`./${game}/Win/Game/${otherServer}/`)}`
+        const otherServerData = JSON.parse(await fs.readFileSync(otherServerPath, 'utf-8'))
+
+        // 推送两个服务器的数据
         await push.pushWinGame(
           ApiInfo[game].name,
           server,
-          gameData,
+          jsonData,
           true,
-          isNewApi
+          isNewApi,
+          {
+            server: otherServer,
+            data: otherServerData
+          }
         )
         process.exit(0)
       } else {

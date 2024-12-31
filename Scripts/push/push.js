@@ -18,7 +18,8 @@ class Push {
     server,
     jsonData,
     isKuroGame = false,
-    isKuroNewApi = false
+    isKuroNewApi = false,
+    otherServerData = null
   ) {
     // 库洛游戏的解析
     if (isKuroGame) {
@@ -70,74 +71,51 @@ class Push {
       }
       // 根据传入 jsonData 判断更新类型是 REL 还是 PRE
       let type = jsonData.predownload?.version ? 'PRE' : 'REL'
-      // pushUrl += ' Win REL 更新！\n\n'
-      if (
-        JSON.stringify(latestCN?.default?.version) ===
-        JSON.stringify(latestOS?.default?.version)
-      ) {
+      
+      if (otherServerData) {
         // 两个服务器都更新了, 一起推送
         pushUrl += encodeURIComponent(` Win ${type} 更新！\n\n`)
-        let jsonDataCN = {}
-        let jsonDataOS = {}
+        let jsonDataCN = server === 'CN' ? jsonData : otherServerData.data
+        let jsonDataOS = server === 'OS' ? jsonData : otherServerData.data
         let jsonDataCNRes = {}
         let jsonDataOSRes = {}
         let jsonDataCNLast = {}
         let jsonDataOSLast = {}
         let jsonDataCNResLast = {}
         let jsonDataOSResLast = {}
-        //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
+        
         try {
-          // 获取 /win/Game/CN 和 OS 目录下最新的 .json 作为传入的文件名
-          const jsonDataContentCN = fs.readFileSync(
-            `./${gameId}/Win/Game/CN/${getLatestJsonFileName(
-              `./${gameId}/Win/Game/CN/`
-            )}`,
+          const jsonDataCNResContent = fs.readFileSync(
+            `./Scripts/data/${gameId}/latest_Win_Game_CN${isKuroNewApi ? '_NEW' : ''}_Res.json`,
             'utf-8'
           )
-          const jsonDataContentOS = fs.readFileSync(
-            `./${gameId}/Win/Game/OS/${getLatestJsonFileName(
-              `./${gameId}/Win/Game/OS/`
-            )}`,
+          const jsonDataOSResContent = fs.readFileSync(
+            `./Scripts/data/${gameId}/latest_Win_Game_OS${isKuroNewApi ? '_NEW' : ''}_Res.json`,
             'utf-8'
           )
-          const jsonDataContentCNRes = fs.readFileSync(
-            `./Scripts/data/${gameId}/latest_Win_Game_CN_Res.json`
+          const jsonDataCNLastContent = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_CN${isKuroNewApi ? '_NEW' : ''}.json`,
+            'utf-8'
           )
-          const jsonDataContentOSRes = fs.readFileSync(
-            `./Scripts/data/${gameId}/latest_Win_Game_OS_Res.json`
+          const jsonDataOSLastContent = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_OS${isKuroNewApi ? '_NEW' : ''}.json`,
+            'utf-8'
           )
-          const jsonDataContentCNLast = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_CN.json`
+          const jsonDataCNResLastContent = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_CN${isKuroNewApi ? '_NEW' : ''}_Res.json`,
+            'utf-8'
           )
-          const jsonDataContentOSLast = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_OS.json`
+          const jsonDataOSResLastContent = fs.readFileSync(
+            `./Scripts/data/${gameId}/last_Win_Game_OS${isKuroNewApi ? '_NEW' : ''}_Res.json`,
+            'utf-8'
           )
-          const jsonDataContentCNResLast = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_CN_Res.json`
-          )
-          const jsonDataContentOSResLast = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_OS_Res.json`
-          )
-          //console.log('读取本地数据:', jsonDataContent);
-          if (type === 'REL') {
-            jsonDataCN = JSON.parse(jsonDataContentCN)
-            jsonDataOS = JSON.parse(jsonDataContentOS)
-            jsonDataCNRes = JSON.parse(jsonDataContentCNRes)
-            jsonDataOSRes = JSON.parse(jsonDataContentOSRes)
-            jsonDataCNLast = JSON.parse(jsonDataContentCNLast)
-            jsonDataOSLast = JSON.parse(jsonDataContentOSLast)
-            jsonDataCNResLast = JSON.parse(jsonDataContentCNResLast)
-            jsonDataOSResLast = JSON.parse(jsonDataContentOSResLast)
-          } else {
-            jsonDataCN = { default: JSON.parse(jsonDataContentCN).predownload }
-            jsonDataOS = { default: JSON.parse(jsonDataContentOS).predownload }
-            jsonDataCNRes = JSON.parse(jsonDataContentCNRes).predownload
-            jsonDataOSRes = JSON.parse(jsonDataContentOSRes).predownload
-            jsonDataCNLast = JSON.parse(jsonDataContentCN)
-            jsonDataOSLast = JSON.parse(jsonDataContentOS)
-            jsonDataCNResLast = JSON.parse(jsonDataContentCNRes)
-            jsonDataOSResLast = JSON.parse(jsonDataContentOSRes)
-          }
+          
+          jsonDataCNRes = JSON.parse(jsonDataCNResContent)
+          jsonDataOSRes = JSON.parse(jsonDataOSResContent)
+          jsonDataCNLast = JSON.parse(jsonDataCNLastContent)
+          jsonDataOSLast = JSON.parse(jsonDataOSLastContent)
+          jsonDataCNResLast = JSON.parse(jsonDataCNResLastContent)
+          jsonDataOSResLast = JSON.parse(jsonDataOSResLastContent)
 
           if (
             jsonDataCN?.default?.version === jsonDataOS?.default?.version &&

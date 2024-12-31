@@ -30,31 +30,31 @@
     "changelog": {},
     "changelogVisible": 0,
     "resourceChunk": {
-      "lastMd5": "1d55004d55deb43556caae3b10ee7531",
-      "lastResourceChunkPath": "pcstarter/prod/game/G153/1.4.0/macWEVSRstwduSYvTVmIhfJLktVCvYTt/resourceChunk.json",
-      "lastResources": "pcstarter/prod/game/G153/1.4.0/hnu9N6kMv8LEKnaIva1RBvtAlnjY5uEm/resource.json",
-      "lastVersion": "1.4.0",
-      "md5": "5c88911ce76f9a4c08ee2f5d01580233",
-      "resourceChunkPath": "pcstarter/prod/game/G153/1.4.1/q6qkjTIO4zB2LGKFu1e31JC2UHCoOqzs/resourceChunk.json"
+      "lastMd5": "5c88911ce76f9a4c08ee2f5d01580233",
+      "lastResourceChunkPath": "pcstarter/prod/game/G153/1.4.1/q6qkjTIO4zB2LGKFu1e31JC2UHCoOqzs/resourceChunk.json",
+      "lastResources": "pcstarter/prod/game/G153/1.4.1/EMNj0aMLL8Dch8osjR0JtB7RMIelvyD6/resource.json",
+      "lastVersion": "1.4.1",
+      "md5": "540d9f64b6cb014fc38c509e35a73330",
+      "resourceChunkPath": "pcstarter/prod/game/G153/1.4.2/FLqEZJv5V1Jq0jMX1iKduA4KbVniTcNM/resourceChunk.json"
     },
-    "resources": "pcstarter/prod/game/G153/1.4.1/EMNj0aMLL8Dch8osjR0JtB7RMIelvyD6/resource.json",
-    "resourcesBasePath": "pcstarter/prod/game/G153/1.4.1/EMNj0aMLL8Dch8osjR0JtB7RMIelvyD6/zip",
+    "resources": "pcstarter/prod/game/G153/1.4.2/3SR0Wg0W2GAjPzeppAbP70fpLjg18pWN/resource.json",
+    "resourcesBasePath": "pcstarter/prod/game/G153/1.4.2/3SR0Wg0W2GAjPzeppAbP70fpLjg18pWN/zip",
     "resourcesDiff": {
       "currentGameInfo": {
         "fileName": "Wuthering Waves.zip",
-        "md5": "9990e0c8598ef87795a6f366006e10d1",
-        "version": "1.4.1"
+        "md5": "e5a3c71bec941d53db588dd89cb67177",
+        "version": "1.4.2"
       },
       "previousGameInfo": {
         "fileName": "Wuthering Waves.zip",
-        "md5": "9ada969fea6a505b4874c167b2be6137",
-        "version": "1.4.0"
+        "md5": "9990e0c8598ef87795a6f366006e10d1",
+        "version": "1.4.1"
       }
     },
     "resourcesExcludePath": [],
     "resourcesExcludePathNeedUpdate": [],
     "sampleHashSwitch": 0,
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "predownloadSwitch": 1,
   "RHIOptionSwitch": 1,
@@ -83,7 +83,7 @@
     "loginSwitch": 0
   },
   "checkExeIsRunning": 0,
-  "keyFileCheckSwitch": 1,
+  "keyFileCheckSwitch": 0,
   "keyFileCheckList": [
     "/Client/Binaries/Win64/Client-Win64-Shipping.exe",
     "/Client/Binaries/Win64/Client-Win64-ShippingBase.dll",
@@ -97,5 +97,13 @@
   ],
   "resourcesGray": {
     "graySwitch": 0
+  },
+  "experiment": {
+    "download": {
+      "dropNetworkError": 1,
+      "disabledCompressed": 1,
+      "dropWrongContentLength": 1,
+      "dropWrongContentEncoding": 1
+    }
   }
 }

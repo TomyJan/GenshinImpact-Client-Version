@@ -71,7 +71,7 @@ class Push {
       }
       // 根据传入 jsonData 判断更新类型是 REL 还是 PRE
       let type = jsonData.predownload?.version ? 'PRE' : 'REL'
-      
+
       if (otherServerData) {
         // 两个服务器都更新了, 一起推送
         pushUrl += encodeURIComponent(` Win ${type} 更新！\n\n`)
@@ -83,33 +83,45 @@ class Push {
         let jsonDataOSLast = {}
         let jsonDataCNResLast = {}
         let jsonDataOSResLast = {}
-        
+
         try {
           const jsonDataCNResContent = fs.readFileSync(
-            `./Scripts/data/${gameId}/latest_Win_Game_CN${isKuroNewApi ? '_NEW' : ''}_Res.json`,
+            `./Scripts/data/${gameId}/latest_Win_Game_CN${
+              isKuroNewApi ? '_NEW' : ''
+            }_Res.json`,
             'utf-8'
           )
           const jsonDataOSResContent = fs.readFileSync(
-            `./Scripts/data/${gameId}/latest_Win_Game_OS${isKuroNewApi ? '_NEW' : ''}_Res.json`,
+            `./Scripts/data/${gameId}/latest_Win_Game_OS${
+              isKuroNewApi ? '_NEW' : ''
+            }_Res.json`,
             'utf-8'
           )
           const jsonDataCNLastContent = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_CN${isKuroNewApi ? '_NEW' : ''}.json`,
+            `./Scripts/data/${gameId}/last_Win_Game_CN${
+              isKuroNewApi ? '_NEW' : ''
+            }.json`,
             'utf-8'
           )
           const jsonDataOSLastContent = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_OS${isKuroNewApi ? '_NEW' : ''}.json`,
+            `./Scripts/data/${gameId}/last_Win_Game_OS${
+              isKuroNewApi ? '_NEW' : ''
+            }.json`,
             'utf-8'
           )
           const jsonDataCNResLastContent = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_CN${isKuroNewApi ? '_NEW' : ''}_Res.json`,
+            `./Scripts/data/${gameId}/last_Win_Game_CN${
+              isKuroNewApi ? '_NEW' : ''
+            }_Res.json`,
             'utf-8'
           )
           const jsonDataOSResLastContent = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_OS${isKuroNewApi ? '_NEW' : ''}_Res.json`,
+            `./Scripts/data/${gameId}/last_Win_Game_OS${
+              isKuroNewApi ? '_NEW' : ''
+            }_Res.json`,
             'utf-8'
           )
-          
+
           jsonDataCNRes = JSON.parse(jsonDataCNResContent)
           jsonDataOSRes = JSON.parse(jsonDataOSResContent)
           jsonDataCNLast = JSON.parse(jsonDataCNLastContent)

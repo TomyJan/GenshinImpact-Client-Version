@@ -316,8 +316,12 @@ async function getWinGameVersion() {
 
         // 获取另一个服务器的数据
         const otherServer = tmpServer
-        const otherServerPath = `./${game}/Win/Game/${otherServer}/${getLatestJsonFileName(`./${game}/Win/Game/${otherServer}/`)}`
-        const otherServerData = JSON.parse(await fs.readFileSync(otherServerPath, 'utf-8'))
+        const otherServerPath = `./${game}/Win/Game/${otherServer}/${getLatestJsonFileName(
+          `./${game}/Win/Game/${otherServer}/`
+        )}`
+        const otherServerData = JSON.parse(
+          await fs.readFileSync(otherServerPath, 'utf-8')
+        )
 
         // 推送两个服务器的数据
         await push.pushWinGame(
@@ -328,7 +332,7 @@ async function getWinGameVersion() {
           isNewApi,
           {
             server: otherServer,
-            data: otherServerData
+            data: otherServerData,
           }
         )
         process.exit(0)

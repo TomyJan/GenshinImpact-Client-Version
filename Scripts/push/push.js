@@ -129,10 +129,19 @@ class Push {
           jsonDataCNResLast = JSON.parse(jsonDataCNResLastContent)
           jsonDataOSResLast = JSON.parse(jsonDataOSResLastContent)
 
+          // 如果是预下载版本，使用predownload的数据
+          if (type === 'PRE') {
+            jsonDataCNRes = jsonDataCNRes.predownload || jsonDataCNRes
+            jsonDataOSRes = jsonDataOSRes.predownload || jsonDataOSRes
+            jsonDataCN = { default: jsonDataCN.predownload || jsonDataCN.default }
+            jsonDataOS = { default: jsonDataOS.predownload || jsonDataOS.default }
+            jsonDataCNLast = { default: jsonDataCNLast.default }
+            jsonDataOSLast = { default: jsonDataOSLast.default }
+          }
+
           if (
             jsonDataCN?.default?.version === jsonDataOS?.default?.version &&
-            jsonDataCNLast?.default?.version ===
-              jsonDataOSLast?.default?.version
+            jsonDataCNLast?.default?.version === jsonDataOSLast?.default?.version
           ) {
             pushUrl += encodeURIComponent(
               `版本: ${

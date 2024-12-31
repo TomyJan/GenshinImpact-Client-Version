@@ -1,2 +1,5 @@
 #nodejs
 node_modules/
+
+# 忽略以 tmp-not_pushed 开头的文件
+tmp-not_pushed*

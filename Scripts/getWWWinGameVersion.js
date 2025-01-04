@@ -318,26 +318,46 @@ async function getWinGameVersion() {
 
         // 读取两个服务器的last数据
         const lastCNContent = await fs.readFileSync(
-          `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'CN' : 'OS'}${isNewApi ? '_NEW' : ''}.json`,
+          `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'CN' : 'OS'}${
+            isNewApi ? '_NEW' : ''
+          }.json`,
           'utf-8'
         )
         const lastOSContent = await fs.readFileSync(
-          `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'OS' : 'CN'}${isNewApi ? '_NEW' : ''}.json`,
+          `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'OS' : 'CN'}${
+            isNewApi ? '_NEW' : ''
+          }.json`,
           'utf-8'
         )
         const lastCN = JSON.parse(lastCNContent)
         const lastOS = JSON.parse(lastOSContent)
 
         // 检查两个服务器是否都有更新
-        const serverUpdated = server === 'CN' 
-          ? lastCN.default.version !== jsonData.default.version
-          : lastOS.default.version !== jsonData.default.version
-        const otherServerUpdated = server === 'CN'
-          ? lastOS.default.version !== otherServerData.default.version
-          : lastCN.default.version !== otherServerData.default.version
+        const serverUpdated =
+          server === 'CN'
+            ? lastCN.default.version !== jsonData.default.version
+            : lastOS.default.version !== jsonData.default.version
+        const otherServerUpdated =
+          server === 'CN'
+            ? lastOS.default.version !== otherServerData.default.version
+            : lastCN.default.version !== otherServerData.default.version
 
-        console.log('当前服务器版本:', server === 'CN' ? lastCN.default.version : lastOS.default.version, '->', server === 'CN' ? jsonData.default.version : otherServerData.default.version)
-        console.log('另一服务器版本:', server === 'CN' ? lastOS.default.version : lastCN.default.version, '->', server === 'CN' ? otherServerData.default.version : jsonData.default.version)
+        console.log(
+          '当前服务器版本:',
+          server === 'CN' ? lastCN.default.version : lastOS.default.version,
+          '->',
+          server === 'CN'
+            ? jsonData.default.version
+            : otherServerData.default.version
+        )
+        console.log(
+          '另一服务器版本:',
+          server === 'CN' ? lastOS.default.version : lastCN.default.version,
+          '->',
+          server === 'CN'
+            ? otherServerData.default.version
+            : jsonData.default.version
+        )
 
         // 删除缓存的文件
         await fs.unlinkSync(tmpFileName)

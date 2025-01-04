@@ -24,31 +24,31 @@
     "changelog": {},
     "changelogVisible": 0,
     "resourceChunk": {
-      "lastMd5": "9e89e6a0a320ced15208a3b142e473f6",
-      "lastResourceChunkPath": "pcstarter/prod/game/G152/2.0.1/sUYJIfVU8QK21On3KqT1urKt9pOoi8aT/resourceChunk.json",
-      "lastResources": "pcstarter/prod/game/G152/2.0.1/eheTjBIMkdXSFbUSA6jUCDwzfJC3ERBM/resource.json",
-      "lastVersion": "2.0.1",
-      "md5": "4bdc07e679128c181a1e418ef4246cb8",
-      "resourceChunkPath": "pcstarter/prod/game/G152/2.0.2/DZPMT8g7BEwc8xGk8RDRCPSi7XDlobML/resourceChunk.json"
+      "lastMd5": "3311de42c9f15d1ea32bd1dd18ce8e96",
+      "lastResourceChunkPath": "pcstarter/prod/game/G152/2.0.0/EW712wwzJIb5COAZbUJg3DCrdDcb2X32/resourceChunk.json",
+      "lastResources": "pcstarter/prod/game/G152/2.0.0/WatnFnudCyaviYfWSRMGpaunniRKFbf2/resource.json",
+      "lastVersion": "2.0.0",
+      "md5": "9e89e6a0a320ced15208a3b142e473f6",
+      "resourceChunkPath": "pcstarter/prod/game/G152/2.0.1/sUYJIfVU8QK21On3KqT1urKt9pOoi8aT/resourceChunk.json"
     },
-    "resources": "pcstarter/prod/game/G152/2.0.2/zyRnMqcYy1bDGLh9TiPPeKWGm1D0ukqE/resource.json",
-    "resourcesBasePath": "pcstarter/prod/game/G152/2.0.2/zyRnMqcYy1bDGLh9TiPPeKWGm1D0ukqE/zip",
+    "resources": "pcstarter/prod/game/G152/2.0.1/eheTjBIMkdXSFbUSA6jUCDwzfJC3ERBM/resource.json",
+    "resourcesBasePath": "pcstarter/prod/game/G152/2.0.1/eheTjBIMkdXSFbUSA6jUCDwzfJC3ERBM/zip",
     "resourcesDiff": {
       "currentGameInfo": {
         "fileName": "Wuthering Waves.zip",
-        "md5": "8f16abc944712561088a5d826853e15a",
-        "version": "2.0.2"
+        "md5": "1234e7700c4a261ef2d16237181e82b5",
+        "version": "2.0.1"
       },
       "previousGameInfo": {
         "fileName": "Wuthering Waves.zip",
-        "md5": "1234e7700c4a261ef2d16237181e82b5",
-        "version": "2.0.1"
+        "md5": "0c2686cc055bbe978a1cd388bb07a5f4",
+        "version": "2.0.0"
       }
     },
     "resourcesExcludePath": [],
     "resourcesExcludePathNeedUpdate": [],
     "sampleHashSwitch": 0,
-    "version": "2.0.2"
+    "version": "2.0.1"
   },
   "predownloadSwitch": 1,
   "RHIOptionSwitch": 1,

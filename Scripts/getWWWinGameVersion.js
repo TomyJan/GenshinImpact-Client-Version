@@ -307,13 +307,6 @@ async function getWinGameVersion() {
       // 读取文件
       const tmpServer = await fs.readFileSync(tmpFileName, 'utf-8')
       if (tmpServer !== server) {
-        // 两个都更新了
-        console.log(
-          `从临时文件获取当前已缓存${game} 版本信息: 两个服务器都已更新, 正在推送...`
-        )
-        // 删除缓存的文件
-        await fs.unlinkSync(tmpFileName)
-
         // 获取另一个服务器的数据
         const otherServer = tmpServer
         const otherServerPath = `./${game}/Win/Game/${otherServer}/${getLatestJsonFileName(
@@ -323,18 +316,75 @@ async function getWinGameVersion() {
           await fs.readFileSync(otherServerPath, 'utf-8')
         )
 
-        // 推送两个服务器的数据
-        await push.pushWinGame(
-          ApiInfo[game].name,
-          server,
-          jsonData,
-          true,
-          isNewApi,
-          {
-            server: otherServer,
-            data: otherServerData,
-          }
+        // 读取两个服务器的last数据
+        const lastCNContent = await fs.readFileSync(
+          `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'CN' : 'OS'}${isNewApi ? '_NEW' : ''}.json`,
+          'utf-8'
         )
+        const lastOSContent = await fs.readFileSync(
+          `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'OS' : 'CN'}${isNewApi ? '_NEW' : ''}.json`,
+          'utf-8'
+        )
+        const lastCN = JSON.parse(lastCNContent)
+        const lastOS = JSON.parse(lastOSContent)
+
+        // 检查两个服务器是否都有更新
+        const serverUpdated = server === 'CN' 
+          ? lastCN.default.version !== jsonData.default.version
+          : lastOS.default.version !== jsonData.default.version
+        const otherServerUpdated = server === 'CN'
+          ? lastOS.default.version !== otherServerData.default.version
+          : lastCN.default.version !== otherServerData.default.version
+
+        console.log('当前服务器版本:', server === 'CN' ? lastCN.default.version : lastOS.default.version, '->', server === 'CN' ? jsonData.default.version : otherServerData.default.version)
+        console.log('另一服务器版本:', server === 'CN' ? lastOS.default.version : lastCN.default.version, '->', server === 'CN' ? otherServerData.default.version : jsonData.default.version)
+
+        // 删除缓存的文件
+        await fs.unlinkSync(tmpFileName)
+
+        if (serverUpdated && otherServerUpdated) {
+          // 两个服务器都更新了，一起推送
+          console.log(
+            `从临时文件获取当前已缓存${game} 版本信息: 两个服务器都已更新, 正在推送...`
+          )
+          await push.pushWinGame(
+            ApiInfo[game].name,
+            server,
+            jsonData,
+            true,
+            isNewApi,
+            {
+              server: otherServer,
+              data: otherServerData,
+            }
+          )
+        } else if (serverUpdated) {
+          // 只有当前服务器更新了
+          console.log(
+            `从临时文件获取当前已缓存${game} 版本信息: 只有 ${server} 服务器更新, 正在推送...`
+          )
+          await push.pushWinGame(
+            ApiInfo[game].name,
+            server,
+            jsonData,
+            true,
+            isNewApi
+          )
+        } else if (otherServerUpdated) {
+          // 只有另一个服务器更新了
+          console.log(
+            `从临时文件获取当前已缓存${game} 版本信息: 只有 ${otherServer} 服务器更新, 正在推送...`
+          )
+          await push.pushWinGame(
+            ApiInfo[game].name,
+            otherServer,
+            otherServerData,
+            true,
+            isNewApi
+          )
+        } else {
+          console.log('两个服务器都没有更新，无需推送')
+        }
         process.exit(0)
       } else {
         // 这咋回事给我搞懵了, 别推, 等下次再检查吧

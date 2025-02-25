@@ -1,0 +1,168 @@
+{
+  "retcode": 0,
+  "message": "OK",
+  "data": {
+    "game_packages": [
+      {
+        "game": {
+          "id": "64kMb5iAWu",
+          "biz": "hkrpg_cn"
+        },
+        "main": {
+          "major": {
+            "version": "3.1.0",
+            "game_pkgs": [
+              {
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/download/StarRail_3.1.0.7z.001",
+                "md5": "545BFFACA06FA2F56A81BFBDD7101EE3",
+                "size": "5368709120",
+                "decompressed_size": "10747904000"
+              },
+              {
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/download/StarRail_3.1.0.7z.002",
+                "md5": "5DF870ED0EE3B9872447919E6A9C3907",
+                "size": "5368709120",
+                "decompressed_size": "10747904000"
+              },
+              {
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/download/StarRail_3.1.0.7z.003",
+                "md5": "F8C6C3A024FEC9A506ED03B18B080BF5",
+                "size": "5368709120",
+                "decompressed_size": "10747904000"
+              },
+              {
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/download/StarRail_3.1.0.7z.004",
+                "md5": "1D3225CE0BFA891362171EC815862CA1",
+                "size": "5368709120",
+                "decompressed_size": "10747904000"
+              },
+              {
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/download/StarRail_3.1.0.7z.005",
+                "md5": "7350B2C9D52D75E2D6EADF1B77E81DC0",
+                "size": "5368709120",
+                "decompressed_size": "10747904000"
+              },
+              {
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/download/StarRail_3.1.0.7z.006",
+                "md5": "B3F42F36B97947636A8C58DC18C17824",
+                "size": "5368709120",
+                "decompressed_size": "10747904000"
+              },
+              {
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/download/StarRail_3.1.0.7z.007",
+                "md5": "3CE059DB6C78BEF48F13A959653EBD30",
+                "size": "5368709120",
+                "decompressed_size": "10747904000"
+              },
+              {
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/download/StarRail_3.1.0.7z.008",
+                "md5": "519E5191CE2EA8D1C4BDC66590287B60",
+                "size": "5368709120",
+                "decompressed_size": "10747904000"
+              },
+              {
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/download/StarRail_3.1.0.7z.009",
+                "md5": "A92A03A93A2F4B3E7EBFA511B95BB041",
+                "size": "2731369079",
+                "decompressed_size": "5473223918"
+              }
+            ],
+            "audio_pkgs": [
+              {
+                "language": "zh-cn",
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/Chinese.7z",
+                "md5": "2714ee8babece40ca8bbb180a94a2069",
+                "size": "7140041551",
+                "decompressed_size": "14290568862"
+              },
+              {
+                "language": "zh-tw",
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/Chinese.7z",
+                "md5": "2714ee8babece40ca8bbb180a94a2069",
+                "size": "7140041551",
+                "decompressed_size": "14290568862"
+              },
+              {
+                "language": "en-us",
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/English.7z",
+                "md5": "6590989fd52a71cb8a7c50836174935f",
+                "size": "8230597408",
+                "decompressed_size": "16471680576"
+              },
+              {
+                "language": "ko-kr",
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/Korean.7z",
+                "md5": "9b13080c0b4d92875ed8356c740c4af2",
+                "size": "7039836017",
+                "decompressed_size": "14090157794"
+              },
+              {
+                "language": "ja-jp",
+                "url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/Japanese.7z",
+                "md5": "ca789d7b92a7958d4089242f2933a210",
+                "size": "8819346928",
+                "decompressed_size": "17649179616"
+              }
+            ],
+            "res_list_url": "https://autopatchcn.bhsr.com/client/cn/20250213221833_pWDwIcOAdsmyvG3O/PC/unzip"
+          },
+          "patches": [
+            {
+              "version": "3.0.0",
+              "game_pkgs": [
+                {
+                  "url": "https://autopatchcn.bhsr.com/client/diff/hkrpg_cn/game_3.0.0_3.1.0_hdiff_kDDqAXOaOhgUHOCa.7z",
+                  "md5": "12f48b714ceb3fcd01cb1f4ae9b804e6",
+                  "size": "4821664861",
+                  "decompressed_size": "10373037159"
+                }
+              ],
+              "audio_pkgs": [
+                {
+                  "language": "zh-tw",
+                  "url": "https://autopatchcn.bhsr.com/client/diff/hkrpg_cn/audio_zh-tw_3.0.0_3.1.0_hdiff_ietMeFEiwonvApmU.7z",
+                  "md5": "7f8e7fc4077417e8a17d2fa06d57bb56",
+                  "size": "414337588",
+                  "decompressed_size": "848718045"
+                },
+                {
+                  "language": "zh-cn",
+                  "url": "https://autopatchcn.bhsr.com/client/diff/hkrpg_cn/audio_zh-cn_3.0.0_3.1.0_hdiff_xgraMKLdGyMekuTW.7z",
+                  "md5": "d8d4373a09afab831da482df261c18d6",
+                  "size": "414337633",
+                  "decompressed_size": "848718090"
+                },
+                {
+                  "language": "en-us",
+                  "url": "https://autopatchcn.bhsr.com/client/diff/hkrpg_cn/audio_en-us_3.0.0_3.1.0_hdiff_xZZHQUPdgGAYCjOA.7z",
+                  "md5": "831e12b2ae5d56f232082f01d1e26d7a",
+                  "size": "421463703",
+                  "decompressed_size": "870855825"
+                },
+                {
+                  "language": "ja-jp",
+                  "url": "https://autopatchcn.bhsr.com/client/diff/hkrpg_cn/audio_ja-jp_3.0.0_3.1.0_hdiff_qmcjICUfXjaibrXh.7z",
+                  "md5": "fb2ec862cbc3fc9a45935fd5b310e3d7",
+                  "size": "506769667",
+                  "decompressed_size": "1043450700"
+                },
+                {
+                  "language": "ko-kr",
+                  "url": "https://autopatchcn.bhsr.com/client/diff/hkrpg_cn/audio_ko-kr_3.0.0_3.1.0_hdiff_FFPXstZIVutePTTa.7z",
+                  "md5": "c52e3c0d9b50739fff1d14df441dc754",
+                  "size": "407357024",
+                  "decompressed_size": "841416142"
+                }
+              ],
+              "res_list_url": ""
+            }
+          ]
+        },
+        "pre_download": {
+          "major": null,
+          "patches": []
+        }
+      }
+    ]
+  }
+}

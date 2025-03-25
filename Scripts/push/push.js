@@ -235,19 +235,29 @@ class Push {
               updateSizeOS = patchConfigOS.size
             }
           }
-          if (lastSizeCN === lastSizeOS && sizeCN === sizeOS && updateSizeCN === updateSizeOS) {
+          if (
+            lastSizeCN === lastSizeOS &&
+            sizeCN === sizeOS &&
+            updateSizeCN === updateSizeOS
+          ) {
             pushUrl += encodeURIComponent(
               `大小: ${
                 lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
-              }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(updateSizeCN)}\`\\)\n`
+              }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(
+                updateSizeCN
+              )}\`\\)\n`
             )
           } else {
             pushUrl += encodeURIComponent(
               `CN 大小: ${
                 lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
-              }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(updateSizeCN)}\`\\)\nOS 大小: ${
+              }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(
+                updateSizeCN
+              )}\`\\)\nOS 大小: ${
                 lastSizeOS ? `\`${formatBytes(lastSizeOS)}\` \\=\\> ` : ''
-              }\`${formatBytes(sizeOS)}\` \\(UP:\`${formatBytes(updateSizeOS)}\`\\)\n`
+              }\`${formatBytes(sizeOS)}\` \\(UP:\`${formatBytes(
+                updateSizeOS
+              )}\`\\)\n`
             )
           }
 

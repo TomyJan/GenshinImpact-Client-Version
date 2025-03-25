@@ -335,12 +335,22 @@ async function getWinGameVersion() {
         // 检查两个服务器是否都有更新
         const serverUpdated =
           server === 'CN'
-            ? (lastCN.default.version !== jsonData.default.version || (jsonData.predownload?.version && lastCN.predownload?.version !== jsonData.predownload?.version))
-            : (lastOS.default.version !== jsonData.default.version || (jsonData.predownload?.version && lastOS.predownload?.version !== jsonData.predownload?.version))
+            ? lastCN.default.version !== jsonData.default.version ||
+              (jsonData.predownload?.version &&
+                lastCN.predownload?.version !== jsonData.predownload?.version)
+            : lastOS.default.version !== jsonData.default.version ||
+              (jsonData.predownload?.version &&
+                lastOS.predownload?.version !== jsonData.predownload?.version)
         const otherServerUpdated =
           server === 'CN'
-            ? (lastOS.default.version !== otherServerData.default.version || (otherServerData.predownload?.version && lastOS.predownload?.version !== otherServerData.predownload?.version))
-            : (lastCN.default.version !== otherServerData.default.version || (otherServerData.predownload?.version && lastCN.predownload?.version !== otherServerData.predownload?.version))
+            ? lastOS.default.version !== otherServerData.default.version ||
+              (otherServerData.predownload?.version &&
+                lastOS.predownload?.version !==
+                  otherServerData.predownload?.version)
+            : lastCN.default.version !== otherServerData.default.version ||
+              (otherServerData.predownload?.version &&
+                lastCN.predownload?.version !==
+                  otherServerData.predownload?.version)
 
         console.log(
           '当前服务器版本:',

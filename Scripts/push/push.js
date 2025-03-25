@@ -200,6 +200,8 @@ class Push {
           let lastSizeOS = 0
           let sizeCN = 0
           let sizeOS = 0
+          let updateSizeCN = 0
+          let updateSizeOS = 0
           if (Array.isArray(jsonDataCNResLast?.resource)) {
             for (let i = 0; i < jsonDataCNResLast.resource.length; i++) {
               lastSizeCN += jsonDataCNResLast.resource[i].size
@@ -216,19 +218,36 @@ class Push {
           for (let i = 0; i < jsonDataOSRes.resource.length; i++) {
             sizeOS += jsonDataOSRes.resource[i].size
           }
-          if (lastSizeCN === lastSizeOS && sizeCN === sizeOS) {
+          // 使用 jsonDataCN.default.config.patchConfig 数组中 version==jsonDataCNLast.default.version 的 size 作为更新大小
+          if (Array.isArray(jsonDataCN.default.config.patchConfig)) {
+            let patchConfigCN = jsonDataCN.default.config.patchConfig.find(
+              (item) => item.version === jsonDataCNLast.default.version
+            )
+            if (patchConfigCN) {
+              updateSizeCN = patchConfigCN.size
+            }
+          }
+          if (Array.isArray(jsonDataOS.default.config.patchConfig)) {
+            let patchConfigOS = jsonDataOS.default.config.patchConfig.find(
+              (item) => item.version === jsonDataOSLast.default.version
+            )
+            if (patchConfigOS) {
+              updateSizeOS = patchConfigOS.size
+            }
+          }
+          if (lastSizeCN === lastSizeOS && sizeCN === sizeOS && updateSizeCN === updateSizeOS) {
             pushUrl += encodeURIComponent(
               `大小: ${
                 lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
-              }\`${formatBytes(sizeCN)}\`\n`
+              }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(updateSizeCN)}\`\\)\n`
             )
           } else {
             pushUrl += encodeURIComponent(
               `CN 大小: ${
                 lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
-              }\`${formatBytes(sizeCN)}\`\nOS 大小: ${
+              }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(updateSizeCN)}\`\\)\nOS 大小: ${
                 lastSizeOS ? `\`${formatBytes(lastSizeOS)}\` \\=\\> ` : ''
-              }\`${formatBytes(sizeOS)}\`\n`
+              }\`${formatBytes(sizeOS)}\` \\(UP:\`${formatBytes(updateSizeOS)}\`\\)\n`
             )
           }
 

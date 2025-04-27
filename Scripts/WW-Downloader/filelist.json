@@ -1,17 +1,17 @@
 {
-    "version": "2.2.0-predownload",
+    "version": "2.3.0-predownload",
     "resource": [
         {
             "dest": "ClearThirdParty.exe",
-            "md5": "72a4c40313405fadea28e09bf14355c7",
-            "sampleHash": "72a4c40313405fadea28e09bf14355c7",
-            "size": 220752
+            "md5": "0591ed45f73bc4ce655663b6ee68ab3c",
+            "sampleHash": "0591ed45f73bc4ce655663b6ee68ab3c",
+            "size": 223312
         },
         {
             "dest": "Wuthering Waves.exe",
-            "md5": "60f71a0310b9d9a23f4b04deb143a770",
-            "sampleHash": "60f71a0310b9d9a23f4b04deb143a770",
-            "size": 611920
+            "md5": "c2b449762ec685e00d9092775417535f",
+            "sampleHash": "c2b449762ec685e00d9092775417535f",
+            "size": 613968
         },
         {
             "dest": "Client/Config/AMD.json",
@@ -69,19 +69,19 @@
         },
         {
             "dest": "Client/Binaries/Win64/Client-Win64-Shipping.exe",
-            "md5": "bfc34ab5826c0cb08734c69ff61d8872",
-            "sampleHash": "55241bf654070c3b922c027b36250fe7",
-            "size": 74060448
+            "md5": "1f0983dfb51448ff94077df3a39d758e",
+            "sampleHash": "ee4c9d415baff5a30141a4b648d2ac0d",
+            "size": 74286240
         },
         {
             "dest": "Client/Binaries/Win64/Client-Win64-ShippingBase.dll",
-            "md5": "7eaa36becd9508c33fdff14c171eb904",
-            "sampleHash": "2905b0858ea3b458e0a8f196951b6a26",
-            "size": 29341088
+            "md5": "d77e6445f7dfc77fbeba9b3e0b9adc91",
+            "sampleHash": "08613d836c65ee6ac1818e336a1cd8ca",
+            "size": 29341016
         },
         {
             "dest": "Client/Binaries/Win64/CrashSight64.dll",
-            "md5": "d80c987b5a837f703f321ee7fca03029",
+            "md5": "d510ac0f31824d3636ed7ebea3a18a6d",
             "sampleHash": "8c4e567ab27bcb6711e3ed0b46918228",
             "size": 5561936
         },
@@ -93,20 +93,20 @@
         },
         {
             "dest": "Client/Binaries/Win64/PerfSight.dll",
-            "md5": "4db7cc08a93e04621dec370e90e00161",
+            "md5": "bcbb452cb772ec7694b8391b2eab4763",
             "sampleHash": "97830cf198d1c1efe110da5f21eda1f9",
             "size": 4739152
         },
         {
             "dest": "Client/Binaries/Win64/libScePad.dll",
-            "md5": "55edfc403fa2162a3e5ec81b3aca227b",
-            "sampleHash": "55edfc403fa2162a3e5ec81b3aca227b",
+            "md5": "df55470fc3b24f66883e2481a24fe898",
+            "sampleHash": "df55470fc3b24f66883e2481a24fe898",
             "size": 237136
         },
         {
             "dest": "Client/Binaries/Win64/turbojpeg.dll",
-            "md5": "f702c63b8e677ff8cb0649fe3b9b11f2",
-            "sampleHash": "f702c63b8e677ff8cb0649fe3b9b11f2",
+            "md5": "9ab8fa41f90cc914fc37dd91a66dd9d1",
+            "sampleHash": "9ab8fa41f90cc914fc37dd91a66dd9d1",
             "size": 747088
         },
         {
@@ -117,452 +117,536 @@
         },
         {
             "dest": "Client/Content/Paks/pakchunk0-WindowsNoEditor.pak",
-            "md5": "aa4590e48211f02dc010caaa4445dde9",
-            "sampleHash": "2cf373178dc9b76a130d8911d1e23854",
-            "size": 1140190223
+            "md5": "f0157ae3fa25693ae2f51bdc692fbeb2",
+            "sampleHash": "12463e12fbb8cd9db5309e7a9056d2fa",
+            "size": 984116367
         },
         {
             "dest": "Client/Content/Paks/pakchunk0-WindowsNoEditor.sig",
-            "md5": "613237c37853c20a7f0fe35969d03225",
-            "sampleHash": "613237c37853c20a7f0fe35969d03225",
-            "size": 70120
+            "md5": "c3898ad6cdd55a444c0a82ef0bc0c5d7",
+            "sampleHash": "c3898ad6cdd55a444c0a82ef0bc0c5d7",
+            "size": 60596
         },
         {
             "dest": "Client/Content/Paks/pakchunk0optional-WindowsNoEditor.pak",
-            "md5": "59c482e6d377c61471e3f9ebbf14ea05",
-            "sampleHash": "59c482e6d377c61471e3f9ebbf14ea05",
+            "md5": "460134d17176d0913ebaf8ec680629ab",
+            "sampleHash": "460134d17176d0913ebaf8ec680629ab",
             "size": 877955
         },
         {
             "dest": "Client/Content/Paks/pakchunk0optional-WindowsNoEditor.sig",
-            "md5": "2ad7d3aead674664c2be73da21d22689",
-            "sampleHash": "2ad7d3aead674664c2be73da21d22689",
+            "md5": "f38f3d8e190ba3e17a453ea297ea035b",
+            "sampleHash": "f38f3d8e190ba3e17a453ea297ea035b",
             "size": 584
         },
         {
             "dest": "Client/Content/Paks/pakchunk1-WindowsNoEditor.pak",
-            "md5": "a0358c998da7e829eba2fb9c2b3cd411",
-            "sampleHash": "17f03cade3be03b5a3f3d0204227cae3",
-            "size": 292982269
+            "md5": "e914fb839bf3918043001aa7171eefce",
+            "sampleHash": "aa1eb99bfc53742863ae2adb30ad697d",
+            "size": 277730429
         },
         {
             "dest": "Client/Content/Paks/pakchunk1-WindowsNoEditor.sig",
-            "md5": "0fe4731b99f66e4a0486efe7c9162396",
-            "sampleHash": "0fe4731b99f66e4a0486efe7c9162396",
-            "size": 18412
+            "md5": "378c3eeb47cea19beee763e424978a43",
+            "sampleHash": "378c3eeb47cea19beee763e424978a43",
+            "size": 17480
         },
         {
             "dest": "Client/Content/Paks/pakchunk15-WindowsNoEditor.pak",
-            "md5": "fde38194cad6082976ac4da48507194a",
-            "sampleHash": "f6656d10ba5f2f837e8f7296f2ab8729",
-            "size": 173944887
+            "md5": "b1de6d9efda5dee674abd12dc3df1b2b",
+            "sampleHash": "a9c51708997da7582af7daffcf336699",
+            "size": 342207047
         },
         {
             "dest": "Client/Content/Paks/pakchunk15-WindowsNoEditor.sig",
-            "md5": "f75b50b14721b08807124407a495e9e8",
-            "sampleHash": "f75b50b14721b08807124407a495e9e8",
-            "size": 11148
+            "md5": "9446236c67a71a4a0ca1b847cf3c4155",
+            "sampleHash": "9446236c67a71a4a0ca1b847cf3c4155",
+            "size": 21416
         },
         {
             "dest": "Client/Content/Paks/pakchunk2-WindowsNoEditor.pak",
-            "md5": "899f6af29ea0f91756e5e32abf17e82e",
-            "sampleHash": "726a45823b957ee575938abb06f8f669",
-            "size": 431818322
+            "md5": "a1669583cbe9249eeeed5ded9aeb695b",
+            "sampleHash": "86bb8740ec3f3ef57d61470568a03811",
+            "size": 471423474
         },
         {
             "dest": "Client/Content/Paks/pakchunk2-WindowsNoEditor.sig",
-            "md5": "cd75668a7614eab7e439016bea505572",
-            "sampleHash": "cd75668a7614eab7e439016bea505572",
-            "size": 26888
+            "md5": "86e4c3f6503ccb640f1f34f97d8799e5",
+            "sampleHash": "86e4c3f6503ccb640f1f34f97d8799e5",
+            "size": 29304
         },
         {
             "dest": "Client/Content/Paks/pakchunk20-WindowsNoEditor.pak",
-            "md5": "1e3b99aa49dba680713080cf4630537c",
-            "sampleHash": "253c714eaae6326eaad58517ba7616ad",
-            "size": 1262564202
+            "md5": "eca2172e63e78f6cbb102dfb7fa0f597",
+            "sampleHash": "efa6227a04fd0386dabe085ec0d5c8ee",
+            "size": 1389933754
         },
         {
             "dest": "Client/Content/Paks/pakchunk20-WindowsNoEditor.sig",
-            "md5": "764b78ebf2bd236f3f9ceefa7491f07a",
-            "sampleHash": "764b78ebf2bd236f3f9ceefa7491f07a",
-            "size": 77592
+            "md5": "6cc940ed82a937f6ce73e015ed263a14",
+            "sampleHash": "6cc940ed82a937f6ce73e015ed263a14",
+            "size": 85364
         },
         {
             "dest": "Client/Content/Paks/pakchunk21-WindowsNoEditor.pak",
-            "md5": "d35598b102cd92bc970763f9118d0143",
-            "sampleHash": "fdf67c715d67552c2bb3dcf1f727214c",
-            "size": 2484651062
+            "md5": "2ecf3015e91a010f6145dd1ac1d4e712",
+            "sampleHash": "81f0b852beaa2d08439cef184a95ac22",
+            "size": 2630472914
         },
         {
             "dest": "Client/Content/Paks/pakchunk21-WindowsNoEditor.sig",
-            "md5": "e54d5da20f08d68a70ff57e41fff29c8",
-            "sampleHash": "e54d5da20f08d68a70ff57e41fff29c8",
-            "size": 152180
+            "md5": "8ab9b42f0d7ce4890f9b8b705b7799f5",
+            "sampleHash": "8ab9b42f0d7ce4890f9b8b705b7799f5",
+            "size": 161080
         },
         {
             "dest": "Client/Content/Paks/pakchunk22-WindowsNoEditor.pak",
-            "md5": "e69d18afd63523d9ae4a8f43e2a9845a",
-            "sampleHash": "9e4eb998366ffb9a80fb1b9b0fea398e",
-            "size": 2990462160
+            "md5": "5679c44fbf555f9cd57ae3437292f5fe",
+            "sampleHash": "792b5b1fd225e5d4db4afe8420117c32",
+            "size": 2855840130
         },
         {
             "dest": "Client/Content/Paks/pakchunk22-WindowsNoEditor.sig",
-            "md5": "6473d2a596ee22593a6a5fd75e3ab16f",
-            "sampleHash": "6473d2a596ee22593a6a5fd75e3ab16f",
-            "size": 183052
+            "md5": "0f15d28cf25b19363258c76b727c14ad",
+            "sampleHash": "0f15d28cf25b19363258c76b727c14ad",
+            "size": 174836
         },
         {
             "dest": "Client/Content/Paks/pakchunk23-WindowsNoEditor.pak",
-            "md5": "9a3b68fa4ed24bb5d494aef895ca1e1a",
-            "sampleHash": "5c5b1e18fd58e9d7b3facad29fc8bc72",
-            "size": 1838319321
+            "md5": "257cceefa86c267022f9fc4a88b55bc9",
+            "sampleHash": "d302efd946eced53ddb04658846f74dd",
+            "size": 1829231065
         },
         {
             "dest": "Client/Content/Paks/pakchunk23-WindowsNoEditor.sig",
-            "md5": "367d82ba7877c9d96c74e026c6c075bb",
-            "sampleHash": "367d82ba7877c9d96c74e026c6c075bb",
-            "size": 112732
+            "md5": "6802f7c905873f0c7d34f87a028740a8",
+            "sampleHash": "6802f7c905873f0c7d34f87a028740a8",
+            "size": 112176
         },
         {
             "dest": "Client/Content/Paks/pakchunk26-WindowsNoEditor.pak",
-            "md5": "a909d9aeadb745b901a0dcf3c545ff59",
-            "sampleHash": "07bb7c801cab2614d387c1a226e5c489",
-            "size": 4207362274
+            "md5": "6379cf619c9ff4743281337bced0f3b7",
+            "sampleHash": "f417bfca68157add56f318cf5220c161",
+            "size": 5243968082
         },
         {
             "dest": "Client/Content/Paks/pakchunk26-WindowsNoEditor.sig",
-            "md5": "fdbb2aa3f3631084b163c72a1c057f8b",
-            "sampleHash": "fdbb2aa3f3631084b163c72a1c057f8b",
-            "size": 257328
+            "md5": "5a3cd5f93c58d9c6ebc8dc88f1e56b8d",
+            "sampleHash": "5a3cd5f93c58d9c6ebc8dc88f1e56b8d",
+            "size": 320596
         },
         {
             "dest": "Client/Content/Paks/pakchunk27-WindowsNoEditor.pak",
-            "md5": "684f2809ddf55b29184a0eaf2ee6613d",
-            "sampleHash": "80d341f7988fbc2f76be14f69208acd1",
+            "md5": "5c23a793e2a0c3c3ce4ee77a2bf473b3",
+            "sampleHash": "6cbab890412d7da4faea27a624daaed7",
             "size": 2236130011
         },
         {
             "dest": "Client/Content/Paks/pakchunk27-WindowsNoEditor.sig",
-            "md5": "b4e34cb490f945ab3766a4a0c3051879",
-            "sampleHash": "b4e34cb490f945ab3766a4a0c3051879",
+            "md5": "dd3db895fba2890712d283ab124db6ab",
+            "sampleHash": "dd3db895fba2890712d283ab124db6ab",
             "size": 137012
         },
         {
             "dest": "Client/Content/Paks/pakchunk28-WindowsNoEditor.pak",
-            "md5": "5eb9cf561923c6c258e985d976b1c216",
-            "sampleHash": "3d5a62e02057927df1c6866315773df3",
+            "md5": "97a2724fd355042e7c73fb268ad6cc2a",
+            "sampleHash": "4908670b4fee34e56041f11ea8f04093",
             "size": 1691427335
         },
         {
             "dest": "Client/Content/Paks/pakchunk28-WindowsNoEditor.sig",
-            "md5": "a9d6990c666084e7d2123dbfb07c1606",
-            "sampleHash": "a9d6990c666084e7d2123dbfb07c1606",
+            "md5": "a7cd5f4d7168e4b0769999261e5ac244",
+            "sampleHash": "a7cd5f4d7168e4b0769999261e5ac244",
             "size": 103768
         },
         {
             "dest": "Client/Content/Paks/pakchunk3-WindowsNoEditor.pak",
-            "md5": "50c1a0b9fc7af970338ce3c3eafed68c",
-            "sampleHash": "2ea1cef065298b88b0e76dc846b6b94e",
-            "size": 14962383
+            "md5": "f1fd2d69a69f69a8613cb4cbac5903d5",
+            "sampleHash": "351a8da976fd23bf6121a91d882bf351",
+            "size": 16400434
         },
         {
             "dest": "Client/Content/Paks/pakchunk3-WindowsNoEditor.sig",
-            "md5": "f7fe7d348069899748b42936c2a1aacc",
-            "sampleHash": "f7fe7d348069899748b42936c2a1aacc",
-            "size": 1444
+            "md5": "71ae36a345b7deceda3093019ea37b41",
+            "sampleHash": "71ae36a345b7deceda3093019ea37b41",
+            "size": 1532
         },
         {
             "dest": "Client/Content/Paks/pakchunk31-WindowsNoEditor.pak",
-            "md5": "93cb5fc5ae507d57bb031eb37f325f4f",
-            "sampleHash": "dc518704b40dfc23d9734801954dda11",
-            "size": 1131821780
+            "md5": "d68ebd25a84ffd30d4508a763e8a9dce",
+            "sampleHash": "ae1e964b096651287ad6b91aef8f71dc",
+            "size": 1198418388
         },
         {
             "dest": "Client/Content/Paks/pakchunk31-WindowsNoEditor.sig",
-            "md5": "22aefaf8e2af37c26b86dad908413c5e",
-            "sampleHash": "22aefaf8e2af37c26b86dad908413c5e",
-            "size": 69612
+            "md5": "8d4cacd11b59b91e3a19019c709398d0",
+            "sampleHash": "8d4cacd11b59b91e3a19019c709398d0",
+            "size": 73676
         },
         {
             "dest": "Client/Content/Paks/pakchunk32-WindowsNoEditor.pak",
-            "md5": "eaac74e83c2f0609af5ad8e0b5bcbb36",
-            "sampleHash": "8d3080d64e9c1a335a850d6cb446af58",
-            "size": 56275095
+            "md5": "9783a7c1da8096f2baedebf1a1b74376",
+            "sampleHash": "911384c2fc04fb7d22ff8cf6d094f1c7",
+            "size": 55682135
         },
         {
             "dest": "Client/Content/Paks/pakchunk32-WindowsNoEditor.sig",
-            "md5": "4da5f7a2adf9b312ffa2829bef8d7b91",
-            "sampleHash": "4da5f7a2adf9b312ffa2829bef8d7b91",
-            "size": 3964
+            "md5": "04ac129c1336051d320b697f801e4e84",
+            "sampleHash": "04ac129c1336051d320b697f801e4e84",
+            "size": 3928
         },
         {
             "dest": "Client/Content/Paks/pakchunk33-WindowsNoEditor.pak",
-            "md5": "dc72e882be5b4462c35f0fdb3e3942ce",
-            "sampleHash": "823aa4f0f603ea62a3e42da3ec7fe1e0",
-            "size": 2480589805
+            "md5": "d878f52e5632a59f9bf2c1faf549db2e",
+            "sampleHash": "8ef2b9d80bd5409c5d73f526a7b68ce7",
+            "size": 2456416589
         },
         {
             "dest": "Client/Content/Paks/pakchunk33-WindowsNoEditor.sig",
-            "md5": "705bc905a90942f1b64cfdc411b6eefe",
-            "sampleHash": "705bc905a90942f1b64cfdc411b6eefe",
-            "size": 151932
+            "md5": "d0b65ffd06a7b50a7c0ad5cd057b59f6",
+            "sampleHash": "d0b65ffd06a7b50a7c0ad5cd057b59f6",
+            "size": 150456
         },
         {
             "dest": "Client/Content/Paks/pakchunk34-WindowsNoEditor.pak",
-            "md5": "ab21ffa848f0324933fae60beb0932c7",
-            "sampleHash": "752c17e19ae2a10a848f5cbe2d657164",
-            "size": 3701863407
+            "md5": "a203c65d2ec42ab7bb0a8946e0929ede",
+            "sampleHash": "d1a82c45d2c80e063c87f0a955852d14",
+            "size": 4043721887
         },
         {
             "dest": "Client/Content/Paks/pakchunk34-WindowsNoEditor.sig",
-            "md5": "9c6006d34215bce6aa170f60fd7ff182",
-            "sampleHash": "9c6006d34215bce6aa170f60fd7ff182",
-            "size": 226472
+            "md5": "915b5c519b75111ab78ee35f3494fa68",
+            "sampleHash": "915b5c519b75111ab78ee35f3494fa68",
+            "size": 247340
         },
         {
             "dest": "Client/Content/Paks/pakchunk35-WindowsNoEditor.pak",
-            "md5": "ce69d426ec86f84cc705d0f174c26035",
-            "sampleHash": "0961daf0af08979d471dcbc009f514ed",
-            "size": 2220978580
+            "md5": "cdfaaae771ae1e0e340cf325ced83ce4",
+            "sampleHash": "54363236b6b5d8901577a248f59889ae",
+            "size": 2219732932
         },
         {
             "dest": "Client/Content/Paks/pakchunk35-WindowsNoEditor.sig",
-            "md5": "1eaeb223cb3943e585fc26032023332e",
-            "sampleHash": "1eaeb223cb3943e585fc26032023332e",
-            "size": 136088
+            "md5": "604a9633160378da666e88c410149cb6",
+            "sampleHash": "604a9633160378da666e88c410149cb6",
+            "size": 136012
         },
         {
             "dest": "Client/Content/Paks/pakchunk36-WindowsNoEditor.pak",
-            "md5": "f2e4e50b77d153a880443d47c4fa18e9",
-            "sampleHash": "93157d8e1fa7c650f12cc2d3d8f22ef1",
-            "size": 1614363720
+            "md5": "8a6e0a30f56c15295b1ed038359734b0",
+            "sampleHash": "8b32a409d296d2fa1eb2429821693d3a",
+            "size": 1603939640
         },
         {
             "dest": "Client/Content/Paks/pakchunk36-WindowsNoEditor.sig",
-            "md5": "f9c48d9576caa5dcbfc5260ba8777998",
-            "sampleHash": "f9c48d9576caa5dcbfc5260ba8777998",
-            "size": 99064
+            "md5": "36177a30898c6c73ebfabcb06e6b3671",
+            "sampleHash": "36177a30898c6c73ebfabcb06e6b3671",
+            "size": 98428
         },
         {
             "dest": "Client/Content/Paks/pakchunk39-WindowsNoEditor.pak",
-            "md5": "8cf7676f8cce555a55f9a0ac31fdaeb0",
-            "sampleHash": "dd8282b18241de0b7423b600957d26fc",
-            "size": 2123919893
+            "md5": "f63547b603f24a9b6de2094f66f41472",
+            "sampleHash": "bbe5b5250d8974bf99fcac284381bd49",
+            "size": 2162036043
         },
         {
             "dest": "Client/Content/Paks/pakchunk39-WindowsNoEditor.sig",
-            "md5": "5dd950cf9d603d0938305e53acabc5f7",
-            "sampleHash": "5dd950cf9d603d0938305e53acabc5f7",
-            "size": 130164
+            "md5": "90305e07b37623cc47375b6ce4f164e8",
+            "sampleHash": "90305e07b37623cc47375b6ce4f164e8",
+            "size": 132492
         },
         {
             "dest": "Client/Content/Paks/pakchunk4-WindowsNoEditor.pak",
-            "md5": "e404ceb6388f8c4d8e4d2fd52479d63c",
-            "sampleHash": "537869e2eda3654b264c39b2385ad4d9",
-            "size": 832124994
+            "md5": "cd35d5277635412dd81a3b1c7bdd248e",
+            "sampleHash": "63806ac283b3db5ce5c8fd6714694ea3",
+            "size": 870045246
         },
         {
             "dest": "Client/Content/Paks/pakchunk4-WindowsNoEditor.sig",
-            "md5": "2d283e47f5965df6ad73c2fc79ca00c2",
-            "sampleHash": "2d283e47f5965df6ad73c2fc79ca00c2",
-            "size": 51320
+            "md5": "9a66d9d39d4e480dc37251c2c0589038",
+            "sampleHash": "9a66d9d39d4e480dc37251c2c0589038",
+            "size": 53632
         },
         {
             "dest": "Client/Content/Paks/pakchunk40-WindowsNoEditor.pak",
-            "md5": "fe4a25b67bc75179d50575f189034ff8",
-            "sampleHash": "0be5cb8ea650e68e59f3523685c9535b",
-            "size": 175300661
+            "md5": "9e243cd5064c9311a107000e04f4e926",
+            "sampleHash": "7428264f4737cfb549d7a1fc10d1f42d",
+            "size": 178181925
         },
         {
             "dest": "Client/Content/Paks/pakchunk40-WindowsNoEditor.sig",
-            "md5": "581ed8f3b0550f627695349739b14b12",
-            "sampleHash": "581ed8f3b0550f627695349739b14b12",
-            "size": 11228
+            "md5": "1eaa0a3dc8f5d488ffb8236831d2c7f7",
+            "sampleHash": "1eaa0a3dc8f5d488ffb8236831d2c7f7",
+            "size": 11404
         },
         {
             "dest": "Client/Content/Paks/pakchunk41-WindowsNoEditor.pak",
-            "md5": "ba50ef47424ed6e4f4d10c4216cc5825",
-            "sampleHash": "c23ee25e7843a943a91363b44d271528",
-            "size": 823848107
+            "md5": "c5b84e5147a4917a896e5f99b0ccf64d",
+            "sampleHash": "a9f920d3a6be8b9e227204118c1ea0f4",
+            "size": 668025355
         },
         {
             "dest": "Client/Content/Paks/pakchunk41-WindowsNoEditor.sig",
-            "md5": "17843ae4103b5559554a530b101edde1",
-            "sampleHash": "17843ae4103b5559554a530b101edde1",
-            "size": 50812
+            "md5": "bd1958433fa89ed28ffed8a0fa3d26af",
+            "sampleHash": "bd1958433fa89ed28ffed8a0fa3d26af",
+            "size": 41304
         },
         {
             "dest": "Client/Content/Paks/pakchunk42-WindowsNoEditor.pak",
-            "md5": "bc89d14acb584f62bf8d9d5ff030bdff",
-            "sampleHash": "2f961f48c17c458e5283c631def59bf4",
-            "size": 406514389
+            "md5": "5b556f7ee56173af12856cd2a0255135",
+            "sampleHash": "814794b7c761b38d69e320ae5e09bf1d",
+            "size": 399639621
         },
         {
             "dest": "Client/Content/Paks/pakchunk42-WindowsNoEditor.sig",
-            "md5": "96b312bd11b5919147a8b686056d9293",
-            "sampleHash": "96b312bd11b5919147a8b686056d9293",
-            "size": 25340
+            "md5": "bcb2af03dc6132eb804369c12704b8fa",
+            "sampleHash": "bcb2af03dc6132eb804369c12704b8fa",
+            "size": 24924
         },
         {
             "dest": "Client/Content/Paks/pakchunk45-WindowsNoEditor.pak",
-            "md5": "98892b4d03d5bcb526f47706b0800523",
-            "sampleHash": "9b93da0d282b22362285cb181b6573b6",
-            "size": 43867522
+            "md5": "6dc901d6ec26214585bacaea3b86c1a9",
+            "sampleHash": "bbf8f93b8157620d9e0eae9c56f27050",
+            "size": 28953450
         },
         {
             "dest": "Client/Content/Paks/pakchunk45-WindowsNoEditor.sig",
-            "md5": "6084f66d8edd0a817efda3689a66f33a",
-            "sampleHash": "6084f66d8edd0a817efda3689a66f33a",
-            "size": 3208
+            "md5": "9eb4ddecf4b800ae87b55b1f44e93ae8",
+            "sampleHash": "9eb4ddecf4b800ae87b55b1f44e93ae8",
+            "size": 2296
         },
         {
             "dest": "Client/Content/Paks/pakchunk46-WindowsNoEditor.pak",
-            "md5": "cc853d619b722002bee32b326b5fd04e",
-            "sampleHash": "8b85b57207f85178cff3ebe8f30917e8",
-            "size": 28650583
+            "md5": "a0130d4949b81be2ec6bad4488da9843",
+            "sampleHash": "d18d46dcaaa44901f0eda98336eb49f9",
+            "size": 23688570
         },
         {
             "dest": "Client/Content/Paks/pakchunk46-WindowsNoEditor.sig",
-            "md5": "181d24938adead865a96e70344f0c58a",
-            "sampleHash": "181d24938adead865a96e70344f0c58a",
-            "size": 2280
+            "md5": "f34ce602a092a47337af28038fcea2a8",
+            "sampleHash": "f34ce602a092a47337af28038fcea2a8",
+            "size": 1976
         },
         {
             "dest": "Client/Content/Paks/pakchunk47-WindowsNoEditor.pak",
-            "md5": "5c5bbe9a6757a05eca039aa1f8fa0966",
-            "sampleHash": "22c68e6ef12cd4f16a156687e8919d6b",
-            "size": 7796352
+            "md5": "d0568a759741f7b2e702007b4a3aac60",
+            "sampleHash": "d89d9e03e80c928654974a5974e22f94",
+            "size": 11762736
         },
         {
             "dest": "Client/Content/Paks/pakchunk47-WindowsNoEditor.sig",
-            "md5": "fdb0e6722dc2605e60215012b3bd2077",
-            "sampleHash": "fdb0e6722dc2605e60215012b3bd2077",
-            "size": 1004
-        },
-        {
-            "dest": "Client/Content/Paks/pakchunk48-WindowsNoEditor.pak",
-            "md5": "4f6feb8b11c2bab7a793a01f298eab05",
-            "sampleHash": "63646d108689c6d2eefa4873d2dbe8aa",
-            "size": 1571680242
-        },
-        {
-            "dest": "Client/Content/Paks/pakchunk48-WindowsNoEditor.sig",
-            "md5": "e92d52fe78d95a16c5d2d27cd49498a3",
-            "sampleHash": "e92d52fe78d95a16c5d2d27cd49498a3",
-            "size": 96456
+            "md5": "9da7ff674054430df235b590363f9c75",
+            "sampleHash": "9da7ff674054430df235b590363f9c75",
+            "size": 1248
         },
         {
             "dest": "Client/Content/Paks/pakchunk49-WindowsNoEditor.pak",
-            "md5": "7e1acd29126fee4f001e64b83aa2de76",
-            "sampleHash": "3a61fa88be7282458cce9e31d79dc695",
-            "size": 1507229907
+            "md5": "cbda0fced3056873ca6626a81c46bcd5",
+            "sampleHash": "c8f112b4edf0cb5a361561df6ceb1b91",
+            "size": 1498881787
         },
         {
             "dest": "Client/Content/Paks/pakchunk49-WindowsNoEditor.sig",
-            "md5": "54980dd95eb0fd40f8bbc24dd48db2de",
-            "sampleHash": "54980dd95eb0fd40f8bbc24dd48db2de",
-            "size": 92524
+            "md5": "90da907ca420c5f942b531ac8f758d1f",
+            "sampleHash": "90da907ca420c5f942b531ac8f758d1f",
+            "size": 92016
         },
         {
             "dest": "Client/Content/Paks/pakchunk5-WindowsNoEditor.pak",
-            "md5": "52d9d88f8287ce27f20267d647656747",
-            "sampleHash": "101055d27da346b6dab9f835377cc93d",
-            "size": 950632682
+            "md5": "12a4cfe340e661085399037b1ebe7fa2",
+            "sampleHash": "225723ec36b991c147c0dc9a3d12486b",
+            "size": 870917114
         },
         {
             "dest": "Client/Content/Paks/pakchunk5-WindowsNoEditor.sig",
-            "md5": "d20796d10e961ee01002c78dfd114eba",
-            "sampleHash": "d20796d10e961ee01002c78dfd114eba",
-            "size": 58552
+            "md5": "b9a0e5dc5711fbd6adcbbbf11a89e93b",
+            "sampleHash": "b9a0e5dc5711fbd6adcbbbf11a89e93b",
+            "size": 53688
         },
         {
             "dest": "Client/Content/Paks/pakchunk50-WindowsNoEditor.pak",
-            "md5": "4e3270a6cb87ce2537f561029532196e",
-            "sampleHash": "7b98b8ec7ab60153a046a7ade80d3ecf",
-            "size": 16910501
+            "md5": "e35893744b71dc38831ccf5798a1d93a",
+            "sampleHash": "fdbb359b68f56c043606fabbc75a3ebc",
+            "size": 1255235835
         },
         {
             "dest": "Client/Content/Paks/pakchunk50-WindowsNoEditor.sig",
-            "md5": "7c5941debb7406d85ffaee8a0120b079",
-            "sampleHash": "7c5941debb7406d85ffaee8a0120b079",
-            "size": 1564
+            "md5": "e90974a7455eafbb75b9b02e9e2efd5d",
+            "sampleHash": "e90974a7455eafbb75b9b02e9e2efd5d",
+            "size": 77144
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk51-WindowsNoEditor.pak",
+            "md5": "05d99a648d88360d09fc5c1775d676bf",
+            "sampleHash": "4dea876107d0f2be2f656da70c1c2b19",
+            "size": 32152629
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk51-WindowsNoEditor.sig",
+            "md5": "85f26ad1b2d1af9bd9a7f59a4f3696a6",
+            "sampleHash": "85f26ad1b2d1af9bd9a7f59a4f3696a6",
+            "size": 2492
         },
         {
             "dest": "Client/Content/Paks/pakchunk52-WindowsNoEditor.pak",
-            "md5": "001c51cfacf4a5f3f60ae96c3beaa2bc",
-            "sampleHash": "dbf3c691fe84ec53eb4c0802fa20681b",
-            "size": 31252799
+            "md5": "75986be18dc2f14c336dd0272f20504a",
+            "sampleHash": "75986be18dc2f14c336dd0272f20504a",
+            "size": 8935
         },
         {
             "dest": "Client/Content/Paks/pakchunk52-WindowsNoEditor.sig",
-            "md5": "a7b9000817d7e847095888d82089ee0b",
-            "sampleHash": "a7b9000817d7e847095888d82089ee0b",
-            "size": 2436
+            "md5": "d39e52ce65fd65d101a000bd41e38753",
+            "sampleHash": "d39e52ce65fd65d101a000bd41e38753",
+            "size": 532
         },
         {
             "dest": "Client/Content/Paks/pakchunk53-WindowsNoEditor.pak",
-            "md5": "5e524985922deae0d7d4bda4fe7121fc",
-            "sampleHash": "abca7e1865a3dee9ba4ebfb963a07ce0",
-            "size": 12276489
+            "md5": "e74216a1b1015aa1295d8243e8eb9b86",
+            "sampleHash": "cffa1679a756f937e60ea5cc3e06b2dc",
+            "size": 2723211
         },
         {
             "dest": "Client/Content/Paks/pakchunk53-WindowsNoEditor.sig",
-            "md5": "95b097b16497676b8bcf60ce36fc4187",
-            "sampleHash": "95b097b16497676b8bcf60ce36fc4187",
-            "size": 1280
+            "md5": "9a9891a901e97d4024441eaccf93f719",
+            "sampleHash": "9a9891a901e97d4024441eaccf93f719",
+            "size": 696
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk54-WindowsNoEditor.pak",
+            "md5": "75bf57a236963c1747e89277b4bc1667",
+            "sampleHash": "467c65a3452d423fc3e11964ceb9a44e",
+            "size": 406869535
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk54-WindowsNoEditor.sig",
+            "md5": "05baff78ca9d35f96b607bf51cca9f3f",
+            "sampleHash": "05baff78ca9d35f96b607bf51cca9f3f",
+            "size": 25364
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk55-WindowsNoEditor.pak",
+            "md5": "4911004b316def3243a1128f84034d59",
+            "sampleHash": "ea710e4b11b9519ab23f313bbc035996",
+            "size": 57450969
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk55-WindowsNoEditor.sig",
+            "md5": "de4705dee4c4e4b408bf884d8d3d24cb",
+            "sampleHash": "de4705dee4c4e4b408bf884d8d3d24cb",
+            "size": 4036
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk56-WindowsNoEditor.pak",
+            "md5": "270ef4699f2b1682d658df1850bc5bfe",
+            "sampleHash": "270ef4699f2b1682d658df1850bc5bfe",
+            "size": 8924
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk56-WindowsNoEditor.sig",
+            "md5": "bb8dacedfe1d8fe981dbfba5446d0fc0",
+            "sampleHash": "bb8dacedfe1d8fe981dbfba5446d0fc0",
+            "size": 532
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk57-WindowsNoEditor.pak",
+            "md5": "e6acc8f1b70409694231313ad91bcb4c",
+            "sampleHash": "e6acc8f1b70409694231313ad91bcb4c",
+            "size": 21658
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk57-WindowsNoEditor.sig",
+            "md5": "65598c6a2c4cdd7391cb95a8ec3daa58",
+            "sampleHash": "65598c6a2c4cdd7391cb95a8ec3daa58",
+            "size": 532
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk58-WindowsNoEditor.pak",
+            "md5": "4890b5c518f3b53847874da80fa6a071",
+            "sampleHash": "4890b5c518f3b53847874da80fa6a071",
+            "size": 77724
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk58-WindowsNoEditor.sig",
+            "md5": "58ae2e8eae29beddb1dd50d0dc072bd1",
+            "sampleHash": "58ae2e8eae29beddb1dd50d0dc072bd1",
+            "size": 536
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk59-WindowsNoEditor.pak",
+            "md5": "18230d3a42405116baf75b6917ada516",
+            "sampleHash": "18230d3a42405116baf75b6917ada516",
+            "size": 64941
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk59-WindowsNoEditor.sig",
+            "md5": "fcb23711b2adb27dc4ef50804029b9d3",
+            "sampleHash": "fcb23711b2adb27dc4ef50804029b9d3",
+            "size": 532
         },
         {
             "dest": "Client/Content/Paks/pakchunk6-WindowsNoEditor.pak",
-            "md5": "f56120b0ce26803617d44da24d77e4ce",
-            "sampleHash": "cd7b46f42b94910b6a10075d5fd1cc42",
-            "size": 1400717085
+            "md5": "37b1b96a130c14e4b42b43e0de81fb08",
+            "sampleHash": "8d50b8f9808c90ee7e26a96e30ac3cd5",
+            "size": 1525488845
         },
         {
             "dest": "Client/Content/Paks/pakchunk6-WindowsNoEditor.sig",
-            "md5": "773fdde1557d43551380c2b2f4c01a10",
-            "sampleHash": "773fdde1557d43551380c2b2f4c01a10",
-            "size": 86024
+            "md5": "9af2d0c45661478cfbeecb43c6ab4119",
+            "sampleHash": "9af2d0c45661478cfbeecb43c6ab4119",
+            "size": 93640
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk60-WindowsNoEditor.pak",
+            "md5": "6cb711c618e9f5836d52eac9cdce8bea",
+            "sampleHash": "6cb711c618e9f5836d52eac9cdce8bea",
+            "size": 4487
+        },
+        {
+            "dest": "Client/Content/Paks/pakchunk60-WindowsNoEditor.sig",
+            "md5": "1a828b01910f09512508bf65027aa324",
+            "sampleHash": "1a828b01910f09512508bf65027aa324",
+            "size": 532
         },
         {
             "dest": "Client/Content/Paks/pakchunk7-WindowsNoEditor.pak",
-            "md5": "33c89f76d99e9b39d7bd3e97406c29cb",
-            "sampleHash": "8cf8f14d8b7fe55675155f88926a52fc",
-            "size": 3148396486
+            "md5": "29ba18ef74e250763b81f7101c67d040",
+            "sampleHash": "02c014294c95c34565318d15b0b1e065",
+            "size": 3768370406
         },
         {
             "dest": "Client/Content/Paks/pakchunk7-WindowsNoEditor.sig",
-            "md5": "bf95b6d50ba66f34b421cc82f6a217ad",
-            "sampleHash": "bf95b6d50ba66f34b421cc82f6a217ad",
-            "size": 192692
+            "md5": "3e1a367f34ce8347770daaa03463ddeb",
+            "sampleHash": "3e1a367f34ce8347770daaa03463ddeb",
+            "size": 230532
         },
         {
             "dest": "Client/Content/Paks/pakchunk8-WindowsNoEditor.pak",
-            "md5": "459f708eadee2436bded9a057636edf2",
-            "sampleHash": "1d4723d201d8fdb9e2a1b69f81757bff",
-            "size": 337337900
+            "md5": "58d2b2ad56053485dcd8a609e724db24",
+            "sampleHash": "67023840ebcc3fdfbd108fe42ece6823",
+            "size": 450536124
         },
         {
             "dest": "Client/Content/Paks/pakchunk8-WindowsNoEditor.sig",
-            "md5": "258908a08717a0641c64ace1f88bb8d0",
-            "sampleHash": "258908a08717a0641c64ace1f88bb8d0",
-            "size": 21120
+            "md5": "f207d55f93866befa59fb6ec6d6931d0",
+            "sampleHash": "f207d55f93866befa59fb6ec6d6931d0",
+            "size": 28028
         },
         {
             "dest": "Client/Content/Paks/pakchunk9-WindowsNoEditor.pak",
-            "md5": "16cfa9806dc4d1c3f9bdb0d391050b04",
-            "sampleHash": "9ee4a8f1fc5603a820171da9d84b01f4",
-            "size": 266650872
+            "md5": "b87b5f21c6f4a249ed942b3a344f86ae",
+            "sampleHash": "181fe677322e170cffc86bc386a64e1c",
+            "size": 268565617
         },
         {
             "dest": "Client/Content/Paks/pakchunk9-WindowsNoEditor.sig",
-            "md5": "d52aa5d7e7ca15a732ceacf3034754d3",
-            "sampleHash": "d52aa5d7e7ca15a732ceacf3034754d3",
-            "size": 16804
+            "md5": "8d9db7984876894311a76f6fdcbbef31",
+            "sampleHash": "8d9db7984876894311a76f6fdcbbef31",
+            "size": 16920
         },
         {
             "dest": "Engine/Binaries/Win64/UnrealCEFSubProcess.exe",
-            "md5": "663cad08a0ea7c6160122d0f91ae019d",
-            "sampleHash": "bcb0952e55da16c2976eed023d691e1a",
+            "md5": "34e11778a2938c9a802b499a1c9a2970",
+            "sampleHash": "fc5f8aacbf8dc3b7044192220a1a5a27",
             "size": 3714640
         },
         {
@@ -579,8 +663,8 @@
         },
         {
             "dest": "Client/Content/Aki/Cursor/CursorData",
-            "md5": "2d5a5bec44ca1f1cf3ceac1a869b0faa",
-            "sampleHash": "2d5a5bec44ca1f1cf3ceac1a869b0faa",
+            "md5": "69c8dacf56a414de9c8ae898390bacab",
+            "sampleHash": "69c8dacf56a414de9c8ae898390bacab",
             "size": 16
         },
         {
@@ -693,20 +777,20 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKEx.dll",
-            "md5": "3d65ecdc4d35e548ed6dff93b868d816",
-            "sampleHash": "aabbf3f9a7ccf80b500414911555469b",
-            "size": 1790544
+            "md5": "de3aaf4cb302a7977e0e3b6e929f61d9",
+            "sampleHash": "1cdb1133b006308d10c06f1703fe19be",
+            "size": 1795152
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKExternal.exe",
-            "md5": "fd942ee67a88fa6f4eef2aa01cd2bc73",
-            "sampleHash": "fd942ee67a88fa6f4eef2aa01cd2bc73",
-            "size": 181840
+            "md5": "08a6259e4cac9ed3f20d8e82ca9c7753",
+            "sampleHash": "08a6259e4cac9ed3f20d8e82ca9c7753",
+            "size": 184912
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRShmq.dll",
-            "md5": "a3996291899780c850f0b2400dc400a7",
-            "sampleHash": "a3996291899780c850f0b2400dc400a7",
+            "md5": "901a3eef089dc8832653a6dd07b082ee",
+            "sampleHash": "901a3eef089dc8832653a6dd07b082ee",
             "size": 45136
         },
         {
@@ -729,32 +813,32 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/krsdk_zlib.dll",
-            "md5": "7c18c1213864a41908e84987954dc07f",
-            "sampleHash": "7c18c1213864a41908e84987954dc07f",
+            "md5": "44c7d76d87acd88b796568291d4d14c9",
+            "sampleHash": "44c7d76d87acd88b796568291d4d14c9",
             "size": 103504
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/libcrypto-3-x64.dll",
-            "md5": "77cd5a3c11eb7eeae6eb381e281a3644",
+            "md5": "5b7705c543d7f68b204ff6090740b884",
             "sampleHash": "f2d1ba609e6816034ffc3a2d3c5c1954",
             "size": 6050384
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/libcurl.dll",
-            "md5": "5536962e43c63d6f03264eeace16e746",
-            "sampleHash": "5536962e43c63d6f03264eeace16e746",
+            "md5": "9db09d618689c49ac15c87c108f7451f",
+            "sampleHash": "9db09d618689c49ac15c87c108f7451f",
             "size": 540752
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/libkrsdkcurl.dll",
-            "md5": "7870a8d98329988c44fb1d1bd9818fd7",
-            "sampleHash": "7870a8d98329988c44fb1d1bd9818fd7",
+            "md5": "5919aacce1cc4bce0c1373a9dd31803c",
+            "sampleHash": "5919aacce1cc4bce0c1373a9dd31803c",
             "size": 496720
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/libssl-3-x64.dll",
-            "md5": "528a0af2e8fdcfd764a3b418d1b470b4",
-            "sampleHash": "528a0af2e8fdcfd764a3b418d1b470b4",
+            "md5": "669dadf2736060a1701b1bae6dcfadff",
+            "sampleHash": "669dadf2736060a1701b1bae6dcfadff",
             "size": 796240
         },
         {
@@ -771,14 +855,14 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/sqlite3.dll",
-            "md5": "94ffb5de817cfb842179f14177b15676",
-            "sampleHash": "94ffb5de817cfb842179f14177b15676",
+            "md5": "3eeef1051069e77792446789a8d01c3f",
+            "sampleHash": "3eeef1051069e77792446789a8d01c3f",
             "size": 1040464
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/thinkingdata.dll",
-            "md5": "36576c05eae4f2e3502e7a4dc01ac459",
-            "sampleHash": "36576c05eae4f2e3502e7a4dc01ac459",
+            "md5": "a100507aa70ea0bd62c834cce540ece8",
+            "sampleHash": "a100507aa70ea0bd62c834cce540ece8",
             "size": 343120
         },
         {
@@ -789,14 +873,14 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/zlibwapi.dll",
-            "md5": "d8a3880a813a724dc1c747662d2a7f2a",
-            "sampleHash": "d8a3880a813a724dc1c747662d2a7f2a",
+            "md5": "f5f8f586780a950f7804b9fb5be111ea",
+            "sampleHash": "f5f8f586780a950f7804b9fb5be111ea",
             "size": 137296
         },
         {
             "dest": "Engine/Binaries/ThirdParty/CEF3/Win64/chrome_elf.dll",
-            "md5": "98ebd11947fd48313a728fc3e4e4ed1d",
-            "sampleHash": "98ebd11947fd48313a728fc3e4e4ed1d",
+            "md5": "582e3004016f98e32f6466e8933c7210",
+            "sampleHash": "582e3004016f98e32f6466e8933c7210",
             "size": 568912
         },
         {
@@ -819,19 +903,19 @@
         },
         {
             "dest": "Engine/Binaries/ThirdParty/CEF3/Win64/libEGL.dll",
-            "md5": "534ac86dc944ff47ce265df441f89bc4",
-            "sampleHash": "534ac86dc944ff47ce265df441f89bc4",
+            "md5": "87fc98aec372f40747463c4f04308b56",
+            "sampleHash": "87fc98aec372f40747463c4f04308b56",
             "size": 113744
         },
         {
             "dest": "Engine/Binaries/ThirdParty/CEF3/Win64/libGLESv2.dll",
-            "md5": "e30a89221604cd450ee8baae41585bd3",
+            "md5": "455be418723222db24bb0730f99ad25e",
             "sampleHash": "e9cdb891ea71141e84ad4816246fd06f",
             "size": 3943504
         },
         {
             "dest": "Engine/Binaries/ThirdParty/CEF3/Win64/libcef.dll",
-            "md5": "54e14756d31542c96a1720d4e4136c44",
+            "md5": "a6ed47a278dbff047591d1ee713d3a55",
             "sampleHash": "dd172ac5163d7e6996c8e977307f2aa2",
             "size": 98296400
         },
@@ -849,14 +933,14 @@
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-ATS64.dll",
-            "md5": "8daf65791decedcb9c26373882c53e20",
+            "md5": "7cba8b399fe82fe1de57f1601d4b0403",
             "sampleHash": "4ad96b1fc185d4db785d5d8ba9086660",
             "size": 4211400
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Base.dat",
-            "md5": "f60d69deccfc12dbecfad365f4c8968f",
-            "sampleHash": "f60d69deccfc12dbecfad365f4c8968f",
+            "md5": "a2b0363b2c0fb608a80887508fd4643b",
+            "sampleHash": "a2b0363b2c0fb608a80887508fd4643b",
             "size": 1988
         },
         {
@@ -867,50 +951,50 @@
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Base64.dll",
-            "md5": "9ad7f71450b1474e16af4f2c103d4830",
-            "sampleHash": "57f1bce0a344daee83a9e2c966d68350",
-            "size": 8633544
+            "md5": "359f5a296803c9685c14a5e87b691bc0",
+            "sampleHash": "7ed1c230db574d4595ca6db69f09ec0e",
+            "size": 8633472
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-CSI64.dll",
-            "md5": "be206ea1d619dd0a4c0fcdc373c0d24f",
+            "md5": "004b29b838c154d51fee37734988a915",
             "sampleHash": "b7c696da383a64efcfd8095faec9c6c6",
             "size": 12424504
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-DFS64.dll",
-            "md5": "cdb02d18780cd453c55182faffc760ca",
+            "md5": "16cd3a5f1d4b12bb80f98b6d72f6bda0",
             "sampleHash": "3889624636d4a5eb29440641338b7098",
             "size": 8705272
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-DRV64.dll",
-            "md5": "d5aa88bcea57ebc225f883165a4b9a9a",
+            "md5": "dcae81d148ccdc13696c64ce7b2057e2",
             "sampleHash": "01b4a3453a19e580b5b203e38add5c60",
             "size": 18822392
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Safe.dll",
-            "md5": "cee20f49aa79a2abb52a6065a703e3d8",
+            "md5": "7fbfbf916d1dffda0b51530522c5b4ac",
             "sampleHash": "d0614b97a3248bfca66f615f4816e49f",
-            "size": 9021104
+            "size": 9021032
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Tips64.dll",
-            "md5": "1bab65645217b538ed8aa5783a61ac07",
+            "md5": "346fa8b45be2ea9f684c29e0f75ca84e",
             "sampleHash": "1c3a8fc3f1d181a731901fb58bbeb19a",
-            "size": 8072904
+            "size": 8072832
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Trace.dll",
-            "md5": "4e005f6a73a95fd7822d684a43de101d",
-            "sampleHash": "c3b655eded7afd8d0dd684705f25231e",
-            "size": 2401488
+            "md5": "270e8f7486e50174c03032866cdf6d60",
+            "sampleHash": "030fdfc158867e7b3205d7fc4bb52177",
+            "size": 2401416
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/D3DX9_43.dll",
-            "md5": "088df265d6f191c0c20abd240908015b",
-            "sampleHash": "4ff3618a8ff283229dacf2058b983dc8",
+            "md5": "b6bca352a0d04290e36ebc6c33e47284",
+            "sampleHash": "bc6ebde5575d55a26154a688b8c8ba3c",
             "size": 2411768
         },
         {
@@ -921,14 +1005,14 @@
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/d3dcompiler_43.dll",
-            "md5": "6528a156e45878c42870b1ef4e76b9ad",
-            "sampleHash": "1e227f2f977d0014f085581e02f2be0e",
+            "md5": "f327bb435b660cbd25490b1e88be428d",
+            "sampleHash": "b8331ea1b5ab262ff03932ca3a83981e",
             "size": 2536712
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/d3dx11_43.dll",
-            "md5": "e3d85cb9337ccf039e8ae76773df24d3",
-            "sampleHash": "e3d85cb9337ccf039e8ae76773df24d3",
+            "md5": "3b6917bb7cc72f9dbd4163a0387f5314",
+            "sampleHash": "3b6917bb7cc72f9dbd4163a0387f5314",
             "size": 287488
         },
         {
@@ -951,15 +1035,15 @@
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/SGuard/x64/ACE-Safe.dll",
-            "md5": "03b16af59838b8f9747e60c0c8ecb023",
+            "md5": "b2644f4988d1c6d465fcdafb51eed398",
             "sampleHash": "d0614b97a3248bfca66f615f4816e49f",
             "size": 9021104
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/SGuard/x64/ACE-Trace.dll",
-            "md5": "6164f6a98ad441763460fc816b20200a",
-            "sampleHash": "032ba1bda7f7d5180e644a091cc4bbf2",
-            "size": 2401488
+            "md5": "feb87b9dcea9efa3ddcb12380a71c16a",
+            "sampleHash": "030fdfc158867e7b3205d7fc4bb52177",
+            "size": 2401416
         },
         {
             "dest": "Client/Binaries/Win64/AntiCheatExpert/SGuard/x64/SGuard.rc",
@@ -999,8 +1083,8 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKConfig.json",
-            "md5": "cf61c72bf132d2425b1dbf91faaaef7e",
-            "sampleHash": "cf61c72bf132d2425b1dbf91faaaef7e",
+            "md5": "649564ed5cf3f354b9e55a4b3df3a3b4",
+            "sampleHash": "649564ed5cf3f354b9e55a4b3df3a3b4",
             "size": 865
         },
         {
@@ -1041,80 +1125,80 @@
         },
         {
             "dest": "Engine/Binaries/ThirdParty/Ogg/Win64/VS2015/libogg_64.dll",
-            "md5": "e709e93140551334fa15c696a3556786",
-            "sampleHash": "e709e93140551334fa15c696a3556786",
+            "md5": "528b02f0c1ac99955acc334129606562",
+            "sampleHash": "528b02f0c1ac99955acc334129606562",
             "size": 70224
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/APEX_Clothing_x64.dll",
-            "md5": "5a192260b94f157419932834e54ead75",
-            "sampleHash": "0f0d2173931dbe9061e88c60a9b36fb8",
+            "md5": "4e3a912412c3ff2fb1d1eb5659db625c",
+            "sampleHash": "c10b8ea54311ab6d8d9cf1b4c17aafa2",
             "size": 1240144
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/APEX_Destructible_x64.dll",
-            "md5": "9d54bbe6f65a8fe5e199112d7725c134",
-            "sampleHash": "d468c25f5259fc94572d64ca12e34e79",
+            "md5": "005d0047e22865d9cbc5feab8a0b7e0d",
+            "sampleHash": "91d5e6b747b4d4dd1ae4cbf40e594c46",
             "size": 2031184
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/APEX_Legacy_x64.dll",
-            "md5": "a0de8cbb7c7b8f3c3c10f68bc16c9c69",
-            "sampleHash": "e5077a5c455d88afa1986f1e91ab1518",
+            "md5": "e67a9bf49fb7fadeaa7ac80bad8b5084",
+            "sampleHash": "d823fe6b1f84a73b4c7ac7b0b6ea09e0",
             "size": 3350608
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/ApexFramework_x64.dll",
-            "md5": "cce405c8a882e9fa2e13f928ebf3aaf4",
-            "sampleHash": "df36b079508e14b6bcf0380ee359ef59",
+            "md5": "2fb46cf6164f2b035fcfdf3cf12a893b",
+            "sampleHash": "648b58d8dce32a869a57aa3c2669f9b2",
             "size": 1065552
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/NvCloth_x64.dll",
-            "md5": "7fa635233e49e2a549fa2eb231e78afa",
-            "sampleHash": "7fa635233e49e2a549fa2eb231e78afa",
+            "md5": "1861ef47dbccbd884b2d25c58598d963",
+            "sampleHash": "1861ef47dbccbd884b2d25c58598d963",
             "size": 286800
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PhysX3Common_x64.dll",
-            "md5": "b4e8592dbc0493588bbed14290345dfa",
+            "md5": "e3bbaf112c293a248c415ca1ff2daca2",
             "sampleHash": "252425f4376994f622d42a40b5c8299a",
             "size": 1620560
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PhysX3Cooking_x64.dll",
-            "md5": "cd95e6df48b0781ef6ba22794a01d566",
-            "sampleHash": "cd95e6df48b0781ef6ba22794a01d566",
+            "md5": "7d2b9ad8ae60cef9801d2260b11a858b",
+            "sampleHash": "7d2b9ad8ae60cef9801d2260b11a858b",
             "size": 266320
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PhysX3_x64.dll",
-            "md5": "9ef74d8fbf0daa017c6fef575fb86ec8",
-            "sampleHash": "a82a833c96f5c4e54ef0518fadefe5a2",
+            "md5": "4657f25fbf57f069f24bea1e19859e0f",
+            "sampleHash": "b1e770dd46965221eded21d858cfe99d",
             "size": 2128464
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PxFoundation_x64.dll",
-            "md5": "0cf2acc24e4b1d361412b0592d240253",
-            "sampleHash": "0cf2acc24e4b1d361412b0592d240253",
+            "md5": "32a180b25bfade07353ad6483f60f426",
+            "sampleHash": "32a180b25bfade07353ad6483f60f426",
             "size": 75856
         },
         {
             "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PxPvdSDK_x64.dll",
-            "md5": "0f0f0d1b1855a4df215cd53b720aa4f9",
-            "sampleHash": "0f0f0d1b1855a4df215cd53b720aa4f9",
+            "md5": "37fbdd4fa23d1176cca1cec5afe29349",
+            "sampleHash": "37fbdd4fa23d1176cca1cec5afe29349",
             "size": 210512
         },
         {
             "dest": "Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbis_64.dll",
-            "md5": "58c93ca33d0d1bb5d4d144115016f480",
-            "sampleHash": "ab79ddfead719d2d81b09e1c0a98be70",
+            "md5": "3f317c3dc5fbc061c3b737d07a212b0c",
+            "sampleHash": "d35cb3419c89fe834df13c3781108c85",
             "size": 1735248
         },
         {
             "dest": "Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbisfile_64.dll",
-            "md5": "30cd34024f966755193bbd0a3412affa",
-            "sampleHash": "30cd34024f966755193bbd0a3412affa",
+            "md5": "74338f8340dce3a0d7b83a3f4f09a9ab",
+            "sampleHash": "74338f8340dce3a0d7b83a3f4f09a9ab",
             "size": 58960
         },
         {
@@ -1161,14 +1245,14 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/KRShmq.dll",
-            "md5": "f8696f849cf9f48a846e300fbc3ba015",
-            "sampleHash": "f8696f849cf9f48a846e300fbc3ba015",
+            "md5": "70c2733b37bd7e775c8822beb3e05001",
+            "sampleHash": "70c2733b37bd7e775c8822beb3e05001",
             "size": 45136
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/KRWebView.exe",
-            "md5": "e666d2239437dc4ddf6c901fb0c05743",
-            "sampleHash": "e2307172db059c654a93fea00a54cce9",
+            "md5": "b882017ec1588a0a5e9b0f58b357de70",
+            "sampleHash": "e46ae6c19964e9f5c0d2c083b1f118bb",
             "size": 5214288
         },
         {
@@ -1185,8 +1269,8 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/chrome_elf.dll",
-            "md5": "a13b7de9a8fe62c0e7d55cbc8fe7b752",
-            "sampleHash": "30a08b61c0be923c7ea2978255be7a5d",
+            "md5": "ed813cb58489eabfeae5ffb110210562",
+            "sampleHash": "9d3ee431b23ad26a48acd1504f7ae3f2",
             "size": 1166928
         },
         {
@@ -1203,19 +1287,19 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/libEGL.dll",
-            "md5": "7f1b914bd30ce4afff98837894a4e023",
-            "sampleHash": "7f1b914bd30ce4afff98837894a4e023",
+            "md5": "5a9453878fef31f8579ecb9892367867",
+            "sampleHash": "5a9453878fef31f8579ecb9892367867",
             "size": 427088
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/libGLESv2.dll",
-            "md5": "8b9588391bad125b383c355d7d72daef",
+            "md5": "339557c149ab0fc97692e44ccce21e56",
             "sampleHash": "a3a9a092935125136eea779ee54a6404",
             "size": 6919248
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/libcef.dll",
-            "md5": "8db7689f74da702a2aaa81c31bb3143d",
+            "md5": "94024fbe7ba74845a22264e5a68ac190",
             "sampleHash": "4493a7b46514f03f596f84b8369b5247",
             "size": 155668560
         },
@@ -1239,13 +1323,13 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/KRShmq.dll",
-            "md5": "955a7128174c584900923704baf5e964",
-            "sampleHash": "955a7128174c584900923704baf5e964",
+            "md5": "41aa5df529b7f9a350bfbcfac4dacf4a",
+            "sampleHash": "41aa5df529b7f9a350bfbcfac4dacf4a",
             "size": 45136
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/KRWebView.exe",
-            "md5": "0bfb21403e442098ac2c85efaaaf618a",
+            "md5": "6f4d69905901627161179a1d63bd604a",
             "sampleHash": "e46ae6c19964e9f5c0d2c083b1f118bb",
             "size": 5214288
         },
@@ -1263,8 +1347,8 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/chrome_elf.dll",
-            "md5": "48e113e4d09f932b3a0c10079b963b9b",
-            "sampleHash": "6ab9923de9bfa0be55f633b8d379d264",
+            "md5": "afe6963a00ea8b9d4b964b8798c6acfd",
+            "sampleHash": "1c37e774c968165f7ecfd49d6ca820e1",
             "size": 1156688
         },
         {
@@ -1281,19 +1365,19 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/libEGL.dll",
-            "md5": "6dadd366211dd02dbe97822dd5b8d688",
-            "sampleHash": "6dadd366211dd02dbe97822dd5b8d688",
+            "md5": "9840a954aa345d34ad61f100848c42d2",
+            "sampleHash": "9840a954aa345d34ad61f100848c42d2",
             "size": 424528
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/libGLESv2.dll",
-            "md5": "3386a6160e6d64ae3a835582662d3c37",
+            "md5": "b60c1a0e0059c042b157c0044f7f840f",
             "sampleHash": "83720ded04285052b9a5183e3f9d93c8",
             "size": 6904912
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/libcef.dll",
-            "md5": "838795a45bf004262c6f01992e1b9dab",
+            "md5": "417d19c20e67392ba67987f8313bce17",
             "sampleHash": "b03c7589831686cb80834c2365f5b16c",
             "size": 156463184
         },
@@ -1989,8 +2073,8 @@
         },
         {
             "dest": "Client/Plugins/Kuro/WeLingPipeSDK/ThirdParty/Win64/libs/NamedPipeClient.dll",
-            "md5": "0e40338ee0a425e830df5e63362de0e0",
-            "sampleHash": "33a3ce6eb87681530353f0dcbef84c9f",
+            "md5": "0f604ca7b1811f903824f3ece2287dc5",
+            "sampleHash": "9b4b14ba4afd39d0ea841443fc0ac9aa",
             "size": 1235536
         },
         {
@@ -2139,14 +2223,14 @@
         },
         {
             "dest": "Client/Plugins/Wwise/ThirdParty/x64_vc160/Release/bin/DolbyAtmosRenderer.dll",
-            "md5": "7e0ef97f6a294b09413ae213a2f434b0",
+            "md5": "87c5de104bcbbf59cddcd633c74680d2",
             "sampleHash": "1c0b53d6f2e1bb006444bb488b238885",
             "size": 1893456
         },
         {
             "dest": "Client/Plugins/Wwise/ThirdParty/x64_vc160/Release/bin/DolbyStereoRenderer.dll",
-            "md5": "003a69ee5b2fb9d0d3af7cd7ddf81b9a",
-            "sampleHash": "003a69ee5b2fb9d0d3af7cd7ddf81b9a",
+            "md5": "dc0415f8940b39581570d489be28c1c4",
+            "sampleHash": "dc0415f8940b39581570d489be28c1c4",
             "size": 56400
         },
         {
@@ -2475,8 +2559,8 @@
         },
         {
             "dest": "Engine/Binaries/ThirdParty/HLMediaLibrary/Windows/Release/x64/HLMediaLibrary.dll",
-            "md5": "55d6ea3dcbf71adde13874e3683c9283",
-            "sampleHash": "55d6ea3dcbf71adde13874e3683c9283",
+            "md5": "a23c464d3d352f4259f945ff03317d5c",
+            "sampleHash": "a23c464d3d352f4259f945ff03317d5c",
             "size": 149584
         },
         {
@@ -2805,13 +2889,13 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/swiftshader/libEGL.dll",
-            "md5": "434850fa3b83e220c157e77e53599721",
-            "sampleHash": "434850fa3b83e220c157e77e53599721",
+            "md5": "7543d06f76e4a99a6577a03c3a61e80d",
+            "sampleHash": "7543d06f76e4a99a6577a03c3a61e80d",
             "size": 444496
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/swiftshader/libGLESv2.dll",
-            "md5": "cd842223dbe3995921ac9e48b850ec25",
+            "md5": "cf7fe056bb1d1c258492ce392f08fa21",
             "sampleHash": "b8ba754dd58f5cf92231c7dee7a14a54",
             "size": 2760272
         },
@@ -3141,14 +3225,14 @@
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/swiftshader/libEGL.dll",
-            "md5": "a8cd8b430347004e2b288415f038b3f3",
-            "sampleHash": "a8cd8b430347004e2b288415f038b3f3",
+            "md5": "9b069a96827281f6097f0345aa6327c6",
+            "sampleHash": "9b069a96827281f6097f0345aa6327c6",
             "size": 439888
         },
         {
             "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/swiftshader/libGLESv2.dll",
-            "md5": "199d1b14fa3ea74efe8cc3e6eaff4dc5",
-            "sampleHash": "867d50f9451535d496fc2cf05aa7ae08",
+            "md5": "36b7af41081aa2076ce40b243b3651db",
+            "sampleHash": "2bed9fb525895bc03ca58f6044fbba90",
             "size": 2765392
         },
         {

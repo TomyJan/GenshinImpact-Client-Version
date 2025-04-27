@@ -10,7 +10,7 @@ const __dirname = dirname(__filename)
 
 const jsonFile = 'Scripts/WW-Downloader/filelist.json'
 const baseUrl =
-  'https://pcdownload-huoshan.aki-game.com/launcher/game/G152/2.2.0/ifrkqjQOAZQkvNXJcAgTKlbRegvLoMZH/zip/'
+  'https://pcdownload-huoshan.aki-game.com/launcher/game/G152/2.3.0/RABESsjbHjMStTvIbpwBbjDnnheQBwOs/zip/'
 const targetDir = path.join(__dirname, 'ww')
 
 // 获取当前时间字符串
@@ -117,7 +117,7 @@ async function handleFile(fileObj, index, total) {
 
   fs.mkdirSync(path.dirname(fullPath), { recursive: true })
 
-  const checkAndDownload = async (retry = false) => {
+  const checkAndDownload = async (isRetry = false) => {
     if (fs.existsSync(fullPath)) {
       log(index, total, `校验 ${name}`)
       const stats = fs.statSync(fullPath)
@@ -134,7 +134,7 @@ async function handleFile(fileObj, index, total) {
           return true
         }
       }
-      log(index, total, `校验 ${name} 文件错误${retry ? '' : ', 重试一次'}`)
+      log(index, total, `校验 ${name} 文件错误${isRetry ? '' : ', 重试一次'}`)
     }
 
     log(index, total, `下载 ${name}`)
@@ -168,8 +168,8 @@ async function handleFile(fileObj, index, total) {
       log(index, total, `校验 ${name} 完成`)
       return true
     } catch (e) {
-      log(index, total, `校验 ${name} 文件错误${retry ? '' : ', 重试一次'}`)
-      if (!retry) return await checkAndDownload(true)
+      log(index, total, `校验 ${name} 文件错误${isRetry ? '' : ', 重试一次'}`)
+      if (!isRetry) return await checkAndDownload(true)
       return false
     }
   }

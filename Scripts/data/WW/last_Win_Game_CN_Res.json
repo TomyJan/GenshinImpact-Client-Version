@@ -68,15 +68,15 @@
     },
     {
       "dest": "Client/Binaries/Win64/Client-Win64-Shipping.exe",
-      "md5": "32d2119b04394e9de284319ede7445da",
-      "sampleHash": "a6502c99298221bc654db6a347247bb3",
-      "size": 74726048
+      "md5": "336b84b99989f1c5960f6d6beaf528a7",
+      "sampleHash": "6f5b0cbf28318cd012613344b2ecdda1",
+      "size": 74736408
     },
     {
       "dest": "Client/Binaries/Win64/Client-Win64-ShippingBase.dll",
-      "md5": "dcf54f3987f6b358dea1ff8dc68059a8",
-      "sampleHash": "52bc4dffd72d4d869bbcf082c18b1bff",
-      "size": 29341016
+      "md5": "2b80d69683bba76184881b1919ac3cc6",
+      "sampleHash": "a5bf3115109a0ce227c687dca2c761fa",
+      "size": 29341072
     },
     {
       "dest": "Client/Binaries/Win64/CrashSight64.dll",
@@ -914,15 +914,15 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-ATS64.dll",
-      "md5": "a17938730bb26d06990623ad1b8d7b0a",
-      "sampleHash": "4ad96b1fc185d4db785d5d8ba9086660",
-      "size": 4211400
+      "md5": "f62f3955a85a55e44630313cfe3c0829",
+      "sampleHash": "db0af7404afb7eb239e1ac8058e7b271",
+      "size": 4211464
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Base.dat",
-      "md5": "4cfa349ba6c2d238c937ba307f3aab00",
-      "sampleHash": "4cfa349ba6c2d238c937ba307f3aab00",
-      "size": 2100
+      "md5": "4e942a789ebe22f7214c52acef2de6eb",
+      "sampleHash": "4e942a789ebe22f7214c52acef2de6eb",
+      "size": 1988
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Base.rc",
@@ -932,51 +932,51 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Base64.dll",
-      "md5": "b8a4ab1fefc4eab5c634b80877c92bf8",
-      "sampleHash": "7ed1c230db574d4595ca6db69f09ec0e",
-      "size": 8633472
+      "md5": "3c89954f427def9bc88ecf8fe077729e",
+      "sampleHash": "57f1bce0a344daee83a9e2c966d68350",
+      "size": 8633608
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-CSI64.dll",
-      "md5": "b72e331ed565292990b523f2f015c3ca",
+      "md5": "cd54c35037c57301d29848dc8c1f2e51",
       "sampleHash": "b7c696da383a64efcfd8095faec9c6c6",
-      "size": 12424504
+      "size": 12424568
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-DFS64.dll",
-      "md5": "e20b1e8f6aa14c9f87163571082cfcb0",
+      "md5": "212ff0e4f6cd52d093389a4c9f29b403",
       "sampleHash": "3889624636d4a5eb29440641338b7098",
-      "size": 8705200
+      "size": 8705336
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-DRV64.dll",
-      "md5": "feb37ab46791e4f5c1a3b8af25702258",
+      "md5": "5e81031e27dbd4404fc6e24f1b236e9d",
       "sampleHash": "01b4a3453a19e580b5b203e38add5c60",
-      "size": 18822392
+      "size": 18822376
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Safe.dll",
-      "md5": "ca40647ba317974ffa2cbd70a5b11aed",
+      "md5": "ad5e449f03ae4fd3ba0d9ac53654ebf4",
       "sampleHash": "d0614b97a3248bfca66f615f4816e49f",
-      "size": 9021104
+      "size": 9021168
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Tips64.dll",
-      "md5": "c17b1716fff2ae4bb0155eddfeb61ecf",
+      "md5": "bff0fac0d68420fc4e0292c7a48adde5",
       "sampleHash": "1c3a8fc3f1d181a731901fb58bbeb19a",
-      "size": 8072904
+      "size": 8072968
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Trace.dll",
-      "md5": "2f59bf8fb0756a4f65d2ce9e4357a0de",
-      "sampleHash": "1d52d4f1adc7095824846bf8c3547b05",
-      "size": 2401488
+      "md5": "e85ac7fab8d8a27266e981b67a68dc8c",
+      "sampleHash": "885cd1f69596dc73a6710295f89afaa8",
+      "size": 2401480
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/D3DX9_43.dll",
-      "md5": "24c8679ed922b8e231282cdf991cd366",
-      "sampleHash": "12b6081c7caf600d1191961702a3f067",
-      "size": 2411696
+      "md5": "cc0810497af1dee967e5e55ee49d91c7",
+      "sampleHash": "46ebb9ed649d1969bd96a44233083641",
+      "size": 2411832
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/SGuardAgent64.dll",
@@ -986,15 +986,15 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/d3dcompiler_43.dll",
-      "md5": "319f56cfdd99be2f0e8ad0dcd6f4553d",
-      "sampleHash": "b8331ea1b5ab262ff03932ca3a83981e",
-      "size": 2536712
+      "md5": "883de6c016d47fc994f54e622fe96a77",
+      "sampleHash": "500589f8633781389d03904934c0bf19",
+      "size": 2536704
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/d3dx11_43.dll",
-      "md5": "962b8feebf70f71ab07a178c3b7106b5",
-      "sampleHash": "962b8feebf70f71ab07a178c3b7106b5",
-      "size": 287488
+      "md5": "6d8f668228c24e109a6baee71a30e881",
+      "sampleHash": "6d8f668228c24e109a6baee71a30e881",
+      "size": 287552
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ids.dat",
@@ -1016,15 +1016,15 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/SGuard/x64/ACE-Safe.dll",
-      "md5": "4a267a29d6cc55a5c9eb088d7565d5cf",
+      "md5": "8adf2c8749989b8b0acb4771125fc345",
       "sampleHash": "d0614b97a3248bfca66f615f4816e49f",
-      "size": 9021104
+      "size": 9021168
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/SGuard/x64/ACE-Trace.dll",
-      "md5": "41350535a12f9fd20338ef377452b081",
-      "sampleHash": "c3b655eded7afd8d0dd684705f25231e",
-      "size": 2401488
+      "md5": "9957f0c8df07c052b35bdf8d54d8d537",
+      "sampleHash": "0605cd7d489b0c276189c6ab9c8ed0a3",
+      "size": 2401552
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/SGuard/x64/SGuard.rc",
@@ -1064,8 +1064,8 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKConfig.json",
-      "md5": "22351b91501c26ca9dd5f37e3fcfdb57",
-      "sampleHash": "22351b91501c26ca9dd5f37e3fcfdb57",
+      "md5": "427b46d5a7e72698769bcbe9d1b8b864",
+      "sampleHash": "427b46d5a7e72698769bcbe9d1b8b864",
       "size": 834
     },
     {

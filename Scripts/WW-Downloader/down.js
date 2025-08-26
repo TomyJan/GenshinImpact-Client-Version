@@ -10,7 +10,11 @@ const __dirname = dirname(__filename)
 
 const jsonFile = 'Scripts/WW-Downloader/filelist.json'
 const baseUrl =
-  'https://pcdownload-huoshan.aki-game.com/launcher/game/G152/2.3.0/RABESsjbHjMStTvIbpwBbjDnnheQBwOs/zip/'
+  'https://pcdownload-aliyun.aki-game.com//launcher/game/G152/10003/2.6.0/PvvUtPgrOKbiVwNKSABGishwOHYgFPUf/zip/'
+// const baseUrl =
+//   'https://pcdownload-huoshan.aki-game.com//launcher/game/G152/10003/2.6.0/PvvUtPgrOKbiVwNKSABGishwOHYgFPUf/zip/'
+// const baseUrl =
+//   'https://pcdownload-qcloud.aki-game.com//launcher/game/G152/10003/2.6.0/PvvUtPgrOKbiVwNKSABGishwOHYgFPUf/zip/'
 const targetDir = path.join(__dirname, 'ww')
 
 // 获取当前时间字符串

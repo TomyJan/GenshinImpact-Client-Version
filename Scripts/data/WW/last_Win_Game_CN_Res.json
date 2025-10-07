@@ -2,12 +2,12 @@
   "resource": [
     {
       "dest": "ClearThirdParty.exe",
-      "md5": "d23d2786c818144860d51df4edcdc85e",
+      "md5": "50f0eda59b6baab287bb81b27448df57",
       "size": 220872
     },
     {
       "dest": "Wuthering Waves.exe",
-      "md5": "a1954302c9e638e8a1c0c8a6dbd1603a",
+      "md5": "311087024cc2f82f54c61db9bb9493ec",
       "size": 481992
     },
     {
@@ -17,13 +17,13 @@
     },
     {
       "dest": "Client/Binaries/Win64/Client-Win64-Shipping.exe",
-      "md5": "c5e7d35d7912d68809137dbc56316943",
-      "size": 76954904
+      "md5": "b7db3bca2cdb3bbe8acf6a7b9cf446db",
+      "size": 76960024
     },
     {
       "dest": "Client/Binaries/Win64/Client-Win64-ShippingBase.dll",
-      "md5": "85e2b921924802b616428cb5a7c3ecb6",
-      "size": 29341664
+      "md5": "d10316cb2b22488f4b597cdeb44b352e",
+      "size": 29341152
     },
     {
       "dest": "Client/Binaries/Win64/CrashSight64.dll",
@@ -57,13 +57,13 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-ATS64.dll",
-      "md5": "1225ad66c70c3cda8286697413e7ab01",
+      "md5": "adde211762623d557adcae5195e984dc",
       "size": 4211464
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Base.dat",
-      "md5": "92104239a446d96b3a0d25dbf6a42bbb",
-      "size": 2052
+      "md5": "493a53560fdb46df06f56585da3cdfb7",
+      "size": 2036
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Base.rc",
@@ -72,52 +72,52 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Base64.dll",
-      "md5": "c93940d66edcffdd6aa956c2d7471d01",
-      "size": 8633536
+      "md5": "67dcdf0bc0c0ae224fc90a4f39d0f5f6",
+      "size": 8633608
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-CSI64.dll",
-      "md5": "015911eb7c84cd4580cc338015fc213b",
-      "size": 12424568
+      "md5": "ca3a0e8dd32d525db005256d38a6594d",
+      "size": 12424496
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-DFS64.dll",
-      "md5": "6f676246f5e00bac619e95d9cceab68f",
-      "size": 8705256
+      "md5": "c1046ebab8091abf6fc86768601ffb52",
+      "size": 8705336
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-DRV64.dll",
-      "md5": "52b00438a901a8e34281ebafa8295d06",
+      "md5": "5ceb516dbab6a931126cd67f233e9852",
       "size": 18822456
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Safe.dll",
-      "md5": "9b88096ace87064fced2c40edd5c4255",
-      "size": 9021168
+      "md5": "fa9b3073cdcfcc9261fed3ec796433d6",
+      "size": 9021096
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Tips64.dll",
-      "md5": "c2c01ec4bb98ba431dfc423601eb8d07",
-      "size": 8072888
+      "md5": "bf764a6a2fb134d18c1d6e0f329b8a2a",
+      "size": 8072968
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/ACE-Trace.dll",
-      "md5": "430a8b09da29b94f7a9cf96c33ed1445",
+      "md5": "8f9b37c6d8bcaa1636542aa67ff80f3f",
       "size": 2401552
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/d3dcompiler_43.dll",
-      "md5": "1f26d792d2a8f82c78a7ba81d1a31a7f",
-      "size": 2536776
+      "md5": "d068149645db4c4a28d078d4d0629499",
+      "size": 2536704
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/d3dx11_43.dll",
-      "md5": "261248644231cc977a22e9266b59a43e",
+      "md5": "4e958a4caf4b5a5ca3f4647a3f3cb0db",
       "size": 287552
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/InGame/x64/D3DX9_43.dll",
-      "md5": "06eceaa5689f876fa1b74121ce24936b",
+      "md5": "8cf0be0da1576a38093c7290d75a88dd",
       "size": 2411832
     },
     {
@@ -142,13 +142,13 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/SGuard/x64/ACE-Safe.dll",
-      "md5": "635c56600da6e3e2df3d5954bac01c60",
+      "md5": "ea23cd60f71d5e655ac43a7d9aec15d2",
       "size": 9021168
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/SGuard/x64/ACE-Trace.dll",
-      "md5": "71dbf409dabe50884e6ece0d5d52c20f",
-      "size": 2401480
+      "md5": "d774505a80fea765b19f9675e4362c07",
+      "size": 2401552
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/SGuard/x64/product.rc",
@@ -317,7 +317,7 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKConfig.json",
-      "md5": "d787ed94e8573aa70193049dfe8ccb12",
+      "md5": "289f27c99334d164d185b876b36286c0",
       "size": 834
     },
     {

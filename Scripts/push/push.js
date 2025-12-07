@@ -1,6 +1,5 @@
-import fs, { link } from 'fs'
+import fs from 'fs'
 import path from 'path'
-import fetch from 'node-fetch'
 
 const TGBotToken =
   process.env.TGBotToken || '5680978316:AAFjPWjc5RBcCcS6jwkuhitt1vNJKORk1eo'

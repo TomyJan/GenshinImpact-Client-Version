@@ -5,10 +5,10 @@ import push from './push/push.js'
 
 const ApiInfo = {
   WW: {
-    CN: 'https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json',
+    CN: 'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json',
     CN_NEW:
       'https://starter-server-api.kurogame.com/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G152&appId=10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5&identify=installer',
-    OS: 'https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json',
+    OS: 'https://prod-alicdn-gamestarter.kurogame.com/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json',
     OS_NEW:
       'https://starter-server-api.kurogame.net/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G153&appId=50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c&identify=installer',
     name: '鸣潮',
@@ -96,9 +96,9 @@ async function getWinLauncherVersion() {
   }
 
   // 提取版本信息
-  const remoteLink = jsonData.default.version
+  const remoteLink = jsonData.default.resource.version
 
-  console.log('本地最新 Launcher 版本:', localData?.default?.version)
+  console.log('本地最新 Launcher 版本:', localData?.default?.resource?.version)
   console.log('取到最新 Launcher 版本:', remoteLink)
   if (
     remoteLink === undefined ||
@@ -138,8 +138,8 @@ async function getWinLauncherVersion() {
       {
         new: {
           version: remoteLink,
-          size: jsonData.default.installerSize,
-          url: jsonData.default.cdnList[0].url + jsonData.default.installer,
+          size: jsonData.default.resource.size,
+          url: jsonData.default.cdnList[0].url + jsonData.default.resource.path,
         },
         old: {
           version: localData?.default?.version,

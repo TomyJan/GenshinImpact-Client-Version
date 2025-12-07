@@ -114,7 +114,7 @@ async function getWinLauncherVersion() {
   //console.log('文件名:', fileName);
 
   // 比较版本并更新本地数据
-  if (localData?.default?.version !== remoteLink) {
+  if (localData?.default?.resource?.version !== remoteLink) {
     console.log('数据有变化，正在更新...')
     // 写出JSON文件
     const outputFilePath = targetDir + fileName
@@ -140,10 +140,10 @@ async function getWinLauncherVersion() {
           url: jsonData.default.cdnList[0].url + jsonData.default.resource.path,
         },
         old: {
-          version: localData?.default?.version,
-          size: localData?.default?.installerSize,
+          version: localData?.default?.resource?.version,
+          size: localData?.default?.resource?.size,
           url:
-            localData?.default?.cdnList[0]?.url + localData?.default?.installer,
+            localData?.default?.cdnList[0]?.url + localData?.default?.resource?.path,
         },
         changelog: jsonData.default.changelog['zh-Hans'],
       },

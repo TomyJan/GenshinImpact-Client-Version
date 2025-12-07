@@ -25,8 +25,12 @@ jobs:
           uses: actions/setup-node@v3
           with:
             node-version: 20
+        - name: Install pnpm
+          uses: pnpm/action-setup@v4
+          with:
+            version: 9
         - name: Install dependencies
-          run: npm install
+          run: pnpm install
         - name: Extract branch name
           shell: bash
           run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
@@ -147,7 +151,7 @@ jobs:
           run: node ./Scripts/getWWWinGameVersion.js os new
         - run: git config --global user.name "github-actions"
         - run: git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        - run: git checkout -- package-lock.json
+        - run: git checkout -- pnpm-lock.yaml
         - run: git stash
         - run: git checkout ${{ steps.extract_branch.outputs.branch }} && git pull
         - run: git stash pop || true

@@ -125,30 +125,31 @@ jobs:
             TGMsgID: ${{ secrets.TGMsgID }}
             TGMsgID_WW: ${{ secrets.TGMsgID_WW }}
           run: node ./Scripts/getAndroidGameVersion.js ww
-        - name: Check WW Win Launcher CN Gray Update
-          env: 
-            TGBotToken: ${{ secrets.TGBotToken }}
-            TGMsgID: ${{ secrets.TGMsgID }}
-            TGMsgID_WW: ${{ secrets.TGMsgID_WW }}
-          run: node ./Scripts/getWWWinLauncherVersion.js cn new
-        - name: Check WW Win Launcher OS Gray Update
-          env: 
-            TGBotToken: ${{ secrets.TGBotToken }}
-            TGMsgID: ${{ secrets.TGMsgID }}
-            TGMsgID_WW: ${{ secrets.TGMsgID_WW }}
-          run: node ./Scripts/getWWWinLauncherVersion.js os new
-        - name: Check WW Win Game CN Gray Update
-          env: 
-            TGBotToken: ${{ secrets.TGBotToken }}
-            TGMsgID: ${{ secrets.TGMsgID }}
-            TGMsgID_WW: ${{ secrets.TGMsgID_WW }}
-          run: node ./Scripts/getWWWinGameVersion.js cn new
-        - name: Check WW Win Game OS Gray Update
-          env: 
-            TGBotToken: ${{ secrets.TGBotToken }}
-            TGMsgID: ${{ secrets.TGMsgID }}
-            TGMsgID_WW: ${{ secrets.TGMsgID_WW }}
-          run: node ./Scripts/getWWWinGameVersion.js os new
+        # 旧的灰度域名停用了, 暂时抓不到也猜不到新的灰度 url , 先停用这个
+        # - name: Check WW Win Launcher CN Gray Update
+        #   env: 
+        #     TGBotToken: ${{ secrets.TGBotToken }}
+        #     TGMsgID: ${{ secrets.TGMsgID }}
+        #     TGMsgID_WW: ${{ secrets.TGMsgID_WW }}
+        #   run: node ./Scripts/getWWWinLauncherVersion.js cn new
+        # - name: Check WW Win Launcher OS Gray Update
+        #   env: 
+        #     TGBotToken: ${{ secrets.TGBotToken }}
+        #     TGMsgID: ${{ secrets.TGMsgID }}
+        #     TGMsgID_WW: ${{ secrets.TGMsgID_WW }}
+        #   run: node ./Scripts/getWWWinLauncherVersion.js os new
+        # - name: Check WW Win Game CN Gray Update
+        #   env: 
+        #     TGBotToken: ${{ secrets.TGBotToken }}
+        #     TGMsgID: ${{ secrets.TGMsgID }}
+        #     TGMsgID_WW: ${{ secrets.TGMsgID_WW }}
+        #   run: node ./Scripts/getWWWinGameVersion.js cn new
+        # - name: Check WW Win Game OS Gray Update
+        #   env: 
+        #     TGBotToken: ${{ secrets.TGBotToken }}
+        #     TGMsgID: ${{ secrets.TGMsgID }}
+        #     TGMsgID_WW: ${{ secrets.TGMsgID_WW }}
+        #   run: node ./Scripts/getWWWinGameVersion.js os new
         - run: git config --global user.name "github-actions"
         - run: git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         - run: git checkout -- pnpm-lock.yaml

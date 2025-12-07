@@ -4,9 +4,11 @@ import push from './push/push.js'
 const ApiInfo = {
   WW: {
     CN: 'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json',
+    CN_EXE: 'https://download.kurogames.com/mc_WnGtDn85y8lJB4mTmYHYuNjIl9n6YGVm/official/cn/zh-Hans/pc_app.json',
     CN_NEW:
       'https://starter-server-api.kurogame.com/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G152&appId=10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5&identify=installer',
     OS: 'https://prod-alicdn-gamestarter.kurogame.com/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json',
+    OS_EXE: 'https://download.kurogames.net/mc_WnGtDn85y8lJB4mTmYHYuNjIl9n6YGVm/official/global/en/pc_app.json',
     OS_NEW:
       'https://starter-server-api.kurogame.net/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G153&appId=50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c&identify=installer',
     name: '鸣潮',
@@ -116,6 +118,41 @@ async function getWinLauncherVersion() {
   // 比较版本并更新本地数据
   if (localData?.default?.resource?.version !== remoteLink) {
     console.log('数据有变化，正在更新...')
+
+    // 尝试获取 EXE API 的真实下载链接
+    let realUrl = jsonData.default.cdnList[0].url + jsonData.default.resource.path
+    const baseServer = server.replace('_NEW', '')
+    const exeApiUrl = ApiInfo[game][baseServer + '_EXE']
+    if (exeApiUrl) {
+      console.log('尝试获取 EXE API 真实下载链接...')
+      try {
+        let exeRsp = await fetchWithTimeout(exeApiUrl)
+        if (!exeRsp.ok) {
+          console.log('EXE API 请求失败:', exeRsp.status, exeRsp.statusText, ', 重试一次...')
+          exeRsp = await fetchWithTimeout(exeApiUrl)
+        }
+        if (exeRsp.ok) {
+          const exeData = await exeRsp.json()
+          console.log('EXE API 版本:', exeData.version, '当前版本:', remoteLink)
+          // 比较版本时忽略末尾的 .0 (如 2.4.0.0 和 2.4.0 视为相同)
+          const normalizeVersion = (v) => v?.replace(/(?:\.0)+$/, '') || ''
+          const versionMatch = normalizeVersion(exeData.version) === normalizeVersion(remoteLink)
+          if (versionMatch && exeData.primary) {
+            console.log('版本一致，使用 EXE API 的 primary 作为真实链接')
+            realUrl = exeData.primary
+          } else if (!versionMatch) {
+            console.log('EXE API 版本不一致，使用原始链接')
+          } else {
+            console.log('EXE API 没有 primary 字段，使用原始链接')
+          }
+        } else {
+          console.log('EXE API 请求失败，使用原始链接')
+        }
+      } catch (error) {
+        console.log('EXE API 获取失败:', error.message, '，使用原始链接')
+      }
+    }
+
     // 写出JSON文件
     const outputFilePath = targetDir + fileName
     // 检查目录是否存在, 不存在则先递归创建
@@ -137,7 +174,7 @@ async function getWinLauncherVersion() {
         new: {
           version: remoteLink,
           size: jsonData.default.resource.size,
-          url: jsonData.default.cdnList[0].url + jsonData.default.resource.path,
+          url: realUrl,
         },
         old: {
           version: localData?.default?.resource?.version,

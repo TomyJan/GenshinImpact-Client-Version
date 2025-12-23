@@ -250,7 +250,7 @@ class ProgressManager {
         
         // 使用 emoji 图标（通过 padEndDisplay 处理宽度）
         let phaseIcon = '⏳'
-        if (phase === 'download') phaseIcon = '📥'
+        if (phase === 'download') phaseIcon = '⬇️'
         else if (phase === 'verify') phaseIcon = '🔍'
         else if (phase === 'done') phaseIcon = '✅'
         else if (phase === 'error') phaseIcon = '❌'

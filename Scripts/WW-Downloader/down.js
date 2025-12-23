@@ -14,6 +14,35 @@ const resDownloadBaseUrl = `${baseUrl}zip/`
 const resListUrl = `${baseUrl}resource.json`
 const targetDir = path.join(__dirname, 'ww')
 
+// 并发与连接配置
+function parseConcurrencyArg() {
+  const argv = process.argv.slice(2)
+  let c = undefined
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i]
+    if (arg.startsWith('--concurrency=')) {
+      c = parseInt(arg.split('=')[1], 10)
+      break
+    }
+    if (arg === '--concurrency' || arg === '-c') {
+      const next = argv[i + 1]
+      if (next) c = parseInt(next, 10)
+      break
+    }
+  }
+  if (!Number.isFinite(c) || c <= 0) {
+    const envC = parseInt(process.env.DOWNLOAD_CONCURRENCY || '', 10)
+    if (Number.isFinite(envC) && envC > 0) c = envC
+  }
+  if (!Number.isFinite(c) || c <= 0) c = 4 // 默认并发
+  // 简单上限，避免过高并发导致不稳定
+  c = Math.max(1, Math.min(c, 16))
+  return c
+}
+
+const concurrency = parseConcurrencyArg()
+const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: concurrency })
+
 // 获取当前时间字符串
 function now() {
   return new Date().toTimeString().split(' ')[0]
@@ -42,8 +71,8 @@ function downloadFileWithProgress(url, dest, index, total, name, expectedSize) {
     let lastLogged = Date.now()
     let lastDownloaded = 0
 
-    https
-      .get(url, (res) => {
+    const req = https
+      .get(url, { agent: httpsAgent }, (res) => {
         if (res.statusCode !== 200) {
           fs.unlink(dest, () => {})
           return reject(new Error(`HTTP ${res.statusCode}`))
@@ -75,6 +104,12 @@ function downloadFileWithProgress(url, dest, index, total, name, expectedSize) {
         fs.unlink(dest, () => {})
         reject(err)
       })
+
+    file.on('error', (err) => {
+      try { req.destroy() } catch {}
+      fs.unlink(dest, () => {})
+      reject(err)
+    })
   })
 }
 
@@ -175,7 +210,7 @@ async function handleFile(fileObj, index, total) {
     }
   }
 
-  await checkAndDownload()
+  return await checkAndDownload()
 }
 
 // 主函数
@@ -203,14 +238,54 @@ async function main() {
 
   const total = data.length
   log(null, null, `共 ${total} 个文件任务开始执行`)
+  log(null, null, `并发数: ${concurrency}`)
 
-  for (let i = 0; i < total; i++) {
-    await handleFile(data[i], i, total)
-  }
+  const taskFns = data.map((item, i) => () => handleFile(item, i, total))
+  const { successes, fails } = await runWithConcurrency(taskFns, concurrency)
 
-  log(null, null, `所有任务完成`)
+  log(null, null, `所有任务完成，成功 ${successes}，失败 ${fails}`)
 }
 
 main().catch((err) => {
   console.error(`主函数出错: ${err.message}`)
 })
+
+// 简单任务池并发执行器
+function runWithConcurrency(taskFns, limit) {
+  return new Promise((resolve) => {
+    let nextIndex = 0
+    let running = 0
+    let successes = 0
+    let fails = 0
+
+    const total = taskFns.length
+    if (total === 0) return resolve({ successes: 0, fails: 0 })
+
+    function runNext() {
+      while (running < limit && nextIndex < total) {
+        const current = nextIndex++
+        const task = taskFns[current]
+        running++
+        Promise.resolve()
+          .then(task)
+          .then((ok) => {
+            if (ok === false) fails++
+            else successes++
+          })
+          .catch(() => {
+            fails++
+          })
+          .finally(() => {
+            running--
+            if (successes + fails === total) {
+              resolve({ successes, fails })
+            } else {
+              runNext()
+            }
+          })
+      }
+    }
+
+    runNext()
+  })
+}

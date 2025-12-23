@@ -8,13 +8,10 @@ import { dirname } from 'path'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-const jsonFile = 'Scripts/WW-Downloader/filelist.json'
 const baseUrl =
-  'https://pcdownload-aliyun.aki-game.com//launcher/game/G152/10003/3.0.0/QDYPElFKaZpJXkogwRukzDzAfaEsoupi/zip/'
-// const baseUrl =
-//   'https://pcdownload-huoshan.aki-game.com//launcher/game/G152/10003/2.6.0/PvvUtPgrOKbiVwNKSABGishwOHYgFPUf/zip/'
-// const baseUrl =
-//   'https://pcdownload-qcloud.aki-game.com//launcher/game/G152/10003/2.6.0/PvvUtPgrOKbiVwNKSABGishwOHYgFPUf/zip/'
+  'https://pcdownload-aliyun.aki-game.com//launcher/game/G152/10003/3.0.0/QDYPElFKaZpJXkogwRukzDzAfaEsoupi/'
+const resDownloadBaseUrl = `${baseUrl}zip/`
+const resListUrl = `${baseUrl}resource.json`
 const targetDir = path.join(__dirname, 'ww')
 
 // 获取当前时间字符串
@@ -116,7 +113,7 @@ function getFileMD5WithProgress(filePath, index, total, name, fileSize) {
 async function handleFile(fileObj, index, total) {
   const relativePath = fileObj.dest
   const fullPath = path.join(targetDir, relativePath)
-  const url = baseUrl + relativePath
+  const url = resDownloadBaseUrl + relativePath
   const name = path.basename(relativePath)
 
   fs.mkdirSync(path.dirname(fullPath), { recursive: true })
@@ -183,12 +180,24 @@ async function handleFile(fileObj, index, total) {
 
 // 主函数
 async function main() {
-  log(null, null, `加载文件列表 ${jsonFile}`)
+  log(null, null, `加载资源列表`)
   let data
   try {
-    data = JSON.parse(fs.readFileSync(jsonFile, 'utf8')).resource
+    const res = await fetch(resListUrl)
+    if (!res.ok){
+      log(null, null, `无法加载资源列表：HTTP ${res.status}`)
+      return
+    }
+    let resJson
+    try {
+      resJson = await res.json()
+    } catch (err) {
+      log(null, null, `无法解析资源列表 JSON：${err.message} , 响应文本：` + await res.text())
+      return
+    }
+    data = resJson.resource
   } catch (err) {
-    console.error(`无法读取 ${jsonFile}：${err.message}`)
+    console.error(`无法加载资源列表：${err.message}`)
     return
   }
 

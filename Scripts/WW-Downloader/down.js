@@ -10,7 +10,7 @@ const __dirname = dirname(__filename)
 
 const jsonFile = 'Scripts/WW-Downloader/filelist.json'
 const baseUrl =
-  'https://pcdownload-aliyun.aki-game.com//launcher/game/G152/10003/2.6.0/PvvUtPgrOKbiVwNKSABGishwOHYgFPUf/zip/'
+  'https://pcdownload-aliyun.aki-game.com//launcher/game/G152/10003/3.0.0/QDYPElFKaZpJXkogwRukzDzAfaEsoupi/zip/'
 // const baseUrl =
 //   'https://pcdownload-huoshan.aki-game.com//launcher/game/G152/10003/2.6.0/PvvUtPgrOKbiVwNKSABGishwOHYgFPUf/zip/'
 // const baseUrl =

@@ -351,6 +351,9 @@
     "loginSwitch": 0
   },
   "experiment": {
+    "repair": {
+      "directoryIntegrityCheckList": "[{\"dir\":\"Client/Content/Paks\",\"exts\":[\"pak\",\"sig\"],\"recursive\":true}]"
+    },
     "download": {
       "downloadCdnSelectTestDuration": "5000",
       "downloadReadBlockTimeout": "30"
@@ -364,6 +367,335 @@
     "apply": {
       "applyMethodFeature": "group"
     }
+  },
+  "predownload": {
+    "changelog": {},
+    "config": {
+      "indexFileMd5": "86c89cbf5296e591ab2b12478cd7dabd",
+      "unCompressSize": 134336973526,
+      "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+      "size": 134336973526,
+      "patchType": "patch",
+      "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/indexFile.json",
+      "version": "3.1.0",
+      "patchConfig": [
+        {
+          "indexFileMd5": "debe12834c478985a12a00743bcb94c9",
+          "unCompressSize": 134127593645,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134127593645,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/1.0.0/indexFile.json",
+          "version": "1.0.0"
+        },
+        {
+          "indexFileMd5": "debe12834c478985a12a00743bcb94c9",
+          "unCompressSize": 134127593645,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134127593645,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/1.0.2/indexFile.json",
+          "version": "1.0.2"
+        },
+        {
+          "indexFileMd5": "a0b2df9cc8e42e32a77f4bb9b037b70b",
+          "unCompressSize": 134125371637,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134125371637,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/1.1.0/indexFile.json",
+          "version": "1.1.0"
+        },
+        {
+          "indexFileMd5": "45f099570f62b759246174a4f803185c",
+          "unCompressSize": 134111367873,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134111367873,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/1.2.0/indexFile.json",
+          "version": "1.2.0"
+        },
+        {
+          "indexFileMd5": "e554b63835e64d363bd513aaf43c51c3",
+          "unCompressSize": 134111367873,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134111367873,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/1.3.0/indexFile.json",
+          "version": "1.3.0"
+        },
+        {
+          "indexFileMd5": "4d197043a78a8f61a0ba1ec44566e25d",
+          "unCompressSize": 134105623864,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134105623864,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/1.4.0/indexFile.json",
+          "version": "1.4.0"
+        },
+        {
+          "indexFileMd5": "4d197043a78a8f61a0ba1ec44566e25d",
+          "unCompressSize": 134105623864,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134105623864,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/1.4.1/indexFile.json",
+          "version": "1.4.1"
+        },
+        {
+          "indexFileMd5": "1638d1772bc595e619c331b4092441e4",
+          "unCompressSize": 134105544428,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134105544428,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/1.4.2/indexFile.json",
+          "version": "1.4.2"
+        },
+        {
+          "indexFileMd5": "1638d1772bc595e619c331b4092441e4",
+          "unCompressSize": 134105544428,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134105544428,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/1.4.3/indexFile.json",
+          "version": "1.4.3"
+        },
+        {
+          "indexFileMd5": "e53a8b78732de680beed4a45283f418e",
+          "unCompressSize": 134105544268,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134105544268,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.0.0/indexFile.json",
+          "version": "2.0.0"
+        },
+        {
+          "indexFileMd5": "e53a8b78732de680beed4a45283f418e",
+          "unCompressSize": 134105544268,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134105544268,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.0.1/indexFile.json",
+          "version": "2.0.1"
+        },
+        {
+          "indexFileMd5": "e53a8b78732de680beed4a45283f418e",
+          "unCompressSize": 134105544268,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134105544268,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.0.2/indexFile.json",
+          "version": "2.0.2"
+        },
+        {
+          "indexFileMd5": "e53a8b78732de680beed4a45283f418e",
+          "unCompressSize": 134105544268,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134105544268,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.0.3/indexFile.json",
+          "version": "2.0.3"
+        },
+        {
+          "indexFileMd5": "12b9dcea984e646efc1f250c56d95eeb",
+          "unCompressSize": 134105544245,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134105544245,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.1.0/indexFile.json",
+          "version": "2.1.0"
+        },
+        {
+          "indexFileMd5": "af1c7c0ce61ca95d2ee8abf9d4a302b3",
+          "unCompressSize": 134044175631,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134044175631,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.1.1/indexFile.json",
+          "version": "2.1.1"
+        },
+        {
+          "indexFileMd5": "b258de17a710a18562b21717cdd026f2",
+          "unCompressSize": 134044175631,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134044175631,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.2.0/indexFile.json",
+          "version": "2.2.0"
+        },
+        {
+          "indexFileMd5": "b258de17a710a18562b21717cdd026f2",
+          "unCompressSize": 134044175631,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134044175631,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.2.1/indexFile.json",
+          "version": "2.2.1"
+        },
+        {
+          "indexFileMd5": "6f9045a973b85e02331874a1849be8a8",
+          "unCompressSize": 134044175631,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134044175631,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.3.0/indexFile.json",
+          "version": "2.3.0"
+        },
+        {
+          "indexFileMd5": "6f9045a973b85e02331874a1849be8a8",
+          "unCompressSize": 134044175631,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134044175631,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.3.1/indexFile.json",
+          "version": "2.3.1"
+        },
+        {
+          "indexFileMd5": "6ec2b3a30db3aad5a6eadae121fe88b3",
+          "unCompressSize": 134044175517,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134044175517,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.4.0/indexFile.json",
+          "version": "2.4.0"
+        },
+        {
+          "indexFileMd5": "6ec2b3a30db3aad5a6eadae121fe88b3",
+          "unCompressSize": 134044175517,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134044175517,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.4.1/indexFile.json",
+          "version": "2.4.1"
+        },
+        {
+          "indexFileMd5": "c7c0e0759b16e9a70fa91941db7733bc",
+          "unCompressSize": 134035067997,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134035067997,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.5.0/indexFile.json",
+          "version": "2.5.0"
+        },
+        {
+          "indexFileMd5": "c7c0e0759b16e9a70fa91941db7733bc",
+          "unCompressSize": 134035067997,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134035067997,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.5.1/indexFile.json",
+          "version": "2.5.1"
+        },
+        {
+          "indexFileMd5": "dafd770fb91410e9fb7cb35e3f045c28",
+          "unCompressSize": 134336973526,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 134336973526,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.5.2/indexFile.json",
+          "version": "2.5.2"
+        },
+        {
+          "indexFileMd5": "c5ead79828ccef228ddadc5275d7890c",
+          "unCompressSize": 133849191052,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 133849191052,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.6.0/indexFile.json",
+          "version": "2.6.0"
+        },
+        {
+          "indexFileMd5": "0a6f6fd02459124d913a7814114ab0ed",
+          "unCompressSize": 133502277772,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 133502277772,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.6.1/indexFile.json",
+          "version": "2.6.1"
+        },
+        {
+          "indexFileMd5": "0a6f6fd02459124d913a7814114ab0ed",
+          "unCompressSize": 133502277772,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 133502277772,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.6.2/indexFile.json",
+          "version": "2.6.2"
+        },
+        {
+          "indexFileMd5": "0a6f6fd02459124d913a7814114ab0ed",
+          "unCompressSize": 133502277772,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 133502277772,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.7.0/indexFile.json",
+          "version": "2.7.0"
+        },
+        {
+          "indexFileMd5": "a5806ce5115809d251380330874d232b",
+          "unCompressSize": 133502277772,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 133502277772,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.7.1/indexFile.json",
+          "version": "2.7.1"
+        },
+        {
+          "indexFileMd5": "8f34aa2a35d40b3a138b2192924efde5",
+          "unCompressSize": 133495602108,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 133495602108,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/2.8.0/indexFile.json",
+          "version": "2.8.0"
+        },
+        {
+          "indexFileMd5": "bf83d29801bca19c58f10cbe526d5055",
+          "unCompressSize": 133495430772,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 133495430772,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/3.0.0/indexFile.json",
+          "version": "3.0.0"
+        },
+        {
+          "indexFileMd5": "bf83d29801bca19c58f10cbe526d5055",
+          "unCompressSize": 133495430772,
+          "ext": {},
+          "baseUrl": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip/",
+          "size": 133495430772,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/3.0.1/indexFile.json",
+          "version": "3.0.1"
+        },
+        {
+          "indexFileMd5": "fbbba0fdc2c6df5f2663091193151141",
+          "unCompressSize": 117670116288,
+          "ext": {
+            "requiredDiskSpace": 20217813348,
+            "maxFileSize": 6410145942
+          },
+          "baseUrl": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/3.0.2/resources/",
+          "size": 37358670694,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/3.0.2/indexFile.json",
+          "version": "3.0.2"
+        },
+        {
+          "indexFileMd5": "6a5160796ff2deee2eec094f39309776",
+          "unCompressSize": 117657073536,
+          "ext": {
+            "requiredDiskSpace": 20217813348,
+            "maxFileSize": 6410145942
+          },
+          "baseUrl": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/3.0.3/resources/",
+          "size": 37357957813,
+          "indexFile": "launcher/game/G152/10003/3.1.0/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource/10003/3.1.0/3.0.3/indexFile.json",
+          "version": "3.0.3"
+        }
+      ]
+    },
+    "resources": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/resource.json",
+    "resourcesBasePath": "launcher/game/G152/10003/3.1.1/YkPEOzYygqgsEPNjXfTVdGufTzzepKlS/zip",
+    "version": "3.1.0"
   },
   "commandSwitch": 1,
   "keyFileCheckList": [

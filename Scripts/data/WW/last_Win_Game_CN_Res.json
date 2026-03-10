@@ -247,12 +247,12 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKEx.dll",
-      "md5": "d3461a30277eda118c41e9a135c852a3",
-      "size": 1912520
+      "md5": "d11ce29fad0ee8a315b2a44dfca806b8",
+      "size": 1914056
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKExternal.exe",
-      "md5": "90ff547e1497005115db3395203a2414",
+      "md5": "a242e4590d0187ac3edfa31901912d6d",
       "size": 193224
     },
     {
@@ -262,13 +262,13 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRShmq.dll",
-      "md5": "b14b9dc770f03d9980b7c44c92fe0772",
+      "md5": "91864cce95d86241c7c1dfb3731a78be",
       "size": 45256
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/kurodata.dll",
-      "md5": "abc6afb54f31fccf0c7207546884058b",
-      "size": 371400
+      "md5": "387a103dfd237ea863d7b3ff87d791a8",
+      "size": 373960
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/LaguSansBold.otf",
@@ -337,8 +337,8 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKConfig.json",
-      "md5": "10e1099afa4d6774292fc35cbfff55e0",
-      "size": 947
+      "md5": "ae946d13fb6f9f5b40217112e4cd777e",
+      "size": 982
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/chrome_100_percent.pak",
@@ -367,12 +367,12 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/KRShmq.dll",
-      "md5": "17314ea29d443dc1f9dc8f6058a6fe07",
+      "md5": "024474269b2ae15ef8c14bbd98df85b8",
       "size": 45256
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/KRWebView.exe",
-      "md5": "e07a21692c99917b28e91dc428576f11",
+      "md5": "08704f686771db21da196504c4717bdf",
       "size": 5214920
     },
     {
@@ -712,12 +712,12 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/KRShmq.dll",
-      "md5": "634f992546c7a604c6da20fc9bbbc62d",
+      "md5": "089073535d63fcb92f2d86df87ae436d",
       "size": 45256
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/KRWebView.exe",
-      "md5": "75e293b89d3036f9e8e5c3554e2d19d8",
+      "md5": "c36dc2b7ac8c9287a541425d15c2f01d",
       "size": 5214920
     },
     {

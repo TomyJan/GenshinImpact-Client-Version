@@ -252,13 +252,13 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDK.dll",
-      "md5": "f3a5858c3f99d527b8bc5f4f6c239979",
-      "size": 1777592
+      "md5": "9a6bae627b5a0c93ea1787e9a647260b",
+      "size": 1822640
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKExternal.exe",
-      "md5": "077c44f76fc61e6ee12fcab4c9d7279f",
-      "size": 161712
+      "md5": "71ec6b1001361d970a3d0f5b89f2f7ff",
+      "size": 161720
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/krsdk_zlib.dll",
@@ -267,13 +267,13 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRShmq.dll",
-      "md5": "ce324b030843bfbcacf9b804029f116b",
+      "md5": "ea8300aa6102f04a928707f780f33141",
       "size": 44984
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/kurodata.dll",
-      "md5": "05ec9f84ddba3aa4d11603845f095178",
-      "size": 371128
+      "md5": "14ba9f05972c62d66f0453370f92b9c4",
+      "size": 373688
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/LaguSansBold.otf",
@@ -382,7 +382,7 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDK.bin",
-      "md5": "e3d29baa65e44bcc8cf217d1e32c1de7",
+      "md5": "dcba24887c2984ef5b59908c63adee0d",
       "size": 1215
     },
     {
@@ -792,12 +792,12 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKUnsupportedVideoWebView/KRShmq.dll",
-      "md5": "f254655ee73f6a6d25d4bc1a5032d2ff",
+      "md5": "a448f821c2420f09c0e7906a1ba9d026",
       "size": 44984
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKUnsupportedVideoWebView/KRWebView.exe",
-      "md5": "cbc8fb0d6c9b93e0b131a11f1fbf6b90",
+      "md5": "aaf58332de12588863fa84fc74b5cb5b",
       "size": 5653936
     },
     {
@@ -1122,8 +1122,8 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKWebView/chrome_elf.dll",
-      "md5": "ab37aa2288a8dd475f5ecfc015d838c2",
-      "size": 1156528
+      "md5": "c5733c58be2236693140c56aea4e2a8c",
+      "size": 1156536
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKWebView/d3dcompiler_47.dll",
@@ -1137,27 +1137,27 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKWebView/KRShmq.dll",
-      "md5": "73d6610a6f9ec5390a56fd47418e96a9",
-      "size": 44984
+      "md5": "7ad4edd4a6bee9db5d27bdd4a3bbc13b",
+      "size": 44976
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKWebView/KRWebView.exe",
-      "md5": "d50991e9e69d233555e96e9e1478d05f",
-      "size": 5653936
+      "md5": "049a7297551d56b2c99a72a608e2c03e",
+      "size": 5653944
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKWebView/libcef.dll",
-      "md5": "fa9835468a24b270a20084db954de01e",
-      "size": 156463032
+      "md5": "f2a3bf28b0e012fdcd28992d95c39a78",
+      "size": 156463024
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKWebView/libEGL.dll",
-      "md5": "8bfb377d94142d1564259a3bc2e0cf3d",
-      "size": 424376
+      "md5": "400062d3899b4b9a18193f4b5428e90c",
+      "size": 424368
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKWebView/libGLESv2.dll",
-      "md5": "d664c7b4e4c256f1058f2f0202bbdaf3",
+      "md5": "b86b24b239b98f4d30574c5dd7617676",
       "size": 6904760
     },
     {
@@ -1447,12 +1447,12 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKWebView/swiftshader/libEGL.dll",
-      "md5": "d52860057d33ffd47a1f25475fd46a89",
-      "size": 439728
+      "md5": "b0c5e1ef1fb94a3bb2339a80d09f3ae3",
+      "size": 439736
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDKWebView/swiftshader/libGLESv2.dll",
-      "md5": "1040a83f599b83481e8b16e840782185",
+      "md5": "1589137eeb3382639201216df3dc49e8",
       "size": 2765232
     },
     {
@@ -1497,13 +1497,13 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/locales/de.pack",
-      "md5": "0ef9071271c4592c238968f76408b843",
-      "size": 8904
+      "md5": "8c38e1b167870bca55aab36519e75914",
+      "size": 8892
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/locales/en.pack",
-      "md5": "d44319589b3a29a4776bdc846e215b82",
-      "size": 7680
+      "md5": "6d324205de030531c0550327b720beb0",
+      "size": 7683
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/locales/es.pack",

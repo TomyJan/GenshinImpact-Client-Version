@@ -66,21 +66,24 @@ class ProgressManager {
     const h = Math.floor(seconds / 3600)
     const m = Math.floor((seconds % 3600) / 60)
     const s = seconds % 60
-    if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+    if (h > 0)
+      return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
   }
 
   // 格式化速度
   formatSpeed(bytesPerSec) {
     if (!isFinite(bytesPerSec) || bytesPerSec <= 0) return '-- B/s'
-    if (bytesPerSec >= 1024 * 1024) return (bytesPerSec / 1048576).toFixed(1) + ' MB/s'
+    if (bytesPerSec >= 1024 * 1024)
+      return (bytesPerSec / 1048576).toFixed(1) + ' MB/s'
     if (bytesPerSec >= 1024) return (bytesPerSec / 1024).toFixed(1) + ' KB/s'
     return Math.floor(bytesPerSec) + ' B/s'
   }
 
   // 格式化大小
   formatSize(bytes) {
-    if (bytes >= 1024 * 1024 * 1024) return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
+    if (bytes >= 1024 * 1024 * 1024)
+      return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
     if (bytes >= 1024 * 1024) return (bytes / 1048576).toFixed(2) + ' MB'
     if (bytes >= 1024) return (bytes / 1024).toFixed(2) + ' KB'
     return bytes + ' B'
@@ -88,7 +91,7 @@ class ProgressManager {
 
   // 生成进度条
   makeProgressBar(percent, width = 20) {
-    const filled = Math.round(width * percent / 100)
+    const filled = Math.round((width * percent) / 100)
     const empty = width - filled
     return '█'.repeat(filled) + '░'.repeat(empty)
   }
@@ -99,15 +102,15 @@ class ProgressManager {
     for (const char of str) {
       const code = char.codePointAt(0)
       // emoji 范围（简化判断）
-      if (code >= 0x1F300 && code <= 0x1F9FF) width += 2
+      if (code >= 0x1f300 && code <= 0x1f9ff) width += 2
       // 中文等宽字符
-      else if (code >= 0x4E00 && code <= 0x9FFF) width += 2
+      else if (code >= 0x4e00 && code <= 0x9fff) width += 2
       // 全角字符
-      else if (code >= 0xFF00 && code <= 0xFFEF) width += 2
+      else if (code >= 0xff00 && code <= 0xffef) width += 2
       // 特殊符号
-      else if (code >= 0x2600 && code <= 0x26FF) width += 2
+      else if (code >= 0x2600 && code <= 0x26ff) width += 2
       // 变体选择器（不占宽度）
-      else if (code >= 0xFE00 && code <= 0xFE0F) width += 0
+      else if (code >= 0xfe00 && code <= 0xfe0f) width += 0
       else width += 1
     }
     return width
@@ -192,7 +195,8 @@ class ProgressManager {
     if (!this.isTTY) return // 非 TTY 环境不刷新
 
     const elapsed = (Date.now() - this.startTime) / 1000
-    const overallPercent = this.total > 0 ? (this.completed / this.total * 100) : 0
+    const overallPercent =
+      this.total > 0 ? (this.completed / this.total) * 100 : 0
     const avgTimePerFile = this.completed > 0 ? elapsed / this.completed : 0
     const remaining = this.total - this.completed
     const eta = avgTimePerFile * remaining
@@ -202,43 +206,64 @@ class ProgressManager {
 
     // 构建输出
     const lines = []
-    
+
     // 顶部空行和边框
     lines.push('')
     lines.push(pad + '╔' + '═'.repeat(width) + '╗')
-    
+
     // 头部：总体进度
     const completedStr = String(this.completed)
     const totalStr = String(this.total)
     const progressBar = this.makeProgressBar(overallPercent, 30)
     const percentStr = overallPercent.toFixed(1).padStart(5)
-    const headerContent = ` 📊 总进度   ${progressBar} ${percentStr}% (${completedStr}/${totalStr})          ✅ ${String(this.succeeded).padStart(4)}  ❌ ${String(this.failed).padStart(3)}                         ⏱️  用时: ${this.formatTime(elapsed).padStart(5)}  预计剩余: ${this.formatTime(eta).padStart(5)} `
+    const headerContent = ` 📊 总进度   ${progressBar} ${percentStr}% (${completedStr}/${totalStr})          ✅ ${String(
+      this.succeeded
+    ).padStart(4)}  ❌ ${String(this.failed).padStart(
+      3
+    )}                         ⏱️  用时: ${this.formatTime(elapsed).padStart(
+      5
+    )}  预计剩余: ${this.formatTime(eta).padStart(5)} `
     lines.push(pad + '║' + this.padEndDisplay(headerContent, width - 2) + '║')
     lines.push(pad + '╠' + '═'.repeat(width) + '╣')
 
     // 固定宽度定义
-    const W_THREAD = 6      // "线程 1" 等
-    const W_INDEX = 12      // "[0001/1000]"
-    const W_NAME = 44       // 文件名
-    const W_BAR = 15        // 进度条
-    const W_PERCENT = 5     // "100.0%"
-    const W_SPEED = 12      // "999.9 MB/s"
-    const W_SIZE = 24       // "1000.00 MB/1000.00 MB"
-    const W_TIME = 14       // "00:00/00:00"
+    const W_THREAD = 6 // "线程 1" 等
+    const W_INDEX = 12 // "[0001/1000]"
+    const W_NAME = 44 // 文件名
+    const W_BAR = 15 // 进度条
+    const W_PERCENT = 5 // "100.0%"
+    const W_SPEED = 12 // "999.9 MB/s"
+    const W_SIZE = 24 // "1000.00 MB/1000.00 MB"
+    const W_TIME = 14 // "00:00/00:00"
 
     // 各个并发线程
     for (let i = 0; i < this.concurrency; i++) {
       const slot = this.slots[i]
-      const threadLabel = this.padEndDisplay(`线程${String(i + 1).padStart(2)}`, W_THREAD)
-      
+      const threadLabel = this.padEndDisplay(
+        `线程${String(i + 1).padStart(2)}`,
+        W_THREAD
+      )
+
       if (!slot) {
         const idleContent = ` ${threadLabel} │ ⏸️  空闲等待中...`
         lines.push(pad + '║' + this.padEndDisplay(idleContent, width) + '║')
       } else {
-        const { index, name, phase, percent, speed, elapsed: taskElapsed, eta: taskEta, current, total: fileTotal } = slot
-        
+        const {
+          index,
+          name,
+          phase,
+          percent,
+          speed,
+          elapsed: taskElapsed,
+          eta: taskEta,
+          current,
+          total: fileTotal,
+        } = slot
+
         // 各字段固定宽度
-        const indexStr = `[${String(index + 1).padStart(4, '0')}/${String(this.total).padStart(4, '0')}]`.padEnd(W_INDEX)
+        const indexStr = `[${String(index + 1).padStart(4, '0')}/${String(
+          this.total
+        ).padStart(4, '0')}]`.padEnd(W_INDEX)
         const nameStr = this.truncateName(name, W_NAME)
         const bar = this.makeProgressBar(percent, W_BAR)
         const percentStr = `${percent.toFixed(1)}%`.padStart(W_PERCENT)
@@ -246,8 +271,10 @@ class ProgressManager {
         const currentSize = this.formatSize(current)
         const totalSize = this.formatSize(fileTotal)
         const sizeStr = `${currentSize}/${totalSize}`.padStart(W_SIZE)
-        const timeStr = `${this.formatTime(taskElapsed)}/${this.formatTime(taskEta)}`.padEnd(W_TIME)
-        
+        const timeStr = `${this.formatTime(taskElapsed)}/${this.formatTime(
+          taskEta
+        )}`.padEnd(W_TIME)
+
         // 使用 emoji 图标（通过 padEndDisplay 处理宽度）
         let phaseIcon = '⏳'
         if (phase === 'download') phaseIcon = '⬇️'
@@ -256,12 +283,12 @@ class ProgressManager {
         else if (phase === 'error') phaseIcon = '❌'
         else if (phase === 'skip') phaseIcon = '⏭️'
         const phaseStr = this.padEndDisplay(phaseIcon, 3)
-        
+
         const lineContent = ` ${threadLabel} │ ${indexStr}${phaseStr}${nameStr} ${bar} ${percentStr} ${speedStr} ${sizeStr} ${timeStr}`
         lines.push(pad + '║' + this.padEndDisplay(lineContent, width) + '║')
       }
     }
-    
+
     // 底部边框
     lines.push(pad + '╚' + '═'.repeat(width) + '╝')
     lines.push('')
@@ -270,7 +297,7 @@ class ProgressManager {
     const totalLines = this.headerLines + this.concurrency
     process.stdout.write(`\x1b[${totalLines}A`) // 上移
     process.stdout.write('\x1b[0J') // 清除光标后的所有内容
-    
+
     // 输出新内容
     process.stdout.write(lines.join('\n') + '\n')
   }
@@ -278,7 +305,11 @@ class ProgressManager {
   // 初始化显示区域
   init() {
     if (!this.isTTY) {
-      console.log(`[${this.now()}] 开始下载 ${this.total} 个文件，并发数: ${this.concurrency}`)
+      console.log(
+        `[${this.now()}] 开始下载 ${this.total} 个文件，并发数: ${
+          this.concurrency
+        }`
+      )
       return
     }
     // 预留显示空间
@@ -315,7 +346,9 @@ class ProgressManager {
     console.log('')
     console.log('═'.repeat(60))
     console.log(`  下载完成！`)
-    console.log(`  总文件: ${this.total} | 成功: ${this.succeeded} | 失败: ${this.failed}`)
+    console.log(
+      `  总文件: ${this.total} | 成功: ${this.succeeded} | 失败: ${this.failed}`
+    )
     console.log(`  总用时: ${this.formatTime(elapsed)}`)
     console.log('═'.repeat(60))
 
@@ -323,7 +356,13 @@ class ProgressManager {
     if (this.failedFiles.length > 0) {
       console.log('')
       console.log('\x1b[31m' + '╔' + '═'.repeat(58) + '╗' + '\x1b[0m')
-      console.log('\x1b[31m' + '║' + '  ⚠️  以下文件下载失败:'.padEnd(57) + '║' + '\x1b[0m')
+      console.log(
+        '\x1b[31m' +
+          '║' +
+          '  ⚠️  以下文件下载失败:'.padEnd(57) +
+          '║' +
+          '\x1b[0m'
+      )
       console.log('\x1b[31m' + '╠' + '═'.repeat(58) + '╣' + '\x1b[0m')
       for (const f of this.failedFiles) {
         const line = `  [${f.index + 1}] ${f.name}`.slice(0, 56)
@@ -348,26 +387,30 @@ function downloadFile(url, dest, onProgress) {
     const file = fs.createWriteStream(dest)
     let downloaded = 0
 
-    const req = https.get(url, { agent: httpsAgent }, (res) => {
-      if (res.statusCode !== 200) {
-        fs.unlink(dest, () => {})
-        return reject(new Error(`HTTP ${res.statusCode}`))
-      }
+    const req = https
+      .get(url, { agent: httpsAgent }, (res) => {
+        if (res.statusCode !== 200) {
+          fs.unlink(dest, () => {})
+          return reject(new Error(`HTTP ${res.statusCode}`))
+        }
 
-      res.on('data', (chunk) => {
-        downloaded += chunk.length
-        if (onProgress) onProgress(downloaded)
+        res.on('data', (chunk) => {
+          downloaded += chunk.length
+          if (onProgress) onProgress(downloaded)
+        })
+
+        res.pipe(file)
+        file.on('finish', () => file.close(resolve))
+      })
+      .on('error', (err) => {
+        fs.unlink(dest, () => {})
+        reject(err)
       })
 
-      res.pipe(file)
-      file.on('finish', () => file.close(resolve))
-    }).on('error', (err) => {
-      fs.unlink(dest, () => {})
-      reject(err)
-    })
-
     file.on('error', (err) => {
-      try { req.destroy() } catch {}
+      try {
+        req.destroy()
+      } catch {}
       fs.unlink(dest, () => {})
       reject(err)
     })
@@ -410,15 +453,22 @@ async function handleFile(fileObj, index, total, slotIndex) {
       const now = Date.now()
       if (now - lastUpdate < 100) return // 节流
       lastUpdate = now
-      
+
       const elapsed = (now - startTime) / 1000
       const speed = elapsed > 0 ? current / elapsed : 0
       const percent = fileSize > 0 ? (current / fileSize) * 100 : 0
       const eta = speed > 0 ? (fileSize - current) / speed : 0
-      
+
       progressManager.updateSlot(slotIndex, {
-        index, name, phase, percent, speed,
-        elapsed, eta, current, total: fileSize
+        index,
+        name,
+        phase,
+        percent,
+        speed,
+        elapsed,
+        eta,
+        current,
+        total: fileSize,
       })
     }
   }
@@ -431,26 +481,35 @@ async function handleFile(fileObj, index, total, slotIndex) {
         // 校验 MD5
         const progressUpdater = createProgressUpdater('verify')
         progressUpdater(0)
-        
+
         try {
           const md5 = await getFileMD5(fullPath, progressUpdater)
           if (md5 === fileObj.md5) {
             progressManager.updateSlot(slotIndex, {
-              index, name, phase: 'skip', percent: 100, speed: 0,
-              elapsed: 0, eta: 0, current: fileSize, total: fileSize
+              index,
+              name,
+              phase: 'skip',
+              percent: 100,
+              speed: 0,
+              elapsed: 0,
+              eta: 0,
+              current: fileSize,
+              total: fileSize,
             })
             return { success: true }
           }
         } catch {}
       }
       // 文件有问题，需要重新下载
-      try { fs.unlinkSync(fullPath) } catch {}
+      try {
+        fs.unlinkSync(fullPath)
+      } catch {}
     }
 
     // 下载文件
     const downloadUpdater = createProgressUpdater('download')
     downloadUpdater(0)
-    
+
     try {
       await downloadFile(url, fullPath, downloadUpdater)
     } catch (e) {
@@ -463,7 +522,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
     // 校验下载的文件
     const verifyUpdater = createProgressUpdater('verify')
     verifyUpdater(0)
-    
+
     try {
       const stats = fs.statSync(fullPath)
       if (stats.size !== fileSize) {
@@ -473,15 +532,24 @@ async function handleFile(fileObj, index, total, slotIndex) {
       if (md5 !== fileObj.md5) {
         throw new Error('MD5 校验失败')
       }
-      
+
       progressManager.updateSlot(slotIndex, {
-        index, name, phase: 'done', percent: 100, speed: 0,
-        elapsed: 0, eta: 0, current: fileSize, total: fileSize
+        index,
+        name,
+        phase: 'done',
+        percent: 100,
+        speed: 0,
+        elapsed: 0,
+        eta: 0,
+        current: fileSize,
+        total: fileSize,
       })
       return { success: true }
     } catch (e) {
       if (!isRetry) {
-        try { fs.unlinkSync(fullPath) } catch {}
+        try {
+          fs.unlinkSync(fullPath)
+        } catch {}
         return await checkAndDownload(true)
       }
       return { success: false, reason: `校验失败: ${e.message}` }
@@ -489,17 +557,24 @@ async function handleFile(fileObj, index, total, slotIndex) {
   }
 
   const result = await checkAndDownload()
-  
+
   if (result.success) {
     progressManager.markComplete(true)
   } else {
     progressManager.updateSlot(slotIndex, {
-      index, name, phase: 'error', percent: 0, speed: 0,
-      elapsed: 0, eta: 0, current: 0, total: fileSize
+      index,
+      name,
+      phase: 'error',
+      percent: 0,
+      speed: 0,
+      elapsed: 0,
+      eta: 0,
+      current: 0,
+      total: fileSize,
     })
     progressManager.markComplete(false, { index, name, reason: result.reason })
   }
-  
+
   progressManager.clearSlot(slotIndex)
   return result.success
 }
@@ -509,7 +584,7 @@ function runWithConcurrency(data, limit) {
   return new Promise((resolve) => {
     let nextIndex = 0
     const total = data.length
-    
+
     if (total === 0) return resolve()
 
     // 维护可用槽位队列
@@ -520,16 +595,17 @@ function runWithConcurrency(data, limit) {
       while (availableSlots.length > 0 && nextIndex < total) {
         const currentIndex = nextIndex++
         const slotIndex = availableSlots.shift() // 取出一个可用槽位
-        
-        handleFile(data[currentIndex], currentIndex, total, slotIndex)
-          .finally(() => {
+
+        handleFile(data[currentIndex], currentIndex, total, slotIndex).finally(
+          () => {
             availableSlots.push(slotIndex) // 归还槽位
             if (progressManager.completed === total) {
               resolve()
             } else {
               runNext()
             }
-          })
+          }
+        )
       }
     }
 
@@ -539,8 +615,10 @@ function runWithConcurrency(data, limit) {
 
 // ==================== 主函数 ====================
 async function main() {
-  console.log(`[${new Date().toTimeString().split(' ')[0]}] 正在加载资源列表...`)
-  
+  console.log(
+    `[${new Date().toTimeString().split(' ')[0]}] 正在加载资源列表...`
+  )
+
   let data
   try {
     const res = await fetch(resListUrl)

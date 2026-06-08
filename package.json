@@ -4,6 +4,9 @@
   "author": "TomyJan",
   "description": "GenshinImpact client Versions",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "prettier": {
     "semi": false,
     "singleQuote": true

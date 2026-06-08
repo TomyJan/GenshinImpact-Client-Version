@@ -83,6 +83,8 @@ node ./Scripts/getAndroidGameVersion.js ww
 
 部分资源存档可以从 [TomyJan 镜像站](https://mirror.tomys.top/189Cloud/%E8%BD%AF%E4%BB%B6/Games) 获取。
 
+UI 资源解包可以从 [TomyJan/WutheringWaves-UIResources](https://github.com/TomyJan/WutheringWaves-UIResources) 获取。
+
 代码是闭着眼睛用脚踩出来的，能跑就行。不要看，以免吓死你，也不要以此为由喷我。
 
 ## License

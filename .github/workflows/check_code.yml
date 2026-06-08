@@ -27,20 +27,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Read Node.js version
-        id: node-version
-        shell: bash
-        run: echo "version=$(node -p \"require('./package.json').engines.node\")" >> "$GITHUB_OUTPUT"
-
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ steps.node-version.outputs.version }}
+          node-version-file: package.json
           cache: pnpm
 
       - name: Install dependencies

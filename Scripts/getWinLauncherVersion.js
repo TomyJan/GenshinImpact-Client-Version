@@ -21,18 +21,18 @@ const game =
   process.argv[2] === 'gi'
     ? 'GI'
     : process.argv[2] === 'sr'
-    ? 'SR'
-    : (() => {
-        throw new Error('无效的命令行参数: ' + process.argv[2])
-      })()
+      ? 'SR'
+      : (() => {
+          throw new Error('无效的命令行参数: ' + process.argv[2])
+        })()
 const server =
   process.argv[3] === 'cn'
     ? 'CN'
     : process.argv[3] === 'os'
-    ? 'OS'
-    : (() => {
-        throw new Error('无效的命令行参数: ' + process.argv[3])
-      })()
+      ? 'OS'
+      : (() => {
+          throw new Error('无效的命令行参数: ' + process.argv[3])
+        })()
 
 const targetUrl = ApiInfo[game][server]
 const targetDir = `./${game}/Win/Launcher/${server}/`
@@ -94,7 +94,7 @@ async function getWinLauncherVersion() {
       await fs.writeFileSync(
         outputFilePath,
         JSON.stringify(jsonData, null, 2) + '\n',
-        'utf-8'
+        'utf-8',
       )
       console.log('数据已写出到:', outputFilePath)
 
@@ -105,7 +105,7 @@ async function getWinLauncherVersion() {
       await fs.writeFileSync(
         latestVerPath,
         JSON.stringify(localData, null, 2) + '\n',
-        'utf-8'
+        'utf-8',
       )
 
       console.log('数据已更新并保存成功。')

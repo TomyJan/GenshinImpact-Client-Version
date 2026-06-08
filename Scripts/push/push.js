@@ -18,7 +18,7 @@ class Push {
     jsonData,
     isKuroGame = false,
     isKuroNewApi = false,
-    otherServerData = null
+    otherServerData = null,
   ) {
     // 库洛游戏的解析
     if (isKuroGame) {
@@ -36,7 +36,7 @@ class Push {
           `${latestVerPath}latest_Win_Game_CN${
             isKuroNewApi ? '_NEW' : ''
           }.json`,
-          'utf-8'
+          'utf-8',
         )
         latestCN = JSON.parse(latestCNContent)
       } catch (error) {
@@ -48,7 +48,7 @@ class Push {
           `${latestVerPath}latest_Win_Game_OS${
             isKuroNewApi ? '_NEW' : ''
           }.json`,
-          'utf-8'
+          'utf-8',
         )
         latestOS = JSON.parse(latestOSContent)
       } catch (error) {
@@ -60,7 +60,7 @@ class Push {
       if (gameName === '鸣潮') {
         if (isKuroNewApi)
           pushUrl += `${TGMsgID_WW}&text=${encodeURIComponent(
-            '\\[灰度\\] ' + gameName
+            '\\[灰度\\] ' + gameName,
           )}`
         else pushUrl += `${TGMsgID_WW}&text=${encodeURIComponent(gameName)}`
         gameId = 'WW'
@@ -88,37 +88,37 @@ class Push {
             `./Scripts/data/${gameId}/latest_Win_Game_CN${
               isKuroNewApi ? '_NEW' : ''
             }_Res.json`,
-            'utf-8'
+            'utf-8',
           )
           const jsonDataOSResContent = fs.readFileSync(
             `./Scripts/data/${gameId}/latest_Win_Game_OS${
               isKuroNewApi ? '_NEW' : ''
             }_Res.json`,
-            'utf-8'
+            'utf-8',
           )
           const jsonDataCNLastContent = fs.readFileSync(
             `./Scripts/data/${gameId}/last_Win_Game_CN${
               isKuroNewApi ? '_NEW' : ''
             }.json`,
-            'utf-8'
+            'utf-8',
           )
           const jsonDataOSLastContent = fs.readFileSync(
             `./Scripts/data/${gameId}/last_Win_Game_OS${
               isKuroNewApi ? '_NEW' : ''
             }.json`,
-            'utf-8'
+            'utf-8',
           )
           const jsonDataCNResLastContent = fs.readFileSync(
             `./Scripts/data/${gameId}/last_Win_Game_CN${
               isKuroNewApi ? '_NEW' : ''
             }_Res.json`,
-            'utf-8'
+            'utf-8',
           )
           const jsonDataOSResLastContent = fs.readFileSync(
             `./Scripts/data/${gameId}/last_Win_Game_OS${
               isKuroNewApi ? '_NEW' : ''
             }_Res.json`,
-            'utf-8'
+            'utf-8',
           )
 
           jsonDataCNRes = JSON.parse(jsonDataCNResContent)
@@ -152,7 +152,7 @@ class Push {
                 jsonDataCNLast.default.version
                   ? `\`${jsonDataCNLast.default.version}\` \\=\\> `
                   : ''
-              }\`${jsonDataCN.default.version}\`\n`
+              }\`${jsonDataCN.default.version}\`\n`,
             )
           } else {
             pushUrl += encodeURIComponent(
@@ -164,7 +164,7 @@ class Push {
                 jsonDataOSLast.default.version
                   ? `\`${jsonDataOSLast.default.version}\` \\=\\> `
                   : ''
-              }\`${jsonDataOS.default.version}\`\n`
+              }\`${jsonDataOS.default.version}\`\n`,
             )
           }
 
@@ -178,7 +178,7 @@ class Push {
                 Array.isArray(jsonDataCNResLast?.resource)
                   ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> `
                   : ''
-              }\`${jsonDataCNRes.resource.length}\`\n`
+              }\`${jsonDataCNRes.resource.length}\`\n`,
             )
           } else {
             pushUrl += encodeURIComponent(
@@ -190,7 +190,7 @@ class Push {
                 Array.isArray(jsonDataOSResLast?.resource)
                   ? `\`${jsonDataOSResLast.resource.length}\` \\=\\> `
                   : ''
-              }\`${jsonDataOSRes.resource.length}\`\n`
+              }\`${jsonDataOSRes.resource.length}\`\n`,
             )
           }
 
@@ -220,7 +220,7 @@ class Push {
           // 使用 jsonDataCN.default.config.patchConfig 数组中 version==jsonDataCNLast.default.version 的 size 作为更新大小
           if (Array.isArray(jsonDataCN.default.config.patchConfig)) {
             let patchConfigCN = jsonDataCN.default.config.patchConfig.find(
-              (item) => item.version === jsonDataCNLast.default.version
+              (item) => item.version === jsonDataCNLast.default.version,
             )
             if (patchConfigCN) {
               updateSizeCN = patchConfigCN.size
@@ -228,7 +228,7 @@ class Push {
           }
           if (Array.isArray(jsonDataOS.default.config.patchConfig)) {
             let patchConfigOS = jsonDataOS.default.config.patchConfig.find(
-              (item) => item.version === jsonDataOSLast.default.version
+              (item) => item.version === jsonDataOSLast.default.version,
             )
             if (patchConfigOS) {
               updateSizeOS = patchConfigOS.size
@@ -243,20 +243,20 @@ class Push {
               `大小: ${
                 lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
               }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(
-                updateSizeCN
-              )}\`\\)\n`
+                updateSizeCN,
+              )}\`\\)\n`,
             )
           } else {
             pushUrl += encodeURIComponent(
               `CN 大小: ${
                 lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
               }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(
-                updateSizeCN
+                updateSizeCN,
               )}\`\\)\nOS 大小: ${
                 lastSizeOS ? `\`${formatBytes(lastSizeOS)}\` \\=\\> ` : ''
               }\`${formatBytes(sizeOS)}\` \\(UP:\`${formatBytes(
-                updateSizeOS
-              )}\`\\)\n`
+                updateSizeOS,
+              )}\`\\)\n`,
             )
           }
 
@@ -269,7 +269,7 @@ class Push {
                 jsonDataCN.default.changelog['zh-Hans']
                   ? jsonDataCN.default.changelog['zh-Hans']
                   : '暂无'
-              }\`\`\`\n`
+              }\`\`\`\n`,
             )
           } else {
             pushUrl += encodeURIComponent(
@@ -281,7 +281,7 @@ class Push {
                 jsonDataOS.default.changelog
                   ? jsonDataOS.default.changelog['zh-Hans']
                   : '暂无'
-              }\`\`\`\n`
+              }\`\`\`\n`,
             )
           }
         } catch (error) {
@@ -290,7 +290,7 @@ class Push {
         }
       } else {
         pushUrl += encodeURIComponent(
-          ` Win ${server.replace('_NEW', '')} REL 更新！\n\n`
+          ` Win ${server.replace('_NEW', '')} REL 更新！\n\n`,
         )
         let jsonData = {}
         let jsonDataRes = {}
@@ -301,18 +301,18 @@ class Push {
           // 获取 /win/Game/CN 和 OS 目录下最新的 .json 作为传入的文件名
           const jsonDataContent = fs.readFileSync(
             `./${gameId}/Win/Game/${server}/${getLatestJsonFileName(
-              `./${gameId}/Win/Game/${server}/`
+              `./${gameId}/Win/Game/${server}/`,
             )}`,
-            'utf-8'
+            'utf-8',
           )
           const jsonDataContentRes = fs.readFileSync(
-            `./Scripts/data/${gameId}/latest_Win_Game_${server}_Res.json`
+            `./Scripts/data/${gameId}/latest_Win_Game_${server}_Res.json`,
           )
           const jsonDataContentLast = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_${server}.json`
+            `./Scripts/data/${gameId}/last_Win_Game_${server}.json`,
           )
           const jsonDataContentResLast = fs.readFileSync(
-            `./Scripts/data/${gameId}/last_Win_Game_${server}_Res.json`
+            `./Scripts/data/${gameId}/last_Win_Game_${server}_Res.json`,
           )
           jsonData = JSON.parse(jsonDataContent)
           jsonDataRes = JSON.parse(jsonDataContentRes)
@@ -324,14 +324,14 @@ class Push {
               jsonDataLast.default.version
                 ? `\`${jsonDataLast.default.version}\` \\=\\> `
                 : ''
-            }\`${jsonData.default.version}\`\n`
+            }\`${jsonData.default.version}\`\n`,
           )
           pushUrl += encodeURIComponent(
             `文件数: ${
               Array.isArray(jsonDataResLast?.resource)
                 ? `\`${jsonDataResLast.resource.length}\` \\=\\> `
                 : ''
-            }\`${jsonDataRes.resource.length}\`\n`
+            }\`${jsonDataRes.resource.length}\`\n`,
           )
           // 计算大小
           let lastSize = 0
@@ -347,14 +347,14 @@ class Push {
           pushUrl += encodeURIComponent(
             `大小: ${
               lastSize ? `\`${formatBytes(lastSize)}\` \\=\\> ` : ''
-            }\`${formatBytes(size)}\`\n`
+            }\`${formatBytes(size)}\`\n`,
           )
           pushUrl += encodeURIComponent(
             `更新日志: \n\`\`\`${
               jsonData.default.changelog['zh-Hans']
                 ? jsonData.default.changelog['zh-Hans']
                 : '暂无'
-            }\`\`\`\n`
+            }\`\`\`\n`,
           )
         } catch (error) {
           console.error('读取本地数据失败4:', error.message)
@@ -363,7 +363,7 @@ class Push {
       }
 
       pushUrl += encodeURIComponent(
-        `\n\\*文件数和大小仅计算本体\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`
+        `\n\\*文件数和大小仅计算本体\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`,
       )
 
       console.log('推送地址:', pushUrl)
@@ -373,7 +373,7 @@ class Push {
           '推送请求失败:',
           rsp.status,
           rsp.statusText,
-          await rsp.text()
+          await rsp.text(),
         )
         process.exit(7)
       }
@@ -393,7 +393,7 @@ class Push {
     try {
       const latestCNContent = await fs.readFileSync(
         `${latestVerPath}latest_Win_Game_CN.json`,
-        'utf-8'
+        'utf-8',
       )
       latestCN = JSON.parse(latestCNContent)
     } catch (error) {
@@ -403,7 +403,7 @@ class Push {
     try {
       const latestOSContent = await fs.readFileSync(
         `${latestVerPath}latest_Win_Game_OS.json`,
-        'utf-8'
+        'utf-8',
       )
       latestOS = JSON.parse(latestOSContent)
     } catch (error) {
@@ -434,12 +434,12 @@ class Push {
         ` Win ${
           type === 'REL'
             ? escapeCharacters(
-                jsonData.data.game_packages[0].main.major.version
+                jsonData.data.game_packages[0].main.major.version,
               )
             : escapeCharacters(
-                jsonData.data.game_packages[0].pre_download?.major?.version
+                jsonData.data.game_packages[0].pre_download?.major?.version,
               )
-        } ${type} 更新！\n\n`
+        } ${type} 更新！\n\n`,
       )
       pushUrl += encodeURIComponent(`国服: \n`)
       pushUrl += encodeURIComponent(`完整包: \n`)
@@ -457,12 +457,12 @@ class Push {
         ` Win ${server} ${
           type === 'REL'
             ? escapeCharacters(
-                jsonData.data.game_packages[0].main.major.version
+                jsonData.data.game_packages[0].main.major.version,
               )
             : escapeCharacters(
-                jsonData.data.game_packages[0].pre_download?.major?.version
+                jsonData.data.game_packages[0].pre_download?.major?.version,
               )
-        } ${type} 更新！\n\n`
+        } ${type} 更新！\n\n`,
       )
       pushUrl += encodeURIComponent(`完整包: \n`)
       pushUrl += getEncodedLinkMsgGroupText(gameId, server, 'full', type)
@@ -481,17 +481,17 @@ class Push {
             ? jsonData.data.game_packages[0].pre_download?.major?.game_pkgs
                 .length
             : jsonData.data.game_packages[0].main.major.game_pkgs.length
-        } 个包, 请自行合并\n\n`
+        } 个包, 请自行合并\n\n`,
       )
 
     pushUrl += encodeURIComponent(
       `\\#${
         jsonData.data.game_packages[0].pre_download?.major?.version
           ? escapeCharacters(
-              jsonData.data.game_packages[0].pre_download?.major?.version
+              jsonData.data.game_packages[0].pre_download?.major?.version,
             )
           : escapeCharacters(jsonData.data.game_packages[0].main.major.version)
-      } `
+      } `,
     )
 
     if (jsonData.data.game_packages[0].pre_download?.major?.version)
@@ -499,10 +499,10 @@ class Push {
     pushUrl +=
       gameName === '原神'
         ? encodeURIComponent(
-            `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
+            `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`,
           )
         : encodeURIComponent(
-            `\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`
+            `\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`,
           )
 
     console.log('推送地址:', pushUrl)
@@ -532,9 +532,9 @@ class Push {
         // 获取 /win/Game/CN或OS目录下最新的.json作为传入的文件名
         const jsonDataContent = fs.readFileSync(
           `./${gameId}/Win/Game/${server}/${getLatestJsonFileName(
-            `./${gameId}/Win/Game/${server}/`
+            `./${gameId}/Win/Game/${server}/`,
           )}`,
-          'utf-8'
+          'utf-8',
         )
         //console.log('读取本地数据:', jsonDataContent);
         jsonData = JSON.parse(jsonDataContent)
@@ -557,7 +557,7 @@ class Push {
         if (linkData.major.game_pkgs.length === 1) {
           //完整包
           fullLink += `[完整包](${escapeCharacters(
-            linkData.major.game_pkgs[0].url
+            linkData.major.game_pkgs[0].url,
           )}) \\| `
           fullSize += `${formatBytes(linkData.major.game_pkgs[0].size)} \\| `
         } else {
@@ -565,7 +565,7 @@ class Push {
           fullLink += `分卷 `
           for (let i = 0; i < linkData.major.game_pkgs.length; i++) {
             fullLink += `[${i + 1}](${escapeCharacters(
-              linkData.major.game_pkgs[i].url
+              linkData.major.game_pkgs[i].url,
             )}) \\| `
           }
           // 分卷计算总大小
@@ -573,8 +573,8 @@ class Push {
             Number(10737418240 * (linkData.major.game_pkgs.length - 1)) +
               Number(
                 linkData.major.game_pkgs[linkData.major.game_pkgs.length - 1]
-                  .size
-              )
+                  .size,
+              ),
           )} \\| `
           // 去掉最后一个 |
           fullLink = fullLink.slice(0, -3) + '\n'
@@ -621,7 +621,7 @@ class Push {
         // 处理剩余的语音包
         for (let i = 0; i < voiceData.length; i++) {
           voiceLink += `[${escapeCharacters(
-            voiceData[i].language
+            voiceData[i].language,
           )}](${escapeCharacters(voiceData[i].url)})\\|`
           fullSize += `${formatBytes(voiceData[i].size)}\\|`
         }
@@ -637,22 +637,22 @@ class Push {
         for (let i = 0; i < linkData.patches.length; i++) {
           let diffSize = '          '
           diffLink += `${escapeCharacters(
-            linkData.patches[i].version
+            linkData.patches[i].version,
           )}\\-${escapeCharacters(linkData.major.version)}: `
           if (linkData.patches[i].game_pkgs.length === 1) {
             //完整包
             diffLink += `[本体](${escapeCharacters(
-              linkData.patches[i].game_pkgs[0].url
+              linkData.patches[i].game_pkgs[0].url,
             )}) \\| `
             diffSize += `${formatBytes(
-              linkData.patches[i].game_pkgs[0].size
+              linkData.patches[i].game_pkgs[0].size,
             )} \\| `
           } else {
             // 分卷包
             diffLink += `本体: 分卷 `
             for (let i = 0; i < linkData.patches[i].game_pkgs.length; i++) {
               diffLink += `[${i + 1}](${escapeCharacters(
-                linkData.patches[i].game_pkgs[i].url
+                linkData.patches[i].game_pkgs[i].url,
               )}) \\| `
             }
             // 分卷计算总大小
@@ -661,8 +661,8 @@ class Push {
                 Number(
                   linkData.patches[i].game_pkgs[
                     linkData.patches[i].game_pkgs.length - 1
-                  ].size
-                )
+                  ].size,
+                ),
             )} \\| `
             // 去掉最后一个 |
             diffLink = diffLink.slice(0, -3) + '\n'
@@ -703,7 +703,7 @@ class Push {
           // 处理剩余的语音包
           for (let j = 0; j < voiceData.length; j++) {
             diffLink += `[${escapeCharacters(
-              voiceData[j].language
+              voiceData[j].language,
             )}](${escapeCharacters(voiceData[j].url)})\\|`
             diffSize += `${formatBytes(voiceData[j].size)}\\|`
           }
@@ -722,7 +722,7 @@ class Push {
 
       // 筛选出所有以 '.json' 结尾, 但不以 _Res.json 结尾的文件
       const jsonFiles = files.filter(
-        (file) => file.endsWith('.json') && !file.endsWith('_Res.json')
+        (file) => file.endsWith('.json') && !file.endsWith('_Res.json'),
       )
 
       // 如果没有找到任何 JSON 文件，则返回 null
@@ -752,7 +752,7 @@ class Push {
     server,
     link,
     isKuroGame = false,
-    isKuroNewApi = false
+    isKuroNewApi = false,
   ) {
     let pushUrl = `https://api.telegram.org/bot${TGBotToken}/sendMessage?parse_mode=MarkdownV2&disable_web_page_preview=True&chat_id=`
 
@@ -767,30 +767,30 @@ class Push {
       }
       if (isKuroNewApi) {
         pushUrl += encodeURIComponent(
-          `\\[灰度\\] ${gameName} Win ${server} Launcher 更新！\n\n`
+          `\\[灰度\\] ${gameName} Win ${server} Launcher 更新！\n\n`,
         )
       } else {
         pushUrl += encodeURIComponent(
-          `${gameName} Win ${server} Launcher 更新！\n\n`
+          `${gameName} Win ${server} Launcher 更新！\n\n`,
         )
       }
       pushUrl += `版本: ${
         link.old.version
           ? `[${escapeCharacters(link.old.version)}](${escapeCharacters(
-              link.old.url
+              link.old.url,
             )}) \\=\\> `
           : ''
       }[${escapeCharacters(link.new.version)}](${escapeCharacters(
-        link.new.url
+        link.new.url,
       )})%0A`
       pushUrl += `大小: ${
         link.old.size ? `\`${formatBytes(link.old.size)}\` \\=\\> ` : ''
       }\`${formatBytes(link.new.size)}\`%0A`
       pushUrl += `更新日志: \`${escapeCharacters(
-        link.changelog ?? '暂无'
+        link.changelog ?? '暂无',
       )}\`%0A`
       pushUrl += encodeURIComponent(
-        `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`
+        `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`,
       )
 
       console.log('推送地址:', pushUrl)
@@ -800,7 +800,7 @@ class Push {
           '推送请求失败:',
           rsp.status,
           rsp.statusText,
-          await rsp.text()
+          await rsp.text(),
         )
         process.exit(15)
       }
@@ -815,16 +815,16 @@ class Push {
     if (gameName === '原神') pushUrl += `${TGMsgID_GI}&text=`
     else pushUrl += `${TGMsgID_SR}&text=`
     pushUrl += encodeURIComponent(
-      `${gameName} Win ${server} Launcher 更新！\n\n`
+      `${gameName} Win ${server} Launcher 更新！\n\n`,
     )
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})`
     pushUrl +=
       gameName === '原神'
         ? encodeURIComponent(
-            `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
+            `\n\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`,
           )
         : encodeURIComponent(
-            `\n\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`
+            `\n\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`,
           )
 
     console.log('推送地址:', pushUrl)
@@ -834,7 +834,7 @@ class Push {
         '推送请求失败:',
         rsp.status,
         rsp.statusText,
-        await rsp.text()
+        await rsp.text(),
       )
       process.exit(16)
     }
@@ -861,23 +861,23 @@ class Push {
         process.exit(17)
     }
     pushUrl += encodeURIComponent(
-      `${gameName} Android ${server} Game 更新！\n\n`
+      `${gameName} Android ${server} Game 更新！\n\n`,
     )
     pushUrl += `链接: [${escapeCharacters(link)}](${escapeCharacters(link)})%0A`
     switch (gameName) {
       case '原神':
         pushUrl += encodeURIComponent(
-          `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`
+          `\n_via [@GenshinVersion](https://t.me/GenshinVersion)_`,
         )
         break
       case '崩坏星穹铁道':
         pushUrl += encodeURIComponent(
-          `\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`
+          `\n_via [@StarRailVersion](https://t.me/StarRailVersion)_`,
         )
         break
       case '鸣潮':
         pushUrl += encodeURIComponent(
-          `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`
+          `\n_via [@WutheringWavesVersion](https://t.me/WutheringWavesVersion)_`,
         )
         break
       default:
@@ -892,7 +892,7 @@ class Push {
         '推送请求失败:',
         rsp.status,
         rsp.statusText,
-        await rsp.text()
+        await rsp.text(),
       )
       process.exit(17)
     }
@@ -926,7 +926,7 @@ function formatBytes(bytes, decimals = 3) {
   const i = Math.floor(Math.log(bytes) / Math.log(k))
 
   return escapeCharacters(
-    parseFloat((bytes / Math.pow(k, i)).toPrecision(dm)) + sizes[i]
+    parseFloat((bytes / Math.pow(k, i)).toPrecision(dm)) + sizes[i],
   )
 }
 

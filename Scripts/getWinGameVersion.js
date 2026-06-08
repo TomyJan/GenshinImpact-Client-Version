@@ -115,13 +115,13 @@ async function getWinGameVersion() {
       '本地最新 REL 版本:',
       localData.latestVersion,
       '预下载版本:',
-      localData.preDownloadVersion
+      localData.preDownloadVersion,
     )
     console.log(
       '取到最新 REL 版本:',
       latestVersion,
       '预下载版本:',
-      preDownloadVersion
+      preDownloadVersion,
     )
     if (!latestVersion) {
       logger.error('最新 REL 版本数据获取失败, 程序退出...')
@@ -146,7 +146,7 @@ async function getWinGameVersion() {
       await fs.writeFileSync(
         outputFilePath,
         JSON.stringify(jsonData, null, 2) + '\n',
-        'utf-8'
+        'utf-8',
       )
       console.log('数据已写出到:', outputFilePath)
 
@@ -158,7 +158,7 @@ async function getWinGameVersion() {
       await fs.writeFileSync(
         latestVerPath,
         JSON.stringify(localData, null, 2) + '\n',
-        'utf-8'
+        'utf-8',
       )
 
       console.log('数据已更新并保存成功。')
@@ -172,7 +172,7 @@ async function getWinGameVersion() {
         if (tmpServer !== server) {
           // 两个都更新了
           console.log(
-            `从临时文件获取当前已缓存${game} 版本信息: 两个服务器都已更新, 正在推送...`
+            `从临时文件获取当前已缓存${game} 版本信息: 两个服务器都已更新, 正在推送...`,
           )
           // 删除缓存的文件
           await fs.unlinkSync(tmpFileName)
@@ -183,14 +183,14 @@ async function getWinGameVersion() {
         } else {
           // 这咋回事给我搞懵了, 别推, 等下次再检查吧
           console.error(
-            '意料之外的错误: 临时文件中的服务器信息与当前服务器信息相同'
+            '意料之外的错误: 临时文件中的服务器信息与当前服务器信息相同',
           )
           process.exit(5)
         }
       } // 没缓存文件, 说明只检查到了一个服务器的更新, 先不推送, 缓存
       else await fs.writeFileSync(tmpFileName, server, 'utf-8')
       console.log(
-        `游戏${game}只检查到了${server}服务器的更新, 已缓存, 等待另一个服务器更新后再推送...`
+        `游戏${game}只检查到了${server}服务器的更新, 已缓存, 等待另一个服务器更新后再推送...`,
       )
     } else {
       console.log('数据无变化，无需更新。')

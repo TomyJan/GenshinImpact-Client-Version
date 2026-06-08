@@ -217,11 +217,11 @@ class ProgressManager {
     const progressBar = this.makeProgressBar(overallPercent, 30)
     const percentStr = overallPercent.toFixed(1).padStart(5)
     const headerContent = ` 📊 总进度   ${progressBar} ${percentStr}% (${completedStr}/${totalStr})          ✅ ${String(
-      this.succeeded
+      this.succeeded,
     ).padStart(4)}  ❌ ${String(this.failed).padStart(
-      3
+      3,
     )}                         ⏱️  用时: ${this.formatTime(elapsed).padStart(
-      5
+      5,
     )}  预计剩余: ${this.formatTime(eta).padStart(5)} `
     lines.push(pad + '║' + this.padEndDisplay(headerContent, width - 2) + '║')
     lines.push(pad + '╠' + '═'.repeat(width) + '╣')
@@ -241,7 +241,7 @@ class ProgressManager {
       const slot = this.slots[i]
       const threadLabel = this.padEndDisplay(
         `线程${String(i + 1).padStart(2)}`,
-        W_THREAD
+        W_THREAD,
       )
 
       if (!slot) {
@@ -262,7 +262,7 @@ class ProgressManager {
 
         // 各字段固定宽度
         const indexStr = `[${String(index + 1).padStart(4, '0')}/${String(
-          this.total
+          this.total,
         ).padStart(4, '0')}]`.padEnd(W_INDEX)
         const nameStr = this.truncateName(name, W_NAME)
         const bar = this.makeProgressBar(percent, W_BAR)
@@ -272,7 +272,7 @@ class ProgressManager {
         const totalSize = this.formatSize(fileTotal)
         const sizeStr = `${currentSize}/${totalSize}`.padStart(W_SIZE)
         const timeStr = `${this.formatTime(taskElapsed)}/${this.formatTime(
-          taskEta
+          taskEta,
         )}`.padEnd(W_TIME)
 
         // 使用 emoji 图标（通过 padEndDisplay 处理宽度）
@@ -308,7 +308,7 @@ class ProgressManager {
       console.log(
         `[${this.now()}] 开始下载 ${this.total} 个文件，并发数: ${
           this.concurrency
-        }`
+        }`,
       )
       return
     }
@@ -347,7 +347,7 @@ class ProgressManager {
     console.log('═'.repeat(60))
     console.log(`  下载完成！`)
     console.log(
-      `  总文件: ${this.total} | 成功: ${this.succeeded} | 失败: ${this.failed}`
+      `  总文件: ${this.total} | 成功: ${this.succeeded} | 失败: ${this.failed}`,
     )
     console.log(`  总用时: ${this.formatTime(elapsed)}`)
     console.log('═'.repeat(60))
@@ -361,7 +361,7 @@ class ProgressManager {
           '║' +
           '  ⚠️  以下文件下载失败:'.padEnd(57) +
           '║' +
-          '\x1b[0m'
+          '\x1b[0m',
       )
       console.log('\x1b[31m' + '╠' + '═'.repeat(58) + '╣' + '\x1b[0m')
       for (const f of this.failedFiles) {
@@ -604,7 +604,7 @@ function runWithConcurrency(data, limit) {
             } else {
               runNext()
             }
-          }
+          },
         )
       }
     }
@@ -616,7 +616,7 @@ function runWithConcurrency(data, limit) {
 // ==================== 主函数 ====================
 async function main() {
   console.log(
-    `[${new Date().toTimeString().split(' ')[0]}] 正在加载资源列表...`
+    `[${new Date().toTimeString().split(' ')[0]}] 正在加载资源列表...`,
   )
 
   let data

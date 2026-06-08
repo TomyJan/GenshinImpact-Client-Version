@@ -57,7 +57,7 @@ function getLatestJsonFileName(directoryPath) {
 
   // 筛选出所有以 '.json' 结尾, 但不以 _Res.json 结尾的文件
   const jsonFiles = files.filter(
-    (file) => file.endsWith('.json') && !file.endsWith('_Res.json')
+    (file) => file.endsWith('.json') && !file.endsWith('_Res.json'),
   )
 
   // 如果没有找到任何 JSON 文件，则返回 null
@@ -109,7 +109,7 @@ async function getWinGameVersion() {
       '返回数据不是json格式:',
       error.message,
       '返回内容:',
-      await rsp.text()
+      await rsp.text(),
     )
     process.exit(3)
   }
@@ -139,13 +139,13 @@ async function getWinGameVersion() {
     '本地最新 REL 版本:',
     localData.default?.version,
     '预下载版本:',
-    localData.predownload?.version
+    localData.predownload?.version,
   )
   console.log(
     '取到最新 REL 版本:',
     latestVersion,
     '预下载版本:',
-    preDownloadVersion
+    preDownloadVersion,
   )
   if (!latestVersion) {
     logger.error('最新 REL 版本数据获取失败, 程序退出...')
@@ -174,7 +174,7 @@ async function getWinGameVersion() {
     await fs.writeFileSync(
       outputFilePath,
       JSON.stringify(jsonData, null, 2) + '\n',
-      'utf-8'
+      'utf-8',
     )
     console.log('版本数据已写出到:', outputFilePath)
 
@@ -191,24 +191,24 @@ async function getWinGameVersion() {
     await fs.writeFileSync(
       latestVerPath,
       JSON.stringify(localData, null, 2) + '\n',
-      'utf-8'
+      'utf-8',
     )
     console.log('脚本版本数据已更新并保存成功。')
 
     // 获取资源数据
     let resJsonData = {}
     let rsp_res = await fetchWithTimeout(
-      jsonData.default.cdnList[0].url + jsonData.default.resources
+      jsonData.default.cdnList[0].url + jsonData.default.resources,
     )
     if (!rsp_res.ok) {
       console.error(
         '请求失败:',
         rsp_res.status,
         rsp_res.statusText,
-        ', 重试一次...'
+        ', 重试一次...',
       )
       rsp_res = await fetchWithTimeout(
-        jsonData.default.cdnList[0].url + jsonData.default.resources
+        jsonData.default.cdnList[0].url + jsonData.default.resources,
       )
       if (!rsp_res.ok) {
         console.error('请求失败:', rsp_res.status, rsp_res.statusText)
@@ -220,23 +220,23 @@ async function getWinGameVersion() {
       resJsonData = await rsp_res.json()
       if (preDownloadVersion) {
         let rsp_res_pre = await fetchWithTimeout(
-          jsonData.default.cdnList[0].url + jsonData.predownload.resources
+          jsonData.default.cdnList[0].url + jsonData.predownload.resources,
         )
         if (!rsp_res_pre.ok) {
           console.error(
             '请求失败:',
             rsp_res_pre.status,
             rsp_res_pre.statusText,
-            ', 重试一次...'
+            ', 重试一次...',
           )
           rsp_res_pre = await fetchWithTimeout(
-            jsonData.default.cdnList[0].url + jsonData.predownload.resources
+            jsonData.default.cdnList[0].url + jsonData.predownload.resources,
           )
           if (!rsp_res_pre.ok) {
             console.error(
               '请求失败:',
               rsp_res_pre.status,
-              rsp_res_pre.statusText
+              rsp_res_pre.statusText,
             )
             process.exit(2)
           }
@@ -248,7 +248,7 @@ async function getWinGameVersion() {
             '返回数据不是json格式:',
             error.message,
             '返回内容:',
-            resJsonData
+            resJsonData,
           )
           process.exit(3)
         }
@@ -258,7 +258,7 @@ async function getWinGameVersion() {
         '返回数据不是json格式:',
         error.message,
         '返回内容:',
-        resJsonData
+        resJsonData,
       )
       process.exit(3)
     }
@@ -272,7 +272,7 @@ async function getWinGameVersion() {
     await fs.writeFileSync(
       latestVerResPath,
       JSON.stringify(resJsonData, null, 2) + '\n',
-      'utf-8'
+      'utf-8',
     )
     console.log('脚本资源数据已更新并保存成功。')
 
@@ -280,7 +280,7 @@ async function getWinGameVersion() {
     await fs.writeFileSync(
       outputResFilePath,
       JSON.stringify(resJsonData, null, 2) + '\n',
-      'utf-8'
+      'utf-8',
     )
     console.log('资源数据已写出到:', outputResFilePath)
 
@@ -295,7 +295,7 @@ async function getWinGameVersion() {
         server,
         jsonData,
         true,
-        isNewApi
+        isNewApi,
       )
       process.exit(0)
     }
@@ -308,10 +308,10 @@ async function getWinGameVersion() {
         // 获取另一个服务器的数据
         const otherServer = tmpServer
         const otherServerPath = `./${game}/Win/Game/${otherServer}/${getLatestJsonFileName(
-          `./${game}/Win/Game/${otherServer}/`
+          `./${game}/Win/Game/${otherServer}/`,
         )}`
         const otherServerData = JSON.parse(
-          await fs.readFileSync(otherServerPath, 'utf-8')
+          await fs.readFileSync(otherServerPath, 'utf-8'),
         )
 
         // 读取两个服务器的last数据
@@ -319,13 +319,13 @@ async function getWinGameVersion() {
           `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'CN' : 'OS'}${
             isNewApi ? '_NEW' : ''
           }.json`,
-          'utf-8'
+          'utf-8',
         )
         const lastOSContent = await fs.readFileSync(
           `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'OS' : 'CN'}${
             isNewApi ? '_NEW' : ''
           }.json`,
-          'utf-8'
+          'utf-8',
         )
         const lastCN = JSON.parse(lastCNContent)
         const lastOS = JSON.parse(lastOSContent)
@@ -356,7 +356,7 @@ async function getWinGameVersion() {
           '->',
           server === 'CN'
             ? jsonData.default.version
-            : otherServerData.default.version
+            : otherServerData.default.version,
         )
         console.log(
           '另一服务器版本:',
@@ -364,7 +364,7 @@ async function getWinGameVersion() {
           '->',
           server === 'CN'
             ? otherServerData.default.version
-            : jsonData.default.version
+            : jsonData.default.version,
         )
 
         // 删除缓存的文件
@@ -373,7 +373,7 @@ async function getWinGameVersion() {
         if (serverUpdated && otherServerUpdated) {
           // 两个服务器都更新了，一起推送
           console.log(
-            `从临时文件获取当前已缓存${game} 版本信息: 两个服务器都已更新, 正在推送...`
+            `从临时文件获取当前已缓存${game} 版本信息: 两个服务器都已更新, 正在推送...`,
           )
           await push.pushWinGame(
             ApiInfo[game].name,
@@ -384,31 +384,31 @@ async function getWinGameVersion() {
             {
               server: otherServer,
               data: otherServerData,
-            }
+            },
           )
         } else if (serverUpdated) {
           // 只有当前服务器更新了
           console.log(
-            `从临时文件获取当前已缓存${game} 版本信息: 只有 ${server} 服务器更新, 正在推送...`
+            `从临时文件获取当前已缓存${game} 版本信息: 只有 ${server} 服务器更新, 正在推送...`,
           )
           await push.pushWinGame(
             ApiInfo[game].name,
             server,
             jsonData,
             true,
-            isNewApi
+            isNewApi,
           )
         } else if (otherServerUpdated) {
           // 只有另一个服务器更新了
           console.log(
-            `从临时文件获取当前已缓存${game} 版本信息: 只有 ${otherServer} 服务器更新, 正在推送...`
+            `从临时文件获取当前已缓存${game} 版本信息: 只有 ${otherServer} 服务器更新, 正在推送...`,
           )
           await push.pushWinGame(
             ApiInfo[game].name,
             otherServer,
             otherServerData,
             true,
-            isNewApi
+            isNewApi,
           )
         } else {
           console.log('两个服务器都没有更新，无需推送')
@@ -417,14 +417,14 @@ async function getWinGameVersion() {
       } else {
         // 这咋回事给我搞懵了, 别推, 等下次再检查吧
         console.error(
-          '意料之外的错误: 临时文件中的服务器信息与当前服务器信息相同'
+          '意料之外的错误: 临时文件中的服务器信息与当前服务器信息相同',
         )
         process.exit(5)
       }
     } // 没缓存文件, 说明只检查到了一个服务器的更新, 先不推送, 缓存
     else await fs.writeFileSync(tmpFileName, server, 'utf-8')
     console.log(
-      `游戏 ${game} 只检查到了 ${server} 服务器的更新, 已缓存, 等待另一个服务器更新后再推送...`
+      `游戏 ${game} 只检查到了 ${server} 服务器的更新, 已缓存, 等待另一个服务器更新后再推送...`,
     )
   } else {
     console.log('数据无变化，无需更新。')

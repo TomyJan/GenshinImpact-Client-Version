@@ -122,7 +122,7 @@ async function getAndroidGameVersion() {
       await fs.writeFileSync(
         outputFilePath,
         JSON.stringify(jsonData, null, 2) + '\n',
-        'utf-8'
+        'utf-8',
       )
       console.log('数据已写出到:', outputFilePath)
 
@@ -133,7 +133,7 @@ async function getAndroidGameVersion() {
       await fs.writeFileSync(
         latestVerPath,
         JSON.stringify(localData, null, 2) + '\n',
-        'utf-8'
+        'utf-8',
       )
 
       console.log('数据已更新并保存成功。')

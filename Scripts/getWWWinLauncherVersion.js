@@ -76,7 +76,7 @@ async function getWinLauncherVersion() {
       '返回数据不是json格式:',
       error.message,
       '返回内容:',
-      await rsp.text()
+      await rsp.text(),
     )
     process.exit(2)
   }
@@ -135,7 +135,7 @@ async function getWinLauncherVersion() {
             'EXE API 请求失败:',
             exeRsp.status,
             exeRsp.statusText,
-            ', 重试一次...'
+            ', 重试一次...',
           )
           exeRsp = await fetchWithTimeout(exeApiUrl)
         }
@@ -171,7 +171,7 @@ async function getWinLauncherVersion() {
     await fs.writeFileSync(
       outputFilePath,
       JSON.stringify(jsonData, null, 2) + '\n',
-      'utf-8'
+      'utf-8',
     )
     console.log('数据已写出到:', outputFilePath)
 
@@ -195,7 +195,7 @@ async function getWinLauncherVersion() {
         changelog: jsonData.default.changelog['zh-Hans'],
       },
       true,
-      isNewApi
+      isNewApi,
     )
 
     // 更新本地数据
@@ -205,7 +205,7 @@ async function getWinLauncherVersion() {
     await fs.writeFileSync(
       latestVerPath,
       JSON.stringify(localData, null, 2) + '\n',
-      'utf-8'
+      'utf-8',
     )
 
     console.log('数据已更新并保存成功。')

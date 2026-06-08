@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const baseUrl =
-  'https://pcdownload-aliyun.aki-game.com//launcher/game/G152/10003/3.0.0/QDYPElFKaZpJXkogwRukzDzAfaEsoupi/'
+  'https://pcdownload-aliyun.aki-game.com//launcher/game/G152/10003/3.4.0/sMnbFpowGUKLSvELgHzeHWxQcGFgQFOJ/'
 const resDownloadBaseUrl = `${baseUrl}zip/`
 const resListUrl = `${baseUrl}resource.json`
 const targetDir = path.join(__dirname, 'ww')

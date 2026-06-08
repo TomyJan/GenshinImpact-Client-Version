@@ -21,6 +21,6 @@
   "devDependencies": {
     "conventional-changelog": "^3.1.25",
     "conventional-changelog-custom-config": "^0.3.1",
-    "prettier": "^2.8.8"
+    "prettier": "^3.8.3"
   }
 }

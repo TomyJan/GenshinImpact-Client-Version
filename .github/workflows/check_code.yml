@@ -4,18 +4,18 @@ on:
   workflow_dispatch: ~
   push:
     paths:
-      - "**/*.js"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/check_code.yml"
+      - '**/*.js'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/check_code.yml'
     branches:
-      - "master"
+      - 'master'
   pull_request:
     paths:
-      - "**/*.js"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/check_code.yml"
+      - '**/*.js'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/check_code.yml'
 
 jobs:
   Check-Code:

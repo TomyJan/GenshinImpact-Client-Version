@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+if command -v pnpm >/dev/null 2>&1 && command -v node >/dev/null 2>&1; then
+  pnpm format
+elif command -v cmd.exe >/dev/null 2>&1; then
+  cmd.exe /c pnpm format
+else
+  echo "pnpm is required to run pre-commit format hook." >&2
+  exit 1
+fi
+
+git ls-files -z -- "*.js" | xargs -0 git add --

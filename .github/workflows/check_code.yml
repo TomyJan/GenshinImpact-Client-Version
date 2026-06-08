@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Read Node.js version
         id: node-version
@@ -45,4 +47,4 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check format
-        run: pnpm exec prettier --check "**/*.js"
+        run: pnpm test

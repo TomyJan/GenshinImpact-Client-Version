@@ -2,12 +2,12 @@
   "resource": [
     {
       "dest": "ClearThirdParty.exe",
-      "md5": "821f4750e0387a8e584656e4f57c3b5a",
-      "size": 220600
+      "md5": "3260dd59d329cf7e2676aaa78418a0ce",
+      "size": 204248
     },
     {
       "dest": "Wuthering Waves.exe",
-      "md5": "3875c1660bb700be06b34a0e580b9a79",
+      "md5": "dc43711d9f9d60189ed36919f54f5985",
       "size": 483768
     },
     {
@@ -17,18 +17,18 @@
     },
     {
       "dest": "Client/Binaries/Win64/cgsdk-loader.dll",
-      "md5": "435f2c881020238c21ce5094e9e64757",
-      "size": 92080
+      "md5": "e92f6a173ea505015ed4cc4c1c472451",
+      "size": 92088
     },
     {
       "dest": "Client/Binaries/Win64/cgsdk.dll",
-      "md5": "876180e1d76684815b98ca9801f3b54b",
-      "size": 790968
+      "md5": "cc45ff51befbefa8322e6dc7198faedc",
+      "size": 790960
     },
     {
       "dest": "Client/Binaries/Win64/Client-Win64-Shipping.exe",
-      "md5": "9f2aac7600d0bef4d4d24a7ad10aa4d0",
-      "size": 166063112
+      "md5": "5138871f269c8d7d2e07eee3e4724b85",
+      "size": 166103040
     },
     {
       "dest": "Client/Binaries/Win64/Client-Win64-ShippingBase.dll",
@@ -37,7 +37,7 @@
     },
     {
       "dest": "Client/Binaries/Win64/CrashSight64.dll",
-      "md5": "b8a162378e6ff767b29b32a421545894",
+      "md5": "63b3b27c3036b8d87d366d8cf1e26278",
       "size": 5574072
     },
     {
@@ -47,43 +47,43 @@
     },
     {
       "dest": "Client/Binaries/Win64/JoyShockLibrary.dll",
-      "md5": "c72dd182a3ab1f4ee7565cf4bb107e9a",
+      "md5": "3d4a249ff0e5881b86cb21d2f666d02a",
       "size": 224688
     },
     {
       "dest": "Client/Binaries/Win64/libcryptoMD.dll",
-      "md5": "1cd2dd3af74bc934cdc7a317c7fbdb7c",
-      "size": 2428344
+      "md5": "52158f614d27324d7f11f8b1fa0c301d",
+      "size": 2428336
     },
     {
       "dest": "Client/Binaries/Win64/libprotobuf.dll",
-      "md5": "474a043d0400a370b5df9b15387f0371",
-      "size": 2317744
+      "md5": "1dbac0269e2916b8863a65c7db5545d6",
+      "size": 2317752
     },
     {
       "dest": "Client/Binaries/Win64/libScePad.dll",
-      "md5": "1ecf163fa851702ff8a7cbd64b5e1d98",
+      "md5": "e2310006e5c48b7dd9d70921a730b1ad",
       "size": 236984
     },
     {
       "dest": "Client/Binaries/Win64/libsslMD.dll",
-      "md5": "c40311db3550fa01d12ebe4aa4c1b7fa",
-      "size": 516016
+      "md5": "aafa64bd5418887e1cb4581bf728cb30",
+      "size": 516024
     },
     {
       "dest": "Client/Binaries/Win64/PerfSight.dll",
-      "md5": "865470e3d61ba21293dceb9adef44365",
-      "size": 4828088
+      "md5": "7e4b3b573b1795c4cab1455b7073c1c5",
+      "size": 4828080
     },
     {
       "dest": "Client/Binaries/Win64/turbojpeg.dll",
-      "md5": "7d0664e80944f1df80f383c844c00545",
-      "size": 746928
+      "md5": "3ead868322f4d4ae91f0929eb0827c0d",
+      "size": 746936
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/ACE-Base.dat",
-      "md5": "bfa6c8935e4d30159677c02cb3dcdbdc",
-      "size": 69940
+      "md5": "3c95b9853e180a4609e37537245d5f22",
+      "size": 70324
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/ACE-BASE.sys",
@@ -92,7 +92,7 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/ACE-Base64.dll",
-      "md5": "793d11921adb56367fccef3ac26b4a97",
+      "md5": "a8bd7f8dc90dc336027a23b9af19ed35",
       "size": 69885760
     },
     {
@@ -137,13 +137,13 @@
     },
     {
       "dest": "Client/Binaries/Win64/Mono/System.Globalization.Native.dll",
-      "md5": "8c377c01c6be68999bc1f89442298918",
+      "md5": "fdad5f98d6acb1b0c532c3c0fbc55b44",
       "size": 105392
     },
     {
       "dest": "Client/Binaries/Win64/Mono/System.IO.Compression.Native.dll",
-      "md5": "c4cd25c12f570d91bd1d85793aed617d",
-      "size": 936376
+      "md5": "ab4981da1df00bac7bc645802ccbb659",
+      "size": 936368
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/Config.txt",
@@ -162,8 +162,8 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRPlugin205.dll",
-      "md5": "02436f572c1f2a8519c91977f1967f80",
-      "size": 179632
+      "md5": "3c68b2e9a357cf534ef9caf007363683",
+      "size": 179640
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDK.dll",
@@ -297,7 +297,7 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDK.bin",
-      "md5": "42fc721f98b3d64ef0cd9443600eb34c",
+      "md5": "0e60a545ad5ea52641b8c02e3b005070",
       "size": 1215
     },
     {
@@ -2107,7 +2107,7 @@
     },
     {
       "dest": "Client/Content/Aki/Cursor/CursorData",
-      "md5": "1d8fea23301af7996bcdb6e3a3f28485",
+      "md5": "bdc3f6b6aac6e746bfbe01163b4e8436",
       "size": 16
     },
     {
@@ -2722,57 +2722,57 @@
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avcodec-58.dll",
-      "md5": "41e361ff0419aa1ed462d4a163df2638",
+      "md5": "d0af07b3c64a1e475e11c2702e90889f",
       "size": 18509744
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avdevice-58.dll",
-      "md5": "34247d90fb7370a74a44762dc06e0349",
+      "md5": "cac72d86ac07c061b433e13f04eb3e7f",
       "size": 168880
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avfilter-7.dll",
-      "md5": "4f67d7593f2c18a52d05892ad4df8b0f",
+      "md5": "67410cd7ab4e2d83a71f727abbd0f94e",
       "size": 4324792
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avformat-58.dll",
-      "md5": "9d0b56292fc99a7445636c93530be984",
-      "size": 3002808
+      "md5": "c1616a1ce91bf0db621a1aa82c911270",
+      "size": 3002800
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avutil-56.dll",
-      "md5": "25160668ef3f6f017786a1f4b028570d",
-      "size": 651704
+      "md5": "4e46eb9a64fa7f96f2382b3efc6747d7",
+      "size": 651696
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/postproc-55.dll",
-      "md5": "0f5ff9deb142070cedbad050f5f9daba",
-      "size": 160176
+      "md5": "e723881221eba9a19b17389f25edb107",
+      "size": 160184
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/swresample-3.dll",
-      "md5": "e1464c9692f19c1f36794226fc1e6bff",
-      "size": 174520
+      "md5": "016a193c6f31bebeb8af5d916d36b37e",
+      "size": 174512
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/swscale-5.dll",
-      "md5": "b7132036a05519be6fd97a2a3fb05308",
+      "md5": "57ef83440fa13db48c64ff3a20307f95",
       "size": 1749936
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/zlib1.dll",
-      "md5": "478f865bab72f452acac18efaffb2b58",
-      "size": 149408
+      "md5": "b7f0d13b130ae660d4030a8f41744d89",
+      "size": 149400
     },
     {
       "dest": "Client/Plugins/Kuro/VolcanoMsgChannel/Source/MsgChannSDK/bin/x64/PcMsgChan.dll",
-      "md5": "d00fb0463db16f907ebb840b081b9b2b",
+      "md5": "cb29466512ee18689e9fc13eae9664a8",
       "size": 465840
     },
     {
       "dest": "Client/Plugins/Kuro/WeLingPipeSDK/ThirdParty/Win64/libs/NamedPipeClient.dll",
-      "md5": "940cbfee90b8766fe14ca368b1a86eb9",
+      "md5": "9cf0e56d6e9617fbaa32f375543436f1",
       "size": 1235384
     },
     {
@@ -2922,8 +2922,8 @@
     },
     {
       "dest": "Engine/Binaries/ThirdParty/HLMediaLibrary/Windows/Release/x64/HLMediaLibrary.dll",
-      "md5": "f633dca0f7b43003a553cf8c087df6e7",
-      "size": 149424
+      "md5": "0deaee6ddb7b271e88d10f0ce206e481",
+      "size": 149432
     },
     {
       "dest": "Engine/Binaries/ThirdParty/NVIDIA/NVaftermath/Win64/GFSDK_Aftermath_Lib.x64.dll",
@@ -2932,68 +2932,68 @@
     },
     {
       "dest": "Engine/Binaries/ThirdParty/Ogg/Win64/VS2015/libogg_64.dll",
-      "md5": "4b45d2c540e347bf504e1c781a482808",
+      "md5": "34012fec99c73ee2d6fecf89d3e5518f",
       "size": 70072
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/ApexFramework_x64.dll",
-      "md5": "4ab7bcd4fddee0cdf1227a97870ff55c",
+      "md5": "b33e77031a9092e0fcc6c89eb49d6252",
       "size": 1064880
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/APEX_Clothing_x64.dll",
-      "md5": "b6d935ebfc9bbc316ab3e62a969e5069",
-      "size": 1239480
+      "md5": "68ddd38b324a15cd453b408bf6ab5c0c",
+      "size": 1239472
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/APEX_Destructible_x64.dll",
-      "md5": "6b4742500a85c3e8555c528de8c4eac7",
-      "size": 2030512
+      "md5": "8f4eff8e4e6c5a7e7b025dc9053bafa4",
+      "size": 2030520
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/APEX_Legacy_x64.dll",
-      "md5": "7b1f2a359b0c74729649211808addec5",
+      "md5": "997c5e88d31239483695868c247d6fe2",
       "size": 3350456
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/NvCloth_x64.dll",
-      "md5": "46332a4d463f07ce579e10008107913a",
+      "md5": "134827e85b827d90c0c85435b4ddef9e",
       "size": 286640
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PhysX3Common_x64.dll",
-      "md5": "d3e744812a63c889718d0bc80f7046c5",
-      "size": 1619888
+      "md5": "470d544a8282d1a725cf0ea5a0128496",
+      "size": 1619896
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PhysX3Cooking_x64.dll",
-      "md5": "4856f4ce1a25aea617aaf34825ee5eef",
+      "md5": "da8fbd462479d7357f80f9f5679ee573",
       "size": 265648
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PhysX3_x64.dll",
-      "md5": "2d0ebcdbfbf59ecf97e7e6426c8427c9",
+      "md5": "ab711c967d8101c186838c52ddb6ea11",
       "size": 2127288
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PxFoundation_x64.dll",
-      "md5": "c52b190c4b54a0f5d8a4cb5f2f81fd01",
+      "md5": "9ebab93995b4849058f7941cd191fc2e",
       "size": 75704
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PxPvdSDK_x64.dll",
-      "md5": "64a849f85e534a854fab4c6b4768d000",
+      "md5": "b68dfedaef664a13c636d182d9875b1d",
       "size": 209848
     },
     {
       "dest": "Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbisfile_64.dll",
-      "md5": "0aacf77c3f5bb21d0e5f8241dd17afe3",
-      "size": 58808
+      "md5": "fe8962bcefba01063b99302b3a1a0d76",
+      "size": 58800
     },
     {
       "dest": "Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbis_64.dll",
-      "md5": "edb230bdc8871f84ef1b510a74ce82b0",
-      "size": 1735096
+      "md5": "c29f547c4f7bfb15d7b5f99d4f975a14",
+      "size": 1735088
     },
     {
       "dest": "Engine/Binaries/ThirdParty/Windows/XAudio2_9/x64/xaudio2_9redist.dll",
@@ -3022,8 +3022,8 @@
     },
     {
       "dest": "Engine/Plugins/Compositing/OpenCVLensDistortion/Binaries/ThirdParty/Win64/opencv_world331.dll",
-      "md5": "15392e953d754d98d4dd751cc0fb43c4",
-      "size": 18490296
+      "md5": "47b1dd33cd7a35a79ab6127ae0bf30fe",
+      "size": 18490288
     },
     {
       "dest": "Engine/Plugins/Runtime/Intel/XeSS/Binaries/ThirdParty/Win64/libxell.dll",

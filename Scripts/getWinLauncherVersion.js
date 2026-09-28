@@ -1,5 +1,6 @@
 import fs from 'fs'
 import push from './push/push.js'
+import { fetchWithRetry } from './utils/fetchWithRetry.js'
 
 const ApiInfo = {
   GI: {
@@ -42,14 +43,10 @@ async function getWinLauncherVersion() {
   try {
     // 发送 GET请求获取 302 地址
     let jsonData = {}
-    let rsp = await fetchWithTimeout(targetUrl)
+    const rsp = await fetchWithRetry(targetUrl)
     if (!rsp.ok) {
-      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-      rsp = await fetchWithTimeout(targetUrl)
-      if (!rsp.ok) {
-        console.log('请求失败:', rsp.status, rsp.statusText)
-        return false
-      }
+      console.log('请求失败:', rsp.status, rsp.statusText)
+      return false
     }
 
     // console.log(JSON.stringify(await rsp.json()))
@@ -131,18 +128,6 @@ async function getNowDate() {
   let second = date.getSeconds().toString().padStart(2, '0')
   let nowDate = year + month + day + hour + minute + second
   return nowDate
-}
-
-async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 10000 } = options
-  const controller = new AbortController()
-  const id = setTimeout(() => controller.abort(), timeout)
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal,
-  })
-  clearTimeout(id)
-  return response
 }
 
 // 执行函数

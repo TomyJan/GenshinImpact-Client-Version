@@ -1,6 +1,7 @@
 import fs from 'fs'
 import push from './push/push.js'
 import path from 'path'
+import { fetchWithRetry } from './utils/fetchWithRetry.js'
 
 const ApiInfo = {
   WW: {
@@ -85,14 +86,10 @@ async function getWinGameVersion() {
   // try {
   // 发送GET请求获取JSON数据
   let jsonData = {}
-  let rsp = await fetchWithTimeout(targetUrl)
+  const rsp = await fetchWithRetry(targetUrl)
   if (!rsp.ok) {
-    console.error('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-    rsp = await fetchWithTimeout(targetUrl)
-    if (!rsp.ok) {
-      console.error('请求失败:', rsp.status, rsp.statusText)
-      process.exit(2)
-    }
+    console.error('请求失败:', rsp.status, rsp.statusText)
+    process.exit(2)
   }
 
   try {
@@ -197,49 +194,23 @@ async function getWinGameVersion() {
 
     // 获取资源数据
     let resJsonData = {}
-    let rsp_res = await fetchWithTimeout(
+    const rsp_res = await fetchWithRetry(
       jsonData.default.cdnList[0].url + jsonData.default.resources,
     )
     if (!rsp_res.ok) {
-      console.error(
-        '请求失败:',
-        rsp_res.status,
-        rsp_res.statusText,
-        ', 重试一次...',
-      )
-      rsp_res = await fetchWithTimeout(
-        jsonData.default.cdnList[0].url + jsonData.default.resources,
-      )
-      if (!rsp_res.ok) {
-        console.error('请求失败:', rsp_res.status, rsp_res.statusText)
-        process.exit(2)
-      }
+      console.error('请求失败:', rsp_res.status, rsp_res.statusText)
+      process.exit(2)
     }
 
     try {
       resJsonData = await rsp_res.json()
       if (preDownloadVersion) {
-        let rsp_res_pre = await fetchWithTimeout(
+        const rsp_res_pre = await fetchWithRetry(
           jsonData.default.cdnList[0].url + jsonData.predownload.resources,
         )
         if (!rsp_res_pre.ok) {
-          console.error(
-            '请求失败:',
-            rsp_res_pre.status,
-            rsp_res_pre.statusText,
-            ', 重试一次...',
-          )
-          rsp_res_pre = await fetchWithTimeout(
-            jsonData.default.cdnList[0].url + jsonData.predownload.resources,
-          )
-          if (!rsp_res_pre.ok) {
-            console.error(
-              '请求失败:',
-              rsp_res_pre.status,
-              rsp_res_pre.statusText,
-            )
-            process.exit(2)
-          }
+          console.error('请求失败:', rsp_res_pre.status, rsp_res_pre.statusText)
+          process.exit(2)
         }
         try {
           resJsonData.predownload = await rsp_res_pre.json()
@@ -433,18 +404,6 @@ async function getWinGameVersion() {
   //   console.error('发生错误:', error.message)
   //   process.exit(6)
   // }
-}
-
-async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 10000 } = options
-  const controller = new AbortController()
-  const id = setTimeout(() => controller.abort(), timeout)
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal,
-  })
-  clearTimeout(id)
-  return response
 }
 
 // 执行函数

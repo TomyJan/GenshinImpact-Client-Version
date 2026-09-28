@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { fetchWithRetry } from '../utils/fetchWithRetry.js'
 
 const TGBotToken =
   process.env.TGBotToken || '5680978316:AAFjPWjc5RBcCcS6jwkuhitt1vNJKORk1eo'
@@ -367,7 +368,7 @@ class Push {
       )
 
       console.log('推送地址:', pushUrl)
-      let rsp = await fetch(pushUrl)
+      let rsp = await fetchWithRetry(pushUrl, { retries: 0 })
       if (!rsp.ok) {
         console.log(
           '推送请求失败:',
@@ -507,7 +508,7 @@ class Push {
 
     console.log('推送地址:', pushUrl)
 
-    let rsp = await fetch(pushUrl)
+    let rsp = await fetchWithRetry(pushUrl, { retries: 0 })
     if (!rsp.ok) {
       console.log('推送请求失败:', rsp.status, rsp.statusText, await rsp.text())
       process.exit(11)
@@ -794,7 +795,7 @@ class Push {
       )
 
       console.log('推送地址:', pushUrl)
-      let rsp = await fetch(pushUrl)
+      let rsp = await fetchWithRetry(pushUrl, { retries: 0 })
       if (!rsp.ok) {
         console.log(
           '推送请求失败:',
@@ -828,7 +829,7 @@ class Push {
           )
 
     console.log('推送地址:', pushUrl)
-    let rsp = await fetch(pushUrl)
+    let rsp = await fetchWithRetry(pushUrl, { retries: 0 })
     if (!rsp.ok) {
       console.error(
         '推送请求失败:',
@@ -886,7 +887,7 @@ class Push {
     }
 
     console.log('推送地址:', pushUrl)
-    let rsp = await fetch(pushUrl)
+    let rsp = await fetchWithRetry(pushUrl, { retries: 0 })
     if (!rsp.ok) {
       console.error(
         '推送请求失败:',

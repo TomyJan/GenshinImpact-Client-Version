@@ -15,7 +15,7 @@
   "scripts": {
     "prepare": "git config core.hooksPath .githooks",
     "format": "prettier --write \"**/*.js\"",
-    "test": "prettier --check \"**/*.js\"",
+    "test": "prettier --check \"**/*.js\" && node --test Scripts/utils/fetchWithRetry.test.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
   "devDependencies": {

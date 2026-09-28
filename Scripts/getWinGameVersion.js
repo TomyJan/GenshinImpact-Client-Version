@@ -1,5 +1,6 @@
 import fs from 'fs'
 import push from './push/push.js'
+import { fetchWithRetry } from './utils/fetchWithRetry.js'
 
 const ApiInfo = {
   GI: {
@@ -73,14 +74,10 @@ const latestVerPath = `${scriptDataPath}latest_Win_Game_${server}.json`
 async function getWinGameVersion() {
   try {
     // 发送GET请求获取JSON数据
-    let rsp = await fetchWithTimeout(targetUrl)
+    const rsp = await fetchWithRetry(targetUrl)
     if (!rsp.ok) {
-      console.error('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-      rsp = await fetchWithTimeout(targetUrl)
-      if (!rsp.ok) {
-        console.error('请求失败:', rsp.status, rsp.statusText)
-        process.exit(2)
-      }
+      console.error('请求失败:', rsp.status, rsp.statusText)
+      process.exit(2)
     }
 
     // console.log(JSON.stringify(await rsp.json()))
@@ -199,18 +196,6 @@ async function getWinGameVersion() {
     console.error('发生错误:', error.message)
     process.exit(6)
   }
-}
-
-async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 10000 } = options
-  const controller = new AbortController()
-  const id = setTimeout(() => controller.abort(), timeout)
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal,
-  })
-  clearTimeout(id)
-  return response
 }
 
 // 执行函数

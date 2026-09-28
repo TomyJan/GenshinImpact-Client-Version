@@ -1,5 +1,6 @@
 import fs from 'fs'
 import push from './push/push.js'
+import { fetchWithRetry } from './utils/fetchWithRetry.js'
 
 const ApiInfo = {
   GI: {
@@ -50,21 +51,17 @@ async function getAndroidGameVersion() {
     let rsp
     // 库洛取游戏信息现在要带上请求头 channelid
     if (game === 'WW') {
-      rsp = await fetchWithTimeout(targetUrl, {
+      rsp = await fetchWithRetry(targetUrl, {
         headers: {
           channelid: 2,
         },
       })
     } else {
-      rsp = await fetchWithTimeout(targetUrl)
+      rsp = await fetchWithRetry(targetUrl)
     }
     if (!rsp.ok) {
-      console.log('请求失败:', rsp.status, rsp.statusText, ', 重试一次...')
-      rsp = await fetchWithTimeout(targetUrl)
-      if (!rsp.ok) {
-        console.log('请求失败:', rsp.status, rsp.statusText)
-        return false
-      }
+      console.log('请求失败:', rsp.status, rsp.statusText)
+      return false
     }
 
     // console.log(JSON.stringify(await rsp.json()))
@@ -159,18 +156,6 @@ async function getNowDate() {
   let second = date.getSeconds().toString().padStart(2, '0')
   let nowDate = year + month + day + hour + minute + second
   return nowDate
-}
-
-async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 10000 } = options
-  const controller = new AbortController()
-  const id = setTimeout(() => controller.abort(), timeout)
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal,
-  })
-  clearTimeout(id)
-  return response
 }
 
 // 执行函数

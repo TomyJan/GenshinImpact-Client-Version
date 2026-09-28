@@ -2,12 +2,12 @@
   "resource": [
     {
       "dest": "ClearThirdParty.exe",
-      "md5": "5415f372980e406c316cb4208cdbac2c",
+      "md5": "ac9ea8034496a69a9582ab02f3da2838",
       "size": 220872
     },
     {
       "dest": "Wuthering Waves.exe",
-      "md5": "e4c454597d98ecfafdd8ea27665b5dde",
+      "md5": "10233ce734ba7fa803b27a259dce7566",
       "size": 484040
     },
     {
@@ -17,18 +17,18 @@
     },
     {
       "dest": "Client/Binaries/Win64/cgsdk-loader.dll",
-      "md5": "d1f5419bdfdacfabe3442674a5fad255",
+      "md5": "4f5aca4bebc22068305cf95f79cd9780",
       "size": 92360
     },
     {
       "dest": "Client/Binaries/Win64/cgsdk.dll",
-      "md5": "4567941de3b8b1b1deb1a4588d94aa0b",
+      "md5": "baef33a9d6a6a09933263abf889ae6e5",
       "size": 791240
     },
     {
       "dest": "Client/Binaries/Win64/Client-Win64-Shipping.exe",
-      "md5": "beaf07c4dd27b34176349ac2d18304aa",
-      "size": 976121112
+      "md5": "9955b584fdcef9d2e952878dd08b5cbf",
+      "size": 976126744
     },
     {
       "dest": "Client/Binaries/Win64/Client-Win64-ShippingBase.dll",
@@ -37,7 +37,7 @@
     },
     {
       "dest": "Client/Binaries/Win64/CrashSight64.dll",
-      "md5": "5ad1556fc556507189cbf55b98596153",
+      "md5": "254afdc3fffe46db7bed45b2fd7f2b48",
       "size": 5574344
     },
     {
@@ -47,43 +47,43 @@
     },
     {
       "dest": "Client/Binaries/Win64/JoyShockLibrary.dll",
-      "md5": "fea3d45b5bc91fbca489f04ec81a28ce",
+      "md5": "0756520328bf1378bdf9de3275d2c43f",
       "size": 224968
     },
     {
       "dest": "Client/Binaries/Win64/libcryptoMD.dll",
-      "md5": "a8da505097cdd709a1f585ae56e29707",
+      "md5": "17397957cef3758ba258bceb586e21e0",
       "size": 2428616
     },
     {
       "dest": "Client/Binaries/Win64/libprotobuf.dll",
-      "md5": "53fb897f4efa2a3b6b332ab2ad28c457",
+      "md5": "a3462b0d875faa904c8e5506cff6ab46",
       "size": 2318024
     },
     {
       "dest": "Client/Binaries/Win64/libScePad.dll",
-      "md5": "d92cb8cc0f69ee05f26dc0e9cda2a379",
+      "md5": "6bf5d54dc0b10000f31920fd8b6e1f56",
       "size": 237256
     },
     {
       "dest": "Client/Binaries/Win64/libsslMD.dll",
-      "md5": "3fd5499af196cb2331cb16535333c6ac",
+      "md5": "4d9a53ad30a3b8f6de65d5a734f9903f",
       "size": 516296
     },
     {
       "dest": "Client/Binaries/Win64/PerfSight.dll",
-      "md5": "14546f87a13bb86ea3929a06cc275a52",
+      "md5": "f3ec045efc263644a64ffb6057321245",
       "size": 4828360
     },
     {
       "dest": "Client/Binaries/Win64/turbojpeg.dll",
-      "md5": "7de1a40513fcc47bff5e5a2e4d994ea2",
+      "md5": "494c168081986b9709b367e340f8a2af",
       "size": 747208
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/ACE-Base.dat",
-      "md5": "ebedc59c2991b904e4c61e1a5ba06168",
-      "size": 54276
+      "md5": "26db0d4d19ef3485e9f2865ed022edfe",
+      "size": 54708
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/ACE-BASE.sys",
@@ -92,7 +92,7 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/ACE-Base64.dll",
-      "md5": "d4e24f1e9bef505850f0b17a68260f2c",
+      "md5": "a74cb95a19358d7b72cd15d58f31a052",
       "size": 70043536
     },
     {
@@ -117,7 +117,7 @@
     },
     {
       "dest": "Client/Binaries/Win64/AntiCheatExpert/ACE-IDS64.dll",
-      "md5": "4fa64aa32dcf8c062ae6bf8d18685eea",
+      "md5": "89e4f3a4b39ba48584aa779f266e5f6d",
       "size": 4617616
     },
     {
@@ -147,12 +147,12 @@
     },
     {
       "dest": "Client/Binaries/Win64/Mono/System.Globalization.Native.dll",
-      "md5": "0b3db227b7c6f2a3942faf39f2a208a7",
+      "md5": "5f0ea9772deb61f98d008cbd76e1cc01",
       "size": 105672
     },
     {
       "dest": "Client/Binaries/Win64/Mono/System.IO.Compression.Native.dll",
-      "md5": "83d45c41bd802d19a8b3713cc6612b4b",
+      "md5": "1400c72b67360eae7ae3e1e58f8402f7",
       "size": 936648
     },
     {
@@ -172,13 +172,13 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKEx.dll",
-      "md5": "6d46653993543aadd49ff9724ce36ead",
-      "size": 2016456
+      "md5": "6c2e750c800d01c65cd30134694f55e6",
+      "size": 2110664
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKExternal.exe",
-      "md5": "10cf6621b0cfcca72fca18713b99ef2e",
-      "size": 199880
+      "md5": "c0996da8e9ede352a742e6c4a0888a4a",
+      "size": 200392
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/krsdk_zlib.dll",
@@ -187,12 +187,12 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRShmq.dll",
-      "md5": "80662b93d83b1f6f0112d2c768ea6626",
+      "md5": "b083794aa847158301f53c2927b71583",
       "size": 45256
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/kurodata.dll",
-      "md5": "4b6efef9afd122a50ece1be73f194151",
+      "md5": "4db05a8de39a09c1403cd6e2c296eb26",
       "size": 373960
     },
     {
@@ -262,7 +262,7 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKConfig.json",
-      "md5": "fec272b5e897a474c314509c359f1ad3",
+      "md5": "83180e08a20d0adbc76d38dc1e5db019",
       "size": 1234
     },
     {
@@ -292,12 +292,12 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/KRShmq.dll",
-      "md5": "3bf5b312b4df996b53d10372b716d083",
+      "md5": "64ace0b033c56d23abff6838dc738a89",
       "size": 45256
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKUnsupportedVideoWebView/KRWebView.exe",
-      "md5": "470ada0db8d7c398905240cd3d2278f8",
+      "md5": "cf91154f39c69f28d58cf6a250fca0f3",
       "size": 5430984
     },
     {
@@ -637,12 +637,12 @@
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/KRShmq.dll",
-      "md5": "f57b55b90b1008f97b50c48ea0cc9e3f",
+      "md5": "9a484c9104526cf3b1776e255ca2beb6",
       "size": 45256
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/KRWebView.exe",
-      "md5": "c26e0abb654a9d5d85bcadcae1c0efb1",
+      "md5": "81ddea352e58ce5a44e0b98b97e1cdbd",
       "size": 5430984
     },
     {
@@ -954,6 +954,581 @@
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebView/swiftshader/libGLESv2.dll",
       "md5": "17780996047e2465c440b204dabc0813",
       "size": 2765392
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/chrome_100_percent.pak",
+      "md5": "65adb188b8eba7d4b02bb934eb5e27da",
+      "size": 695068
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/chrome_200_percent.pak",
+      "md5": "ca75cbe23dae886034a296e94b60b802",
+      "size": 1094621
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/chrome_elf.dll",
+      "md5": "99a221f316bb593ab677f4abb9c6712f",
+      "size": 1361608
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/concrt140.dll",
+      "md5": "5fe9a647921ded8a2fad92deb9ec4ab2",
+      "size": 324208
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/d3dcompiler_47.dll",
+      "md5": "19e527a35241c171d37dc1e6c530053c",
+      "size": 4741488
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/dxcompiler.dll",
+      "md5": "7461e6afa8022bc6211d5dddbb150875",
+      "size": 20708552
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/dxil.dll",
+      "md5": "0e6cb4fe47aab638cf0118cbaa0cc31b",
+      "size": 1508392
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/icudtl.dat",
+      "md5": "ffd67c1e24cb35dc109a24024b1ba7ec",
+      "size": 10468208
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/KRCefWrapper.dll",
+      "md5": "b4a98f86e86b4adc1a3a37f49282c0ca",
+      "size": 1115336
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/KRShmq.dll",
+      "md5": "145fcf871267b8369c4fc9fc02bbca3f",
+      "size": 45256
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/KRWebClient.exe",
+      "md5": "e8c66f94a7703c34a1b20a03a7bf2c2d",
+      "size": 58568
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/KRWebRender.exe",
+      "md5": "03211a0ae65203e8fe596cd5e386a7da",
+      "size": 32456
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/libcef.dll",
+      "md5": "3741462a3fbae49daf0fc5e7725c7cc7",
+      "size": 237359304
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/libEGL.dll",
+      "md5": "a9744257ac61ee9007a9dd4dd6e522d8",
+      "size": 539848
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/libGLESv2.dll",
+      "md5": "819f047a32f66aebdc4dcced8136bb13",
+      "size": 8699080
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/msvcp140.dll",
+      "md5": "bc88b387cafa556068b5c5d6ff3ccc8f",
+      "size": 557728
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/resources.pak",
+      "md5": "ec16259650928300dd4fc01d15116d3c",
+      "size": 8688812
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/snapshot_blob.bin",
+      "md5": "b34ac49f393fe3daaf84756341a8aca0",
+      "size": 313526
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/v8_context_snapshot.bin",
+      "md5": "fdce62bfd0ce582ddb98dc94172a0a48",
+      "size": 665981
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/vcruntime140.dll",
+      "md5": "6ca4edb2b52ec46c7fca3fd372ca6c00",
+      "size": 124544
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/vcruntime140_1.dll",
+      "md5": "cd1b08f4930b276ad78853580b76b5c6",
+      "size": 49792
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/vk_swiftshader.dll",
+      "md5": "d1bce242240b9a4588c1b836bb8d2f78",
+      "size": 5519048
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/vk_swiftshader_icd.json",
+      "md5": "8642dd3a87e2de6e991fae08458e302b",
+      "size": 106
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/vulkan-1.dll",
+      "md5": "6e6e1b96b942dd5ee42f5c6950806a7a",
+      "size": 936136
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/af.pak",
+      "md5": "87df432f593db6dae10bad6ac458f25d",
+      "size": 538998
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/am.pak",
+      "md5": "b2a17c75f6786fe94bda79f09eb48f74",
+      "size": 866444
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ar.pak",
+      "md5": "1e6812a66b8e0c4192d05b2120add1fd",
+      "size": 953918
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/bg.pak",
+      "md5": "115073d89fc745a23852532ca1cc7870",
+      "size": 987762
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/bn.pak",
+      "md5": "24e5cf81792101cee7195e7219ee1f4a",
+      "size": 1269605
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ca.pak",
+      "md5": "5c2b1c947a2a1ae26d08f46b4b7602a8",
+      "size": 612377
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/cs.pak",
+      "md5": "1f9ee1f329870402b679290f93d53ee2",
+      "size": 622919
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/da.pak",
+      "md5": "db28a0dbbd8513eadc6d76885df553da",
+      "size": 567958
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/de.pak",
+      "md5": "89d0345af314a6c775e915a7bc3881ac",
+      "size": 609935
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/el.pak",
+      "md5": "41a1345085551416e87f44b77b058089",
+      "size": 1080416
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/en-GB.pak",
+      "md5": "f6a9d6c6c64f89bd545b90f235593b17",
+      "size": 492124
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/en-US.pak",
+      "md5": "feb9b5d5cea5cc61b64ce7908da86858",
+      "size": 497015
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/es-419.pak",
+      "md5": "0e0adf863ea3aadd6b9ebb4a7c4ef889",
+      "size": 598355
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/es.pak",
+      "md5": "621cf55101d4aad5fdec3ee9597037d2",
+      "size": 596806
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/et.pak",
+      "md5": "06714f18fd8df48f8ab2751f843d8ee5",
+      "size": 544221
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/fa.pak",
+      "md5": "f205bf8623cfa099f3709cee9ee2073b",
+      "size": 879421
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/fi.pak",
+      "md5": "d1f6e7aa96479fd41c059090fe8a7655",
+      "size": 552657
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/fil.pak",
+      "md5": "784a8411321f31f0ab6614d10c6e8175",
+      "size": 624599
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/fr.pak",
+      "md5": "a1d365b1ef7bb54bf1ccba7eb4743491",
+      "size": 646732
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/gu.pak",
+      "md5": "f4b295a29d8b5284a523bdb573e5a5e6",
+      "size": 1255599
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/he.pak",
+      "md5": "1357baa0e32815bf1457fb67219df918",
+      "size": 777593
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/hi.pak",
+      "md5": "e7060b696fd17dfa154bc8c2f87d32e3",
+      "size": 1330999
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/hr.pak",
+      "md5": "c3c21297190ce1f8f1722851e0d7a52f",
+      "size": 600581
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/hu.pak",
+      "md5": "2b1b83984431a7eeffd44bd8b3b8d12a",
+      "size": 646489
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/id.pak",
+      "md5": "f6c5cda8b1a628f91efbef46c6bc0f82",
+      "size": 535422
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/it.pak",
+      "md5": "be7d72f6b40bb37ee60f7ff10310ced4",
+      "size": 594371
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ja.pak",
+      "md5": "0f1eba9a3990cea9f2302c5d45691699",
+      "size": 719063
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/kn.pak",
+      "md5": "ea32b6bafe32f877734489fd47896ce3",
+      "size": 1424332
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ko.pak",
+      "md5": "756e24d52445ee344ce2c4ef86952186",
+      "size": 606589
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/lt.pak",
+      "md5": "015462b4654eaf63df46edb75774df1c",
+      "size": 652194
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/lv.pak",
+      "md5": "652b96e87a425d440b197084d1547b68",
+      "size": 651016
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ml.pak",
+      "md5": "4a2493d4d929277409a0d672cf40765e",
+      "size": 1479560
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/mr.pak",
+      "md5": "58e49f64d3ef2bc23a6539f901b28792",
+      "size": 1223735
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ms.pak",
+      "md5": "eefa2ecf2cf4201b7604e53b4e0c72dc",
+      "size": 560048
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/nb.pak",
+      "md5": "218d126f6fcf6a0982f004ccbd322de7",
+      "size": 543051
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/nl.pak",
+      "md5": "f4884b505fb15b756d4b2e46bb3b9890",
+      "size": 562204
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/pl.pak",
+      "md5": "8f1256bc435f6e95e0bc5c15181b129f",
+      "size": 627081
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/pt-BR.pak",
+      "md5": "ed056bdddbc7392aa8e4a5a8ac84dfce",
+      "size": 587941
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/pt-PT.pak",
+      "md5": "dde1fa4ff7c32318482fd5f5e1a2499e",
+      "size": 592511
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ro.pak",
+      "md5": "1d29dd877ab163ba5a4a5c5409341ff1",
+      "size": 612678
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ru.pak",
+      "md5": "24099c5ee764aadb101ee59912cad553",
+      "size": 1003077
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/sk.pak",
+      "md5": "069e0fa9f5401fa77edb3f5b2206ff57",
+      "size": 632482
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/sl.pak",
+      "md5": "7e8b26d807e067192b85d9978bbefe00",
+      "size": 607050
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/sr.pak",
+      "md5": "56e8c62c51666946d15d672a695cd4e3",
+      "size": 929699
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/sv.pak",
+      "md5": "c776df2ebe25159e97c87f990ea3e3ae",
+      "size": 547471
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/sw.pak",
+      "md5": "01dd67473edd683d96f2eee543cb7d81",
+      "size": 576117
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ta.pak",
+      "md5": "fec2b46d10164b2efc0bad040a152762",
+      "size": 1475609
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/te.pak",
+      "md5": "ca67aa792ad408d553e117d9151259e0",
+      "size": 1361935
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/th.pak",
+      "md5": "78ac599b245eeda18ca416f78505ca90",
+      "size": 1144623
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/tr.pak",
+      "md5": "1d3251d07294b3c278fc1ec116aeeaab",
+      "size": 587129
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/uk.pak",
+      "md5": "62c251aed2b3023869cfd167a532689f",
+      "size": 1001189
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/ur.pak",
+      "md5": "d85d1ae919201f611d807467df6e848a",
+      "size": 872334
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/vi.pak",
+      "md5": "cdbd7a44793dccdea4dd1dcc517b0f65",
+      "size": 695768
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/zh-CN.pak",
+      "md5": "bcdffe6a79d27d5bf689bc45a1ded0c9",
+      "size": 503346
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/locales/zh-TW.pak",
+      "md5": "32e32a068fb657b832cacfe786113a80",
+      "size": 500142
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_close_jy_30.png",
+      "md5": "dfb98ba453c4d136e2c2f59a0e70ef12",
+      "size": 908
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_transparent_webview_close_clicked_48.png",
+      "md5": "19f695f2da4eb2454bbee1db177399e1",
+      "size": 2109
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_transparent_webview_close_hover_48.png",
+      "md5": "3f9166ab08a7e58759cadba3879262ce",
+      "size": 2692
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_transparent_webview_close_normal_48.png",
+      "md5": "35a1a7dc0c524c96d3ab78e1d6421253",
+      "size": 2388
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_webview_back_clicked_72.png",
+      "md5": "63e5801a9b22d914b4f7ed7bacf6092a",
+      "size": 483
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_webview_back_hover_72.png",
+      "md5": "8806955481912e6215b805faa60d54f5",
+      "size": 500
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_webview_back_normal_72.png",
+      "md5": "c4ab797c4235080d36ab0824d7aa18ca",
+      "size": 506
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_webview_close_clicked_72.png",
+      "md5": "0f9b5ba9dbc038e9e9fc9668dbfd3eb1",
+      "size": 592
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_webview_close_hover_72.png",
+      "md5": "fee6c3873da36b549f5118a2bdbe6979",
+      "size": 587
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_webview_close_normal_72.png",
+      "md5": "62dd937d454ffc6e73a7a07add455b53",
+      "size": 628
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_webview_refresh_clicked_72.png",
+      "md5": "4fc7bf970234759728385e7a2d250c68",
+      "size": 1116
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_webview_refresh_hover_72.png",
+      "md5": "8a25317c7f4d1d7178f8fbb139e43e4a",
+      "size": 1161
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/btn_webview_refresh_normal_72.png",
+      "md5": "3c50a3f497fef72ef1aefa3a6c3cd625",
+      "size": 1156
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading.png",
+      "md5": "5416b1a83bb4159a3f3fe28876b75339",
+      "size": 11405
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00000.png",
+      "md5": "188fe0311f214b98c897c0efcdd788c0",
+      "size": 6728
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00001.png",
+      "md5": "3f9947cef65330632ec1051aca4b3581",
+      "size": 7211
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00002.png",
+      "md5": "b5c7d4a5c90dac7c7c7900581e432d04",
+      "size": 7077
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00003.png",
+      "md5": "7168528131088499eae11d95994b7326",
+      "size": 7200
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00004.png",
+      "md5": "5b7af3ab78b31070972ccfcee589f22b",
+      "size": 7183
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00005.png",
+      "md5": "6ab850c6625a432967fc2bbaa6f5cfaa",
+      "size": 7151
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00006.png",
+      "md5": "3060cc950a364546f39e3bde50e75c6a",
+      "size": 7260
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00007.png",
+      "md5": "88a854900d047bc9febf12520d775c10",
+      "size": 7127
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00008.png",
+      "md5": "34b437dffa8b403d705aae1feb80aba0",
+      "size": 7174
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00009.png",
+      "md5": "8c2fc68e8e5781830df254dbb8fb18ea",
+      "size": 7203
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00010.png",
+      "md5": "b1934517544e3872512ea1159722b010",
+      "size": 7185
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00011.png",
+      "md5": "e25055faf5cca1084bdeb56bc65b531a",
+      "size": 7190
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00012.png",
+      "md5": "4e29679a06bb0198071354edfed5b99c",
+      "size": 7179
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00013.png",
+      "md5": "6aa96a1202e468472812f8272abc1a86",
+      "size": 7229
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00014.png",
+      "md5": "37d6ca20997c2f11db2fa4275a697687",
+      "size": 7118
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00015.png",
+      "md5": "fca29a75dde1be3a50a6a939c380da9e",
+      "size": 7205
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00016.png",
+      "md5": "ff0d9f8ead10676234a390db03e5cb50",
+      "size": 7156
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00017.png",
+      "md5": "0a0c99d7883e42f566df745b17d541ce",
+      "size": 7084
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00018.png",
+      "md5": "21b00d45cd08beae0d0f13ee3bdb835f",
+      "size": 7203
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/loading_00019.png",
+      "md5": "5e49263d3fda1b662e29139fba8d1524",
+      "size": 6730
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/load_back_ground.png",
+      "md5": "ded06798659b37caeec1b300273644c2",
+      "size": 8827
+    },
+    {
+      "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/KRSDKWebViewOSR/skin/load_failed.png",
+      "md5": "5c6dc8f435c03d38ba7238e108d5bb3f",
+      "size": 24431
     },
     {
       "dest": "Client/Binaries/Win64/ThirdParty/KrPcSdk_Mainland/KRSDKRes/res_cert/cert.pem",
@@ -2777,57 +3352,57 @@
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avcodec-58.dll",
-      "md5": "eb303184b65e1f320a28b5ab16ddf753",
+      "md5": "f4aadd641c991c41ba55b48c2b714e09",
       "size": 18510024
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avdevice-58.dll",
-      "md5": "6a7f7803babe8a4103823a5ad087675a",
+      "md5": "6dd6011ac99327736a3bc3f8679ed62e",
       "size": 169160
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avfilter-7.dll",
-      "md5": "cf81cc0ed9413aa991f70562f80fe7d5",
+      "md5": "a0488d7513ed1a845d15a18f49d0a1db",
       "size": 4325064
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avformat-58.dll",
-      "md5": "775f38c3afeebdad2db192eaa82c6346",
+      "md5": "d38a658b3d85aed44aabdf99d5879168",
       "size": 3003080
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/avutil-56.dll",
-      "md5": "a5528482fe0892914229804665c7d5f3",
+      "md5": "dccdb63e9f1631da394f1067a6661fea",
       "size": 651976
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/postproc-55.dll",
-      "md5": "5ba22a5d51d3d6a24999068306f07b79",
+      "md5": "5d1affbc94b3f80c37151cdd27cd9147",
       "size": 160456
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/swresample-3.dll",
-      "md5": "ab373257f640d0c1f7f8400b648272ed",
+      "md5": "18c030d41fa532125c6133b43c63ecd6",
       "size": 174792
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/swscale-5.dll",
-      "md5": "225695e8ac0ec321d2e90d32c1519b2c",
+      "md5": "7563c1d94f276b5495b69aea1220327c",
       "size": 1750216
     },
     {
       "dest": "Client/Plugins/FFMPEGMedia/ThirdParty/ffmpeg/bin/vs/x64/zlib1.dll",
-      "md5": "d855fef4a15fbac35295ab44368f0e38",
+      "md5": "a2360511e46a19134a114050b66f36b8",
       "size": 149680
     },
     {
       "dest": "Client/Plugins/Kuro/VolcanoMsgChannel/Source/MsgChannSDK/bin/x64/PcMsgChan.dll",
-      "md5": "5537ca8380fa9a12ad818e1e1a578667",
+      "md5": "3f54de31822f3be8ad3f74c79ba2024d",
       "size": 466120
     },
     {
       "dest": "Client/Plugins/Kuro/WeLingPipeSDK/ThirdParty/Win64/libs/NamedPipeClient.dll",
-      "md5": "db64a366f3714ef22c07f6c34039ee73",
+      "md5": "26ede4ccd95be0aff6058a34463844e4",
       "size": 1235656
     },
     {
@@ -2977,7 +3552,7 @@
     },
     {
       "dest": "Engine/Binaries/ThirdParty/CEF3/Win64/chrome_elf.dll",
-      "md5": "a58c3b25e27896e60266075b58a9e382",
+      "md5": "95e198e468d85f38e28ea2d23328d806",
       "size": 569032
     },
     {
@@ -2997,17 +3572,17 @@
     },
     {
       "dest": "Engine/Binaries/ThirdParty/CEF3/Win64/libcef.dll",
-      "md5": "2acc7f8f25888e05370ca1aa0ad40600",
+      "md5": "059045cbf5852631bb1dba725b7c372c",
       "size": 98296520
     },
     {
       "dest": "Engine/Binaries/ThirdParty/CEF3/Win64/libEGL.dll",
-      "md5": "3417dcd1764a8a5bee1a61cf5a6a5b60",
+      "md5": "34eacababba7f82403513bded4c592e0",
       "size": 113864
     },
     {
       "dest": "Engine/Binaries/ThirdParty/CEF3/Win64/libGLESv2.dll",
-      "md5": "8e12ff16509eff3bfaa21a3a4a3787b9",
+      "md5": "2e8dba4f7a65d199277887a167ba9eea",
       "size": 3943624
     },
     {
@@ -3317,7 +3892,7 @@
     },
     {
       "dest": "Engine/Binaries/ThirdParty/HLMediaLibrary/Windows/Release/x64/HLMediaLibrary.dll",
-      "md5": "383bf9f3c7d63e1442d6a8b7bc7752e4",
+      "md5": "8b16c8120e7aef000189eb2655a0750d",
       "size": 149704
     },
     {
@@ -3327,67 +3902,67 @@
     },
     {
       "dest": "Engine/Binaries/ThirdParty/Ogg/Win64/VS2015/libogg_64.dll",
-      "md5": "98b53779587865d11e339059a8be4b43",
+      "md5": "ddc54145fe9717a5e3880cd63f5dc08b",
       "size": 70344
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/ApexFramework_x64.dll",
-      "md5": "3faa01d0b864c6977f75a2396b8b723b",
+      "md5": "69e72ed794c0a1cea6e4fff59dbcf3a6",
       "size": 1065160
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/APEX_Clothing_x64.dll",
-      "md5": "5ddf18b07b23022c21a26df822d26916",
+      "md5": "4a05364a1fce6cf95ad9ad4609b83c85",
       "size": 1239752
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/APEX_Destructible_x64.dll",
-      "md5": "e483d2340c5ba0d041b659685c9c7372",
+      "md5": "fd66a5327a700a262f5aa46de0126380",
       "size": 2030792
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/APEX_Legacy_x64.dll",
-      "md5": "5c86df17bfed50344ff4077343e8c1b6",
+      "md5": "827a1e8580fcb432bdd5d84ad1d22689",
       "size": 3350728
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/NvCloth_x64.dll",
-      "md5": "f9f95b359ed62add625a6d0a1804b503",
+      "md5": "3aa2f72ac96b4f73f8a6701243a85efd",
       "size": 286920
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PhysX3Common_x64.dll",
-      "md5": "cb2f1a4e5a8aa6b0ba91694e6c49b2cf",
+      "md5": "e6af5c3f3cb5d1ee621b3f30d26c45a5",
       "size": 1620168
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PhysX3Cooking_x64.dll",
-      "md5": "49791bda8bf69cd804c772cac0d51cff",
+      "md5": "0c9f4b6a33cffa28ca287658e82444c4",
       "size": 265928
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PhysX3_x64.dll",
-      "md5": "d490c4d426e4afd13261bd7f5b31d298",
+      "md5": "e622ce6f508a5ff75f8a8696ce417b1c",
       "size": 2127560
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PxFoundation_x64.dll",
-      "md5": "01b71616bdab6874438fb9a2f7207ba7",
+      "md5": "810075198f885c5f6433e518c7fa70e2",
       "size": 75976
     },
     {
       "dest": "Engine/Binaries/ThirdParty/PhysX3/Win64/VS2015/PxPvdSDK_x64.dll",
-      "md5": "13b043b29d1c54773c96b7375c441351",
+      "md5": "89d3e796d063cd7e38fe5cb311bc2605",
       "size": 210120
     },
     {
       "dest": "Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbisfile_64.dll",
-      "md5": "ead650c8e9dd075c8818432fb9b79cf4",
+      "md5": "4f69026a5fc3a92b1b3ee182efd7fcf0",
       "size": 59080
     },
     {
       "dest": "Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbis_64.dll",
-      "md5": "b621c6372b0a685c8542a34cd20faa8f",
+      "md5": "c6e56180321202322ea96e198106f2b8",
       "size": 1735368
     },
     {
@@ -3397,7 +3972,7 @@
     },
     {
       "dest": "Engine/Binaries/Win64/UnrealCEFSubProcess.exe",
-      "md5": "9133dd30aa3a3f93d83044457eb7b87c",
+      "md5": "9c0813ec598b4fb9a51f76e2d7c4c9a6",
       "size": 3714760
     },
     {
@@ -3422,7 +3997,7 @@
     },
     {
       "dest": "Engine/Plugins/Compositing/OpenCVLensDistortion/Binaries/ThirdParty/Win64/opencv_world331.dll",
-      "md5": "1b69898b894c0bc4b37b63cb010e2398",
+      "md5": "a369393c7b25bc10bed6773f8fd9554a",
       "size": 18490568
     },
     {

@@ -4,14 +4,18 @@ import crypto from 'crypto'
 import https from 'https'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import { getWWResourcePacks, resourceLevelNames } from '../utils/wwResources.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-const baseUrl =
-  'https://pcdownload-aliyun.aki-game.com//launcher/game/G152/10003/3.4.0/sMnbFpowGUKLSvELgHzeHWxQcGFgQFOJ/'
-const resDownloadBaseUrl = `${baseUrl}zip/`
-const resListUrl = `${baseUrl}resource.json`
+// 国服正式资源入口：自动获取当前版本及其分包清单，无需手动修改版本路径。
+const gameIndexUrl =
+  'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/G152/official/index.json'
+// 下载资源等级：UHD = 极致（最高，默认），HD = 高清，SD = 流畅。
+// 只需修改此变量；每个等级都会自动包含 common 公共包，不下载其他等级的包。
+// 在同一目录切换等级会保留原有文件；如需纯净包体，请使用空目录。
+const resourceLevel = 'UHD'
 const targetDir = path.join(__dirname, 'ww')
 
 // ==================== 配置 ====================
@@ -439,7 +443,7 @@ function getFileMD5(filePath, onProgress) {
 async function handleFile(fileObj, index, total, slotIndex) {
   const relativePath = fileObj.dest
   const fullPath = path.join(targetDir, relativePath)
-  const url = resDownloadBaseUrl + relativePath
+  const url = fileObj.url
   const name = path.basename(relativePath)
   const fileSize = fileObj.size
 
@@ -614,6 +618,29 @@ function runWithConcurrency(data, limit) {
 }
 
 // ==================== 主函数 ====================
+async function loadResources() {
+  const fetchJson = async (url) => {
+    const res = await fetch(url)
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`)
+    return res.json()
+  }
+  const gameData = await fetchJson(gameIndexUrl)
+  const packs = getWWResourcePacks(gameData, resourceLevel)
+  const cdnUrl = gameData.cdnList[0].url
+  const files = []
+  for (const pack of packs) {
+    const manifest = await fetchJson(new URL(pack.indexFile, cdnUrl).href)
+    const baseUrl = new URL(pack.baseUrl.replace(/\/?$/, '/'), cdnUrl)
+    for (const file of manifest.resource) {
+      files.push({
+        ...file,
+        url: new URL(file.dest.replace(/^\/+/, ''), baseUrl).href,
+      })
+    }
+  }
+  return files
+}
+
 async function main() {
   console.log(
     `[${new Date().toTimeString().split(' ')[0]}] 正在加载资源列表...`,
@@ -621,19 +648,7 @@ async function main() {
 
   let data
   try {
-    const res = await fetch(resListUrl)
-    if (!res.ok) {
-      console.error(`无法加载资源列表: HTTP ${res.status}`)
-      process.exit(1)
-    }
-    let resJson
-    try {
-      resJson = await res.json()
-    } catch (err) {
-      console.error(`无法解析资源列表 JSON: ${err.message}`)
-      process.exit(1)
-    }
-    data = resJson.resource
+    data = await loadResources()
   } catch (err) {
     console.error(`无法加载资源列表: ${err.message}`)
     process.exit(1)
@@ -645,6 +660,7 @@ async function main() {
   }
 
   const total = data.length
+  console.log(`资源等级: ${resourceLevelNames[resourceLevel]}`)
   console.log(`共 ${total} 个文件，并发数: ${concurrency}`)
   console.log(`目标目录: ${targetDir}`)
   console.log('')

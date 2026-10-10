@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fetchWithRetry } from '../utils/fetchWithRetry.js'
+import { resourceLevelNames } from '../utils/wwResources.js'
 
 const TGBotToken =
   process.env.TGBotToken || '5680978316:AAFjPWjc5RBcCcS6jwkuhitt1vNJKORk1eo'
@@ -323,22 +324,19 @@ class Push {
             jsonDataRes = jsonDataRes.predownload || jsonDataRes
             jsonData.default = jsonData.predownload || jsonData.default
           }
-          if (jsonData.default.resourceLevel) {
-            pushUrl += encodeURIComponent(
-              `资源等级: ${jsonData.default.resourceLevel}\n`,
-            )
-          }
           //console.log('读取本地数据:', jsonDataContent);
           pushUrl += encodeURIComponent(
             `版本: ${
-              jsonDataLast.default.version
+              jsonDataLast.default?.version &&
+              jsonDataLast.default.version !== jsonData.default.version
                 ? `\`${jsonDataLast.default.version}\` \\=\\> `
                 : ''
             }\`${jsonData.default.version}\`\n`,
           )
           pushUrl += encodeURIComponent(
-            `文件数: ${
-              Array.isArray(jsonDataResLast?.resource)
+            `${resourceLevelNames[jsonData.default.resourceLevel] || ''}文件数: ${
+              Array.isArray(jsonDataResLast?.resource) &&
+              jsonDataResLast.resource.length !== jsonDataRes.resource.length
                 ? `\`${jsonDataResLast.resource.length}\` \\=\\> `
                 : ''
             }\`${jsonDataRes.resource.length}\`\n`,
@@ -354,11 +352,29 @@ class Push {
           for (let i = 0; i < jsonDataRes.resource.length; i++) {
             size += jsonDataRes.resource[i].size
           }
-          pushUrl += encodeURIComponent(
-            `大小: ${
-              lastSize ? `\`${formatBytes(lastSize)}\` \\=\\> ` : ''
-            }\`${formatBytes(size)}\`\n`,
-          )
+          if (jsonData.default.resourceLevelSizes) {
+            pushUrl += encodeURIComponent('资源大小:\n')
+            for (const [level, name] of Object.entries(resourceLevelNames)) {
+              const levelSize = jsonData.default.resourceLevelSizes[level]
+              if (levelSize === undefined) continue
+              const oldSize = jsonDataLast.default?.resourceLevelSizes?.[level]
+              pushUrl += encodeURIComponent(
+                `${name}: ${
+                  oldSize !== undefined && oldSize !== levelSize
+                    ? `\`${formatBytes(oldSize)}\` \\=\\> `
+                    : ''
+                }\`${formatBytes(levelSize)}\`\n`,
+              )
+            }
+          } else {
+            pushUrl += encodeURIComponent(
+              `大小: ${
+                lastSize && lastSize !== size
+                  ? `\`${formatBytes(lastSize)}\` \\=\\> `
+                  : ''
+              }\`${formatBytes(size)}\`\n`,
+            )
+          }
           pushUrl += encodeURIComponent(
             `更新日志: \n\`\`\`${
               jsonData.default.changelog['zh-Hans']

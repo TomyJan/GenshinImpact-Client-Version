@@ -2,6 +2,7 @@ import fs from 'fs'
 import push from './push/push.js'
 import path from 'path'
 import { fetchWithRetry } from './utils/fetchWithRetry.js'
+import { getWWResourceLevelSizes } from './utils/wwResources.js'
 
 const ApiInfo = {
   WW: {
@@ -89,6 +90,7 @@ function normalizeGameData(data) {
     version: info.resourcePacks.common.version,
     cdnList: info.cdnList,
     resourceLevel: 'HD',
+    resourceLevelSizes: getWWResourceLevelSizes(info),
     resourcePacks: Object.fromEntries(
       info.bundles.HD.resourcePacks.map((name) => [
         name,
@@ -203,7 +205,11 @@ async function getWinGameVersion() {
   if (
     localData.default?.version !== latestVersion ||
     localData.predownload?.version !== preDownloadVersion ||
-    localData.default?.resourceLevel !== jsonData.default.resourceLevel
+    localData.default?.resourceLevel !== jsonData.default.resourceLevel ||
+    JSON.stringify(localData.default?.resourceLevelSizes) !==
+      JSON.stringify(jsonData.default.resourceLevelSizes) ||
+    JSON.stringify(localData.predownload?.resourceLevelSizes) !==
+      JSON.stringify(jsonData.predownload?.resourceLevelSizes)
   ) {
     console.log('数据有变化，正在更新...')
     // 所有清单取齐后才更新版本缓存，失败时下次仍能重试。

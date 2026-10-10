@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
 import { test } from 'node:test'
+import * as wwResources from './utils/wwResources.js'
 
 const appUrl =
   'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/app/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/index.json'
@@ -19,6 +20,7 @@ const pack = (name, version = '3.7.0') => ({
   version,
   indexFile: `${name}/indexFile.json`,
   baseUrl: 'zip/',
+  size: { common: 10, sd: 5, hd: 20, uhd: 30 }[name],
 })
 const game = {
   cdnList,
@@ -28,7 +30,11 @@ const game = {
     hd: pack('hd'),
     uhd: pack('uhd'),
   },
-  bundles: { HD: { resourcePacks: ['common', 'hd'] } },
+  bundles: {
+    UHD: { resourcePacks: ['common', 'uhd'] },
+    HD: { resourcePacks: ['common', 'hd'] },
+    SD: { resourcePacks: ['common', 'sd'] },
+  },
   config: {},
   predownload: null,
 }
@@ -61,6 +67,7 @@ async function runScript(name, args, remote, initialFiles = {}) {
       'fetchWithRetry',
       'process',
       'console',
+      ...Object.keys(wwResources),
       source,
     )(
       fakeFs,
@@ -82,6 +89,7 @@ async function runScript(name, args, remote, initialFiles = {}) {
         },
       },
       { log() {}, error() {} },
+      ...Object.values(wwResources),
     )
   } catch (error) {
     if (error !== exit) throw error
@@ -137,6 +145,7 @@ test('CN official game archives packs and counts only common + HD resources', as
   const data = result.pushes[0][2]
   assert.equal(data.default.version, '3.7.0')
   assert.equal(data.default.resourceLevel, 'HD')
+  assert.deepEqual(data.default.resourceLevelSizes, { UHD: 40, HD: 30, SD: 15 })
   assert.deepEqual(data.resourcePacks, game.resourcePacks)
   const resources = JSON.parse(
     result.files.get('./Scripts/data/WW/latest_Win_Game_CN_Res.json'),
@@ -195,7 +204,7 @@ test('same-version resource migration pushes once and retries failed manifests',
   assert.deepEqual(unchanged.requests, [gameUrl])
 })
 
-test('official game message names the HD level and is not labeled gray', async () => {
+test('official game message shows all Chinese resource levels without equal version arrows', async () => {
   const initialFiles = {
     './Scripts/data/WW/latest_Win_Game_CN.json': JSON.stringify({
       default: { version: '3.7.0' },
@@ -219,6 +228,19 @@ test('official game message names the HD level and is not labeled gray', async (
     },
     initialFiles,
   )
+  const message = await renderGameMessage(result)
+  assert.match(message, /^鸣潮 Win CN REL 更新/)
+  assert.match(message, /高清文件数: `1` \\=\\> `2`/)
+  assert.match(message, /极致: `40B`/)
+  assert.match(message, /高清: `30B`/)
+  assert.match(message, /流畅: `15B`/)
+  assert.ok(message.indexOf('极致:') < message.indexOf('高清:'))
+  assert.doesNotMatch(message, /`3\.7\.0` \\=\\> `3\.7\.0`/)
+  assert.doesNotMatch(message, /资源等级: HD/)
+  assert.doesNotMatch(message, /灰度|undefined|NaN/)
+})
+
+async function renderGameMessage(result) {
   const source = fs
     .readFileSync(new URL('push/push.js', import.meta.url), 'utf8')
     .replace(/^import .+\r?\n/gm, '')
@@ -231,6 +253,7 @@ test('official game message names the HD level and is not labeled gray', async (
     'fetchWithRetry',
     'process',
     'console',
+    ...Object.keys(wwResources),
     source,
   )(
     {
@@ -257,10 +280,72 @@ test('official game message names the HD level and is not labeled gray', async (
       },
     },
     { log() {}, error() {} },
+    ...Object.values(wwResources),
   )
   await assert.rejects(push.pushWinGame(...result.pushes[0]), (e) => e === exit)
-  assert.match(message, /^鸣潮 Win CN REL 更新/)
-  assert.match(message, /资源等级: HD/)
-  assert.match(message, /文件数: `1` \\=\\> `2`/)
-  assert.doesNotMatch(message, /灰度|undefined|NaN/)
+  return message
+}
+
+test('existing HD cache refreshes once to add all resource level sizes', async () => {
+  const remote = {
+    [gameUrl]: game,
+    'https://cdn.example/common/indexFile.json': { resource: [] },
+    'https://cdn.example/hd/indexFile.json': { resource: [] },
+  }
+  const result = await runScript('getWWWinGameVersion.js', ['cn'], remote, {
+    './Scripts/data/WW/latest_Win_Game_CN.json': JSON.stringify({
+      default: { version: '3.7.0', resourceLevel: 'HD' },
+    }),
+  })
+  assert.equal(result.pushes.length, 1)
+  const unchanged = await runScript(
+    'getWWWinGameVersion.js',
+    ['cn'],
+    remote,
+    Object.fromEntries(result.files),
+  )
+  assert.equal(unchanged.pushes.length, 0)
+})
+
+test('PRE message uses the upcoming sizes for every resource level', async () => {
+  const predownload = {
+    resourcePacks: Object.fromEntries(
+      Object.entries(game.resourcePacks).map(([name, value]) => [
+        name,
+        {
+          ...value,
+          version: '3.8.0',
+          indexFile: `pre/${name}.json`,
+          size: value.size * 2,
+        },
+      ]),
+    ),
+  }
+  const result = await runScript(
+    'getWWWinGameVersion.js',
+    ['cn'],
+    {
+      [gameUrl]: { ...game, predownload },
+      'https://cdn.example/common/indexFile.json': { resource: [] },
+      'https://cdn.example/hd/indexFile.json': { resource: [] },
+      'https://cdn.example/pre/common.json': { resource: [] },
+      'https://cdn.example/pre/hd.json': { resource: [] },
+    },
+    {
+      './Scripts/data/WW/latest_Win_Game_CN.json': JSON.stringify({
+        default: { version: '3.7.0' },
+      }),
+      './Scripts/data/WW/latest_Win_Game_CN_Res.json': JSON.stringify({
+        resource: [],
+      }),
+      './Scripts/data/WW/latest_Win_Game_OS.json': '{}',
+    },
+  )
+  const message = await renderGameMessage(result)
+  assert.match(message, /^鸣潮 Win CN PRE 更新/)
+  assert.match(message, /`3\.8\.0`/)
+  assert.match(message, /极致: `80B`/)
+  assert.match(message, /高清: `60B`/)
+  assert.match(message, /流畅: `30B`/)
+  assert.doesNotMatch(message, /`0` \\=\\> `0`/)
 })

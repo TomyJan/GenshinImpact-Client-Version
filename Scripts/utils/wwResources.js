@@ -27,3 +27,21 @@ export function getWWResourceLevelSizes(data) {
       ]),
   )
 }
+
+export function getWWResourceLevels(data) {
+  return Object.fromEntries(
+    Object.entries(getWWResourceLevelSizes(data)).map(([level, size]) => {
+      const packs = getWWResourcePacks(data, level)
+      return [
+        level,
+        {
+          version: [...new Set(packs.map((pack) => pack.version))].join(' + '),
+          size,
+          changelog: data.bundles[level].changelog || data.changelog || {},
+          resourcePacks: data.bundles[level].resourcePacks,
+          indexFiles: packs.map((pack) => [pack.indexFile, pack.indexFileMd5]),
+        },
+      ]
+    }),
+  )
+}

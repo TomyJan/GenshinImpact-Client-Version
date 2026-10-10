@@ -2,7 +2,7 @@ import fs from 'fs'
 import push from './push/push.js'
 import path from 'path'
 import { fetchWithRetry } from './utils/fetchWithRetry.js'
-import { getWWResourceLevelSizes } from './utils/wwResources.js'
+import { getWWResourceLevels } from './utils/wwResources.js'
 
 const ApiInfo = {
   WW: {
@@ -86,20 +86,24 @@ function getLatestJsonFileName(directoryPath) {
 // 新正式接口按资源等级分包，保留原始数据，并兼容现有版本/推送字段。
 function normalizeGameData(data) {
   if (!data.resourcePacks) return data
-  const getInfo = (info) => ({
-    version: info.resourcePacks.common.version,
-    cdnList: info.cdnList,
-    resourceLevel: 'HD',
-    resourceLevelSizes: getWWResourceLevelSizes(info),
-    resourcePacks: Object.fromEntries(
-      info.bundles.HD.resourcePacks.map((name) => [
-        name,
-        info.resourcePacks[name],
-      ]),
-    ),
-    changelog: info.changelog || {},
-    config: info.config || {},
-  })
+  const getInfo = (info) => {
+    const resourceLevels = getWWResourceLevels(info)
+    return {
+      version: info.resourcePacks.common.version,
+      cdnList: info.cdnList,
+      resourceLevel: 'HD',
+      resourceLevelSizes: Object.fromEntries(
+        Object.entries(resourceLevels).map(([level, value]) => [
+          level,
+          value.size,
+        ]),
+      ),
+      resourceLevels,
+      resourcePacks: info.resourcePacks,
+      changelog: info.changelog || {},
+      config: info.config || {},
+    }
+  }
   return {
     ...data,
     default: getInfo(data),
@@ -110,19 +114,44 @@ function normalizeGameData(data) {
 }
 
 async function getGameResources(info) {
-  const paths = info.resourcePacks
-    ? Object.values(info.resourcePacks).map((pack) => pack.indexFile)
-    : [info.resources]
-  const resource = []
-  for (const resourcePath of paths) {
+  const fetchResources = async (resourcePath) => {
     const rsp = await fetchWithRetry(info.cdnList[0].url + resourcePath)
     if (!rsp.ok)
       throw new Error(`资源请求失败: ${rsp.status} ${rsp.statusText}`)
-    const data = await rsp.json()
-    if (!info.resourcePacks) return data
-    resource.push(...data.resource)
+    return rsp.json()
   }
-  return { resource }
+  if (!info.resourceLevels) return fetchResources(info.resources)
+  // 公共包在多个画质中复用，每个分包只请求一次。
+  const packNames = [
+    ...new Set(
+      Object.values(info.resourceLevels).flatMap(
+        (level) => level.resourcePacks,
+      ),
+    ),
+  ]
+  const resourcesByPack = {}
+  for (const name of packNames) {
+    resourcesByPack[name] = (
+      await fetchResources(info.resourcePacks[name].indexFile)
+    ).resource
+  }
+  return {
+    // 保留原有 resource 字段，兼容旧记录和其他服务器推送。
+    resource: info.resourceLevels[info.resourceLevel].resourcePacks.flatMap(
+      (name) => resourcesByPack[name],
+    ),
+    resourceLevels: Object.fromEntries(
+      Object.entries(info.resourceLevels).map(([level, value]) => [
+        level,
+        {
+          fileCount: value.resourcePacks.reduce(
+            (total, name) => total + resourcesByPack[name].length,
+            0,
+          ),
+        },
+      ]),
+    ),
+  }
 }
 
 async function getWinGameVersion() {
@@ -206,10 +235,10 @@ async function getWinGameVersion() {
     localData.default?.version !== latestVersion ||
     localData.predownload?.version !== preDownloadVersion ||
     localData.default?.resourceLevel !== jsonData.default.resourceLevel ||
-    JSON.stringify(localData.default?.resourceLevelSizes) !==
-      JSON.stringify(jsonData.default.resourceLevelSizes) ||
-    JSON.stringify(localData.predownload?.resourceLevelSizes) !==
-      JSON.stringify(jsonData.predownload?.resourceLevelSizes)
+    JSON.stringify(localData.default?.resourceLevels) !==
+      JSON.stringify(jsonData.default.resourceLevels) ||
+    JSON.stringify(localData.predownload?.resourceLevels) !==
+      JSON.stringify(jsonData.predownload?.resourceLevels)
   ) {
     console.log('数据有变化，正在更新...')
     // 所有清单取齐后才更新版本缓存，失败时下次仍能重试。

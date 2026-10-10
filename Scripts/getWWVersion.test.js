@@ -39,8 +39,18 @@ const game = {
   predownload: null,
 }
 
+const resourceResponses = Object.fromEntries(
+  ['common', 'uhd', 'hd', 'sd'].map((name) => [
+    `https://cdn.example/${name}/indexFile.json`,
+    {
+      resource: [{ dest: `${name}.pak`, size: game.resourcePacks[name].size }],
+    },
+  ]),
+)
+
 // 执行真实脚本，仅替换文件、网络和推送边界，避免改动版本缓存或发出消息。
 async function runScript(name, args, remote, initialFiles = {}) {
+  remote = { ...resourceResponses, ...remote }
   const files = new Map(Object.entries(initialFiles))
   const requests = []
   const pushes = []
@@ -128,7 +138,7 @@ test('unchanged official launcher does not push again', async () => {
   assert.equal(result.exitCode, 0)
 })
 
-test('CN official game archives packs and counts only common + HD resources', async () => {
+test('CN official game counts every resource level and fetches common only once', async () => {
   const result = await runScript('getWWWinGameVersion.js', ['cn'], {
     [gameUrl]: game,
     'https://cdn.example/common/indexFile.json': {
@@ -154,6 +164,17 @@ test('CN official game archives packs and counts only common + HD resources', as
     resources.resource.map((file) => file.dest),
     ['client.exe', 'hd.pak'],
   )
+  assert.deepEqual(resources.resourceLevels, {
+    UHD: { fileCount: 2 },
+    HD: { fileCount: 2 },
+    SD: { fileCount: 2 },
+  })
+  assert.equal(
+    result.requests.filter((url) => url.endsWith('/common/indexFile.json'))
+      .length,
+    1,
+  )
+  assert.equal(result.requests.length, 5)
 })
 
 test('legacy OS gray responses still unwrap data', async () => {
@@ -230,13 +251,14 @@ test('official game message shows all Chinese resource levels without equal vers
   )
   const message = await renderGameMessage(result)
   assert.match(message, /^鸣潮 Win CN REL 更新/)
-  assert.match(message, /高清文件数: `1` \\=\\> `2`/)
+  assert.match(message, /\n文件数: `2`\n/)
   assert.match(message, /极致: `40B`/)
   assert.match(message, /高清: `30B`/)
   assert.match(message, /流畅: `15B`/)
   assert.ok(message.indexOf('极致:') < message.indexOf('高清:'))
   assert.doesNotMatch(message, /`3\.7\.0` \\=\\> `3\.7\.0`/)
   assert.doesNotMatch(message, /资源等级: HD/)
+  assert.doesNotMatch(message, /高清文件数|极致文件数|流畅文件数/)
   assert.doesNotMatch(message, /灰度|undefined|NaN/)
 })
 
@@ -330,6 +352,8 @@ test('PRE message uses the upcoming sizes for every resource level', async () =>
       'https://cdn.example/hd/indexFile.json': { resource: [] },
       'https://cdn.example/pre/common.json': { resource: [] },
       'https://cdn.example/pre/hd.json': { resource: [] },
+      'https://cdn.example/pre/uhd.json': { resource: [] },
+      'https://cdn.example/pre/sd.json': { resource: [] },
     },
     {
       './Scripts/data/WW/latest_Win_Game_CN.json': JSON.stringify({
@@ -348,4 +372,64 @@ test('PRE message uses the upcoming sizes for every resource level', async () =>
   assert.match(message, /高清: `60B`/)
   assert.match(message, /流畅: `30B`/)
   assert.doesNotMatch(message, /`0` \\=\\> `0`/)
+})
+
+test('each field expands only when it differs between resource levels', async () => {
+  const data = structuredClone(game)
+  for (const name of ['uhd', 'hd', 'sd']) data.resourcePacks[name].size = 20
+  data.resourcePacks.uhd.version = '3.8.0'
+  data.bundles.UHD.changelog = { 'zh-Hans': '极致日志' }
+  data.changelog = { 'zh-Hans': '共同日志' }
+  const result = await runScript(
+    'getWWWinGameVersion.js',
+    ['cn'],
+    {
+      [gameUrl]: data,
+      'https://cdn.example/sd/indexFile.json': {
+        resource: [{ dest: 'sd1.pak' }, { dest: 'sd2.pak' }],
+      },
+    },
+    {
+      './Scripts/data/WW/latest_Win_Game_OS.json': '{}',
+    },
+  )
+  const message = await renderGameMessage(result)
+  assert.match(
+    message,
+    /版本:\n极致: `3\.7\.0 \+ 3\.8\.0`\n高清: `3\.7\.0`\n流畅: `3\.7\.0`/,
+  )
+  assert.match(message, /文件数:\n极致: `2`\n高清: `2`\n流畅: `3`/)
+  assert.match(message, /资源大小: `30B`\n/)
+  assert.match(
+    message,
+    /更新日志:\n极致: \n```极致日志```\n高清: \n```共同日志```\n流畅: \n```共同日志```/,
+  )
+  assert.doesNotMatch(message, /高清文件数|undefined|NaN/)
+})
+
+test('equal current counts still show differing changes from previous counts', async () => {
+  const result = await runScript(
+    'getWWWinGameVersion.js',
+    ['cn'],
+    { [gameUrl]: game },
+    {
+      './Scripts/data/WW/latest_Win_Game_OS.json': '{}',
+    },
+  )
+  result.files.set('./Scripts/data/WW/last_Win_Game_CN.json', '{}')
+  result.files.set(
+    './Scripts/data/WW/last_Win_Game_CN_Res.json',
+    JSON.stringify({
+      resourceLevels: {
+        UHD: { fileCount: 1 },
+        HD: { fileCount: 2 },
+        SD: { fileCount: 3 },
+      },
+    }),
+  )
+  const message = await renderGameMessage(result)
+  assert.match(
+    message,
+    /文件数:\n极致: `1` \\=\\> `2`\n高清: `2`\n流畅: `3` \\=\\> `2`/,
+  )
 })

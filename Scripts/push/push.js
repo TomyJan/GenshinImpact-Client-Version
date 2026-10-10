@@ -324,64 +324,76 @@ class Push {
             jsonDataRes = jsonDataRes.predownload || jsonDataRes
             jsonData.default = jsonData.predownload || jsonData.default
           }
-          //console.log('读取本地数据:', jsonDataContent);
-          pushUrl += encodeURIComponent(
-            `版本: ${
-              jsonDataLast.default?.version &&
-              jsonDataLast.default.version !== jsonData.default.version
-                ? `\`${jsonDataLast.default.version}\` \\=\\> `
-                : ''
-            }\`${jsonData.default.version}\`\n`,
-          )
-          pushUrl += encodeURIComponent(
-            `${resourceLevelNames[jsonData.default.resourceLevel] || ''}文件数: ${
-              Array.isArray(jsonDataResLast?.resource) &&
-              jsonDataResLast.resource.length !== jsonDataRes.resource.length
-                ? `\`${jsonDataResLast.resource.length}\` \\=\\> `
-                : ''
-            }\`${jsonDataRes.resource.length}\`\n`,
-          )
-          // 计算大小
-          let lastSize = 0
-          let size = 0
-          if (Array.isArray(jsonDataResLast?.resource)) {
-            for (let i = 0; i < jsonDataResLast.resource.length; i++) {
-              lastSize += jsonDataResLast.resource[i].size
+          if (jsonData.default.resourceLevels && jsonDataRes.resourceLevels) {
+            pushUrl += encodeURIComponent(
+              formatWWResourceFields(
+                jsonData.default,
+                jsonDataRes,
+                jsonDataLast.default,
+                jsonDataResLast,
+              ),
+            )
+          } else {
+            //console.log('读取本地数据:', jsonDataContent);
+            pushUrl += encodeURIComponent(
+              `版本: ${
+                jsonDataLast.default?.version &&
+                jsonDataLast.default.version !== jsonData.default.version
+                  ? `\`${jsonDataLast.default.version}\` \\=\\> `
+                  : ''
+              }\`${jsonData.default.version}\`\n`,
+            )
+            pushUrl += encodeURIComponent(
+              `文件数: ${
+                Array.isArray(jsonDataResLast?.resource) &&
+                jsonDataResLast.resource.length !== jsonDataRes.resource.length
+                  ? `\`${jsonDataResLast.resource.length}\` \\=\\> `
+                  : ''
+              }\`${jsonDataRes.resource.length}\`\n`,
+            )
+            // 计算大小
+            let lastSize = 0
+            let size = 0
+            if (Array.isArray(jsonDataResLast?.resource)) {
+              for (let i = 0; i < jsonDataResLast.resource.length; i++) {
+                lastSize += jsonDataResLast.resource[i].size
+              }
             }
-          }
-          for (let i = 0; i < jsonDataRes.resource.length; i++) {
-            size += jsonDataRes.resource[i].size
-          }
-          if (jsonData.default.resourceLevelSizes) {
-            pushUrl += encodeURIComponent('资源大小:\n')
-            for (const [level, name] of Object.entries(resourceLevelNames)) {
-              const levelSize = jsonData.default.resourceLevelSizes[level]
-              if (levelSize === undefined) continue
-              const oldSize = jsonDataLast.default?.resourceLevelSizes?.[level]
+            for (let i = 0; i < jsonDataRes.resource.length; i++) {
+              size += jsonDataRes.resource[i].size
+            }
+            if (jsonData.default.resourceLevelSizes) {
+              pushUrl += encodeURIComponent('资源大小:\n')
+              for (const [level, name] of Object.entries(resourceLevelNames)) {
+                const levelSize = jsonData.default.resourceLevelSizes[level]
+                if (levelSize === undefined) continue
+                const oldSize =
+                  jsonDataLast.default?.resourceLevelSizes?.[level]
+                pushUrl += encodeURIComponent(
+                  `${name}: ${
+                    oldSize !== undefined && oldSize !== levelSize
+                      ? `\`${formatBytes(oldSize)}\` \\=\\> `
+                      : ''
+                  }\`${formatBytes(levelSize)}\`\n`,
+                )
+              }
+            } else {
               pushUrl += encodeURIComponent(
-                `${name}: ${
-                  oldSize !== undefined && oldSize !== levelSize
-                    ? `\`${formatBytes(oldSize)}\` \\=\\> `
+                `大小: ${
+                  lastSize && lastSize !== size
+                    ? `\`${formatBytes(lastSize)}\` \\=\\> `
                     : ''
-                }\`${formatBytes(levelSize)}\`\n`,
+                }\`${formatBytes(size)}\`\n`,
               )
             }
-          } else {
             pushUrl += encodeURIComponent(
-              `大小: ${
-                lastSize && lastSize !== size
-                  ? `\`${formatBytes(lastSize)}\` \\=\\> `
-                  : ''
-              }\`${formatBytes(size)}\`\n`,
+              `更新日志: \n\`\`\`${
+                jsonData.default.changelog['zh-Hans']
+                  ? jsonData.default.changelog['zh-Hans']
+                  : '暂无'
+              }\`\`\`\n`,
             )
           }
-          pushUrl += encodeURIComponent(
-            `更新日志: \n\`\`\`${
-              jsonData.default.changelog['zh-Hans']
-                ? jsonData.default.changelog['zh-Hans']
-                : '暂无'
-            }\`\`\`\n`,
-          )
         } catch (error) {
           console.error('读取本地数据失败4:', error.message)
           process.exit(6)
@@ -927,6 +939,63 @@ class Push {
     let pushJsonData = await rsp.json()
     console.log('推送结果:', pushJsonData)
   }
+}
+
+// 每个字段分别比较三档画质；仅当值或变化过程不同才展开等级。
+function formatWWResourceFields(
+  info,
+  resources,
+  lastInfo = {},
+  lastResources = {},
+) {
+  const levels = Object.keys(resourceLevelNames).filter(
+    (level) => info.resourceLevels[level],
+  )
+  const field = (title, current, previous, format) => {
+    const rows = levels.map((level) => {
+      const value = current(level)
+      const oldValue = previous?.(level)
+      const changed = oldValue !== undefined && oldValue !== value
+      return {
+        level,
+        signature: JSON.stringify([value, changed ? oldValue : null]),
+        text: `${changed ? `${format(oldValue)} \\=\\> ` : ''}${format(value)}`,
+      }
+    })
+    if (rows.every((row) => row.signature === rows[0].signature)) {
+      return `${title}: ${rows[0].text}\n`
+    }
+    return `${title}:\n${rows.map((row) => `${resourceLevelNames[row.level]}: ${row.text}\n`).join('')}`
+  }
+  const code = (value) => `\`${value}\``
+  return (
+    field(
+      '版本',
+      (level) => info.resourceLevels[level].version,
+      (level) => lastInfo.resourceLevels?.[level]?.version ?? lastInfo.version,
+      code,
+    ) +
+    field(
+      '文件数',
+      (level) => resources.resourceLevels[level].fileCount,
+      (level) => lastResources.resourceLevels?.[level]?.fileCount,
+      code,
+    ) +
+    field(
+      '资源大小',
+      (level) => info.resourceLevels[level].size,
+      (level) =>
+        lastInfo.resourceLevels?.[level]?.size ??
+        lastInfo.resourceLevelSizes?.[level],
+      (value) => code(formatBytes(value)),
+    ) +
+    field(
+      '更新日志',
+      (level) => info.resourceLevels[level].changelog?.['zh-Hans'] || '暂无',
+      null,
+      (value) => `\n\`\`\`${value}\`\`\``,
+    )
+  )
 }
 
 function escapeCharacters(inputString) {

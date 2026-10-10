@@ -5,7 +5,7 @@ import { fetchWithRetry } from './utils/fetchWithRetry.js'
 
 const ApiInfo = {
   WW: {
-    CN: 'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json',
+    CN: 'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/G152/official/index.json',
     CN_NEW:
       'https://starter-server-api.kurogame.com/launcher/gray?deviceId=CFF248F5-5191-4EC8-882C-3995573E87A3&gameId=G152&appId=10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5&identify=game',
     OS: 'https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json',
@@ -82,6 +82,47 @@ function getLatestJsonFileName(directoryPath) {
   return latestJsonFile
 }
 
+// 新正式接口按资源等级分包，保留原始数据，并兼容现有版本/推送字段。
+function normalizeGameData(data) {
+  if (!data.resourcePacks) return data
+  const getInfo = (info) => ({
+    version: info.resourcePacks.common.version,
+    cdnList: info.cdnList,
+    resourceLevel: 'HD',
+    resourcePacks: Object.fromEntries(
+      info.bundles.HD.resourcePacks.map((name) => [
+        name,
+        info.resourcePacks[name],
+      ]),
+    ),
+    changelog: info.changelog || {},
+    config: info.config || {},
+  })
+  return {
+    ...data,
+    default: getInfo(data),
+    predownload: data.predownload?.resourcePacks
+      ? getInfo({ ...data, ...data.predownload })
+      : data.predownload,
+  }
+}
+
+async function getGameResources(info) {
+  const paths = info.resourcePacks
+    ? Object.values(info.resourcePacks).map((pack) => pack.indexFile)
+    : [info.resources]
+  const resource = []
+  for (const resourcePath of paths) {
+    const rsp = await fetchWithRetry(info.cdnList[0].url + resourcePath)
+    if (!rsp.ok)
+      throw new Error(`资源请求失败: ${rsp.status} ${rsp.statusText}`)
+    const data = await rsp.json()
+    if (!info.resourcePacks) return data
+    resource.push(...data.resource)
+  }
+  return { resource }
+}
+
 async function getWinGameVersion() {
   // try {
   // 发送GET请求获取JSON数据
@@ -110,6 +151,8 @@ async function getWinGameVersion() {
     )
     process.exit(3)
   }
+
+  jsonData = normalizeGameData(jsonData)
 
   // 读取本地保存的数据
   let localData = {}
@@ -159,9 +202,25 @@ async function getWinGameVersion() {
   // 比较版本并更新本地数据
   if (
     localData.default?.version !== latestVersion ||
-    localData.predownload?.version !== preDownloadVersion
+    localData.predownload?.version !== preDownloadVersion ||
+    localData.default?.resourceLevel !== jsonData.default.resourceLevel
   ) {
     console.log('数据有变化，正在更新...')
+    // 所有清单取齐后才更新版本缓存，失败时下次仍能重试。
+    let resJsonData = {}
+    try {
+      resJsonData = await getGameResources(jsonData.default)
+      if (preDownloadVersion) {
+        resJsonData.predownload = await getGameResources({
+          cdnList: jsonData.default.cdnList,
+          ...jsonData.predownload,
+        })
+      }
+    } catch (error) {
+      console.error('获取资源数据失败:', error.message)
+      process.exit(3)
+    }
+
     // 先检查目标目录是否存在
     if (!fs.existsSync(targetDir)) {
       fs.mkdirSync(targetDir, { recursive: true })
@@ -192,48 +251,6 @@ async function getWinGameVersion() {
     )
     console.log('脚本版本数据已更新并保存成功。')
 
-    // 获取资源数据
-    let resJsonData = {}
-    const rsp_res = await fetchWithRetry(
-      jsonData.default.cdnList[0].url + jsonData.default.resources,
-    )
-    if (!rsp_res.ok) {
-      console.error('请求失败:', rsp_res.status, rsp_res.statusText)
-      process.exit(2)
-    }
-
-    try {
-      resJsonData = await rsp_res.json()
-      if (preDownloadVersion) {
-        const rsp_res_pre = await fetchWithRetry(
-          jsonData.default.cdnList[0].url + jsonData.predownload.resources,
-        )
-        if (!rsp_res_pre.ok) {
-          console.error('请求失败:', rsp_res_pre.status, rsp_res_pre.statusText)
-          process.exit(2)
-        }
-        try {
-          resJsonData.predownload = await rsp_res_pre.json()
-        } catch (error) {
-          console.error(
-            '返回数据不是json格式:',
-            error.message,
-            '返回内容:',
-            resJsonData,
-          )
-          process.exit(3)
-        }
-      }
-    } catch (error) {
-      console.error(
-        '返回数据不是json格式:',
-        error.message,
-        '返回内容:',
-        resJsonData,
-      )
-      process.exit(3)
-    }
-
     // 将 latestVerResPath 文件的内容读出来写到 lastVerResPath
     if (!fs.existsSync(latestVerResPath)) {
       fs.writeFileSync(latestVerResPath, '{}', 'utf-8')
@@ -258,9 +275,9 @@ async function getWinGameVersion() {
     console.log('所有数据已更新并保存成功。')
 
     // 如果只有单个服务器更新, 先写一下临时文件, 等两个都更新了再推送
-    // 但是 WW 灰度不用此逻辑
-    if (isNewApi) {
-      console.log(`游戏 ${game} 的新API ${server} 服务器已更新, 正在推送...`)
+    // 灰度或已迁移到分包接口的服务器独立推送，避免等待旧接口服务器。
+    if (isNewApi || jsonData.resourcePacks) {
+      console.log(`游戏 ${game} 的 ${server} 服务器已更新, 正在推送...`)
       await push.pushWinGame(
         ApiInfo[game].name,
         server,

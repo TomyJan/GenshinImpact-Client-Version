@@ -4,7 +4,7 @@ import { fetchWithRetry } from './utils/fetchWithRetry.js'
 
 const ApiInfo = {
   WW: {
-    CN: 'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json',
+    CN: 'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/app/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/index.json',
     CN_EXE:
       'https://download.kurogames.com/mc_WnGtDn85y8lJB4mTmYHYuNjIl9n6YGVm/official/cn/zh-Hans/pc_app.json',
     CN_NEW:

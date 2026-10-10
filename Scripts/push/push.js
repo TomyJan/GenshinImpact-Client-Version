@@ -291,7 +291,7 @@ class Push {
         }
       } else {
         pushUrl += encodeURIComponent(
-          ` Win ${server.replace('_NEW', '')} REL 更新！\n\n`,
+          ` Win ${server.replace('_NEW', '')} ${type} 更新！\n\n`,
         )
         let jsonData = {}
         let jsonDataRes = {}
@@ -319,6 +319,15 @@ class Push {
           jsonDataRes = JSON.parse(jsonDataContentRes)
           jsonDataLast = JSON.parse(jsonDataContentLast)
           jsonDataResLast = JSON.parse(jsonDataContentResLast)
+          if (type === 'PRE') {
+            jsonDataRes = jsonDataRes.predownload || jsonDataRes
+            jsonData.default = jsonData.predownload || jsonData.default
+          }
+          if (jsonData.default.resourceLevel) {
+            pushUrl += encodeURIComponent(
+              `资源等级: ${jsonData.default.resourceLevel}\n`,
+            )
+          }
           //console.log('读取本地数据:', jsonDataContent);
           pushUrl += encodeURIComponent(
             `版本: ${

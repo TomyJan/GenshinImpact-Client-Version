@@ -2,53 +2,52 @@
   "default": {
     "cdnList": [
       {
-        "P": 13416,
         "K1": 1,
         "K2": 1,
+        "P": 8714,
         "url": "https://pcdownload-aliyun.aki-game.com/"
       },
       {
-        "P": 4743,
         "K1": 1,
         "K2": 1,
-        "url": "https://pcdownload-huoshan.aki-game.com/"
+        "P": 0,
+        "url": "https://pcdownload-qcloud.aki-game.com/"
       },
       {
-        "P": 0,
         "K1": 1,
         "K2": 1,
-        "url": "https://pcdownload-qcloud.aki-game.com/"
+        "P": 1677,
+        "url": "https://pcdownload-huoshan.aki-game.com/"
       }
     ],
-    "changelog": {
-      "zh-Hans": "优化了部分功能"
-    },
     "resource": {
-      "fileCheckListMd5": "3d6d031279d833a1d2e3435d281713a7",
-      "md5": "03b642e565e7b9675a51791ae9092a74",
-      "path": "launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/2.6.5.0/ijssFcdGxHvVOwBTvraEvBfgNxomLJkV/launcher.zip",
-      "size": 447549800,
-      "version": "2.6.5.0"
+      "fileCheckListMd5": "1881afd4d3030e9fbb58e847dfb1ca09",
+      "path": "launcher/app/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/parent/3.0.1.0/1875ea91fa70443399d05d758067fcde/launcher.zip",
+      "size": 465198503,
+      "version": "3.0.1.0",
+      "md5": "fa0725da1ff7cfb38a67332766155500"
+    },
+    "changelog": {
+      "zh-Hans": "1. 游戏支持不同的资源等级，可根据设备配置情况下载\n2. 优化了部分功能"
     }
   },
-  "functionCode": {
-    "background": "PTj45kPbFHV7O3FHrxK8CaRjsTlV6DHX"
-  },
   "experiment": {
-    "mainButtonExitGameEntry": 1,
+    "updater": {
+      "enableCDNSelect": true
+    },
     "componentList": [
       {
+        "Id": "KRWebViewRuntime",
         "fileCheckListMd5": "852c066819f820fd02bc3634a831d9fa",
         "path": "launcher/environment/KRWebViewRuntime.zip",
         "size": 249517572,
-        "Id": "KRWebViewRuntime",
         "version": "133.0.3065.59",
         "md5": "28114c06a191aa4fd061c767183cea58"
       }
-    ],
-    "updater": {
-      "enableCDNSelect": true
-    }
+    ]
   },
-  "crashInitSwitch": 1
+  "crashInitSwitch": 1,
+  "resourcesGray": {
+    "graySwitch": 0
+  }
 }

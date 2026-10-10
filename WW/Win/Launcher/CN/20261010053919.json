@@ -1,0 +1,53 @@
+{
+  "default": {
+    "cdnList": [
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 8714,
+        "url": "https://pcdownload-aliyun.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 0,
+        "url": "https://pcdownload-qcloud.aki-game.com/"
+      },
+      {
+        "K1": 1,
+        "K2": 1,
+        "P": 1677,
+        "url": "https://pcdownload-huoshan.aki-game.com/"
+      }
+    ],
+    "resource": {
+      "fileCheckListMd5": "1881afd4d3030e9fbb58e847dfb1ca09",
+      "path": "launcher/app/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/parent/3.0.1.0/1875ea91fa70443399d05d758067fcde/launcher.zip",
+      "size": 465198503,
+      "version": "3.0.1.0",
+      "md5": "fa0725da1ff7cfb38a67332766155500"
+    },
+    "changelog": {
+      "zh-Hans": "1. 游戏支持不同的资源等级，可根据设备配置情况下载\n2. 优化了部分功能"
+    }
+  },
+  "experiment": {
+    "updater": {
+      "enableCDNSelect": true
+    },
+    "componentList": [
+      {
+        "Id": "KRWebViewRuntime",
+        "fileCheckListMd5": "852c066819f820fd02bc3634a831d9fa",
+        "path": "launcher/environment/KRWebViewRuntime.zip",
+        "size": 249517572,
+        "version": "133.0.3065.59",
+        "md5": "28114c06a191aa4fd061c767183cea58"
+      }
+    ]
+  },
+  "crashInitSwitch": 1,
+  "resourcesGray": {
+    "graySwitch": 0
+  }
+}

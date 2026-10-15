@@ -1,14 +1,17 @@
 {
+  "resourcesGray": {
+    "graySwitch": 0
+  },
   "default": {
     "cdnList": [
       {
-        "P": 2989,
+        "P": 1677,
         "K1": 1,
         "K2": 1,
         "url": "https://hw-pcdownload-qcloud.aki-game.net/"
       },
       {
-        "P": 2989,
+        "P": 7276,
         "K1": 1,
         "K2": 1,
         "url": "https://hw-pcdownload-aws.aki-game.net/"
@@ -17,31 +20,37 @@
         "P": 0,
         "K1": 1,
         "K2": 1,
+        "url": "https://pcdownload-huoshan.aki-game.net/"
+      },
+      {
+        "P": 2177,
+        "K1": 1,
+        "K2": 1,
         "url": "https://hw-pcdownload-akamai.aki-game.net/"
       }
     ],
     "changelog": {
-      "zh-Hans": "优化了部分功能",
-      "de": "Funktionen teilweise optimiert",
-      "zh-Hant": "優化了部分功能",
-      "ko": "일부 기능을 최적화함",
-      "th": "ปรับปรุงประสบการณ์การใช้งานบางส่วนให้ดียิ่งขึ้น",
-      "pt-BR": "Certas funções foram otimizadas.",
-      "ja": "ゲーム動作改善",
-      "en": "Part of the functions optimized",
-      "fr": "Partie des fonctions optimisées",
-      "es": "Optimizadas algunas funciones"
+      "zh-Hans": "1. 游戏支持不同的资源等级，可根据设备配置情况下载\n2. 优化了部分功能",
+      "de": "1. Das Spiel unterstützt jetzt verschiedene Ressourcenstufen. Wähle entsprechend der Leistung deines Geräts die geeignete Ressourcenstufe aus.\n2. Funktionen teilweise optimiert",
+      "zh-Hant": "1. 遊戲支援多種資源品質，可根據裝置的配置情況下載\n2. 優化了部分功能",
+      "ko": "1. 게임은 다양한 리소스 등급을 지원하며, 기기 사양에 맞춰 다운로드할 수 있습니다\n2. 일부 기능을 최적화함",
+      "th": "1. เกมรองรับทรัพยากรหลายระดับ สามารถเลือกดาวน์โหลดตามสเปกของอุปกรณ์ได้\n2. ปรับปรุงประสบการณ์การใช้งานบางส่วนให้ดียิ่งขึ้น",
+      "pt-BR": "1. O jogo oferece diferentes níveis de qualidade de recursos, que podem ser baixados de acordo com as configurações do dispositivo\n2. Certas funções foram otimizadas.",
+      "ja": "1. ゲームでは複数のリソース品質に対応しており、ご利用の端末のスペックに応じてダウンロードできます\n2. ゲーム動作改善",
+      "en": "1. The game now supports different resource quality. Choose the appropriate quality based on your device's performance.\n2. Part of the functions optimized",
+      "fr": "1. Le jeu propose plusieurs niveaux de ressources. Choisissez celui qui convient aux performances de votre appareil.\n2. Partie des fonctions optimisées",
+      "es": "1. Se admite la selección de recursos según la calidad gráfica.\n2. Optimizadas algunas funciones"
     },
     "resource": {
-      "fileCheckListMd5": "14c2e8ab941a48bfde39532216ce63ba",
-      "md5": "3e7a7d9fa4d1a8d43b64da0c7d99a581",
-      "path": "launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/2.6.5.0/QZxWoYltxRGWvhjQtJlpWIZmQLLRqIwC/launcher.zip",
-      "size": 447547608,
-      "version": "2.6.5.0"
+      "fileCheckListMd5": "95418c21b1054c607060e64da32725a6",
+      "md5": "1dc40e5b556babd3218a2f5a7c1a8dbf",
+      "path": "launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/3.0.1.0/mQnyOPbxaQqbjpRjmjJGYajnBdKIfwmN/launcher.zip",
+      "size": 465195358,
+      "version": "3.0.1.0"
     }
   },
   "functionCode": {
-    "background": "dOlPEc8xvpP8r4k2lyIOK6p0R7hNNqRf"
+    "background": "lv1emIbKHn38mW6zgxiFqU3Uw8nwstj6"
   },
   "experiment": {
     "componentList": [

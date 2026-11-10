@@ -70,6 +70,7 @@ async function runScript(name, args, remote, initialFiles = {}) {
     },
     writeFileSync: (file, data) => files.set(file, data),
     existsSync: (file) => files.has(file),
+    unlinkSync: (file) => files.delete(file),
     mkdirSync() {},
   }
   const exit = new Error('exit')
@@ -110,6 +111,245 @@ async function runScript(name, args, remote, initialFiles = {}) {
   }
   return { files, requests, pushes, exitCode }
 }
+
+const pendingGamePath = './Scripts/data/WW/tmp-not_pushed_win_WW_server.txt'
+
+// 模拟下一步检查另一服且无更新，使已等待的单服消息正常发出。
+async function flushPendingGame(result, server) {
+  const other = server === 'OS' ? 'CN' : 'OS'
+  const cache = `./Scripts/data/WW/latest_Win_Game_${other}.json`
+  const unchanged = { default: { version: '3.7.0' } }
+  const files = Object.fromEntries(result.files)
+  files[cache] = JSON.stringify(unchanged)
+  return runScript(
+    'getWWWinGameVersion.js',
+    [other.toLowerCase()],
+    { [other === 'CN' ? gameUrl : osGameUrl]: unchanged },
+    files,
+  )
+}
+
+function withPredownload(version = '3.8.0') {
+  return {
+    ...structuredClone(game),
+    predownload: {
+      resourcePacks: Object.fromEntries(
+        Object.entries(game.resourcePacks).map(([name, value]) => [
+          name,
+          {
+            ...value,
+            version,
+            size: value.size * 2,
+            indexFile: `pre/${name}.json`,
+          },
+        ]),
+      ),
+    },
+  }
+}
+
+const preResourceResponses = Object.fromEntries(
+  ['common', 'uhd', 'hd', 'sd'].map((name) => [
+    `https://cdn.example/pre/${name}.json`,
+    { resource: [{ dest: `pre-${name}.pak`, size: 2 }] },
+  ]),
+)
+
+test('formal release and predownload wait for the peer and merge in either check order', async () => {
+  for (const data of [game, withPredownload()]) {
+    for (const first of ['CN', 'OS']) {
+      const second = first === 'CN' ? 'OS' : 'CN'
+      const remote = {
+        [gameUrl]: data,
+        [osGameUrl]: data,
+        ...preResourceResponses,
+      }
+      const initial = {
+        './Scripts/data/WW/latest_Win_Game_CN.json': JSON.stringify({
+          default: { version: '3.6.1' },
+        }),
+        './Scripts/data/WW/latest_Win_Game_OS.json': JSON.stringify({
+          default: { version: '3.6.1' },
+        }),
+      }
+      const waiting = await runScript(
+        'getWWWinGameVersion.js',
+        [first.toLowerCase()],
+        remote,
+        initial,
+      )
+      assert.equal(waiting.pushes.length, 0)
+      assert.ok(waiting.files.has(pendingGamePath))
+      const repeated = await runScript(
+        'getWWWinGameVersion.js',
+        [first.toLowerCase()],
+        remote,
+        Object.fromEntries(waiting.files),
+      )
+      assert.equal(repeated.exitCode, 0)
+      assert.equal(repeated.pushes.length, 0)
+      assert.ok(repeated.files.has(pendingGamePath))
+      const merged = await runScript(
+        'getWWWinGameVersion.js',
+        [second.toLowerCase()],
+        remote,
+        Object.fromEntries(repeated.files),
+      )
+      assert.equal(merged.exitCode, 0)
+      assert.equal(merged.pushes.length, 1)
+      assert.equal(merged.pushes[0][1], second)
+      assert.equal(merged.pushes[0][5].server, first)
+      assert.equal(merged.files.has(pendingGamePath), false)
+      const message = await renderGameMessage(merged)
+      assert.match(
+        message,
+        data.predownload ? /^鸣潮 Win PRE 更新/ : /^鸣潮 Win REL 更新/,
+      )
+      assert.match(message, /极致: `/)
+      assert.match(message, /高清: `/)
+      assert.match(message, /流畅: `/)
+      assert.doesNotMatch(message, /undefined|NaN/)
+      const next = await runScript(
+        'getWWWinGameVersion.js',
+        [first.toLowerCase()],
+        remote,
+        Object.fromEntries(merged.files),
+      )
+      assert.equal(next.pushes.length, 0)
+      assert.equal(next.files.has(pendingGamePath), false)
+    }
+  }
+})
+
+test('a peer check without an update flushes the waiting server once', async () => {
+  const waiting = await runScript('getWWWinGameVersion.js', ['cn'], {
+    [gameUrl]: withPredownload(),
+    ...preResourceResponses,
+  })
+  assert.equal(waiting.pushes.length, 0)
+  const flushed = await flushPendingGame(waiting, 'CN')
+  assert.equal(flushed.exitCode, 0)
+  assert.equal(flushed.pushes.length, 1)
+  assert.equal(flushed.pushes[0][1], 'CN')
+  assert.equal(flushed.pushes[0][5], undefined)
+  assert.equal(flushed.files.has(pendingGamePath), false)
+})
+
+test('merged packed messages share equal fields and retain per-server resource level differences', async () => {
+  const os = structuredClone(game)
+  os.resourcePacks.uhd.size = 35
+  const remote = { [gameUrl]: game, [osGameUrl]: os }
+  const waiting = await runScript('getWWWinGameVersion.js', ['cn'], remote)
+  const merged = await runScript(
+    'getWWWinGameVersion.js',
+    ['os'],
+    remote,
+    Object.fromEntries(waiting.files),
+  )
+  const message = await renderGameMessage(merged)
+  assert.equal(message.match(/版本:/g).length, 1)
+  assert.equal(message.match(/文件数:/g).length, 1)
+  assert.equal(message.match(/更新日志:/g).length, 1)
+  assert.match(message, /CN 资源大小:\n极致: `40B`/)
+  assert.match(message, /OS 资源大小:\n极致: `45B`/)
+})
+
+test('different predownload versions are sent separately without losing either update', async () => {
+  const remote = {
+    [gameUrl]: withPredownload('3.8.0'),
+    [osGameUrl]: withPredownload('3.9.0'),
+    ...preResourceResponses,
+  }
+  const waiting = await runScript('getWWWinGameVersion.js', ['cn'], remote)
+  const second = await runScript(
+    'getWWWinGameVersion.js',
+    ['os'],
+    remote,
+    Object.fromEntries(waiting.files),
+  )
+  assert.equal(second.pushes.length, 1)
+  assert.equal(second.pushes[0][1], 'CN')
+  assert.equal(second.pushes[0][2].predownload.version, '3.8.0')
+  assert.equal(second.pushes[0][5], undefined)
+  assert.ok(second.files.has(pendingGamePath))
+  const last = await runScript(
+    'getWWWinGameVersion.js',
+    ['cn'],
+    remote,
+    Object.fromEntries(second.files),
+  )
+  assert.equal(last.pushes.length, 1)
+  assert.equal(last.pushes[0][1], 'OS')
+  assert.equal(last.pushes[0][2].predownload.version, '3.9.0')
+  assert.equal(last.files.has(pendingGamePath), false)
+})
+
+test('a release change while predownload is unchanged remains a release notification', async () => {
+  const data = withPredownload()
+  const remote = { [gameUrl]: data, ...preResourceResponses }
+  const seed = await runScript('getWWWinGameVersion.js', ['cn'], remote)
+  const flushed = await flushPendingGame(seed, 'CN')
+  const update = structuredClone(data)
+  for (const pack of Object.values(update.resourcePacks)) pack.version = '3.7.1'
+  const waiting = await runScript(
+    'getWWWinGameVersion.js',
+    ['cn'],
+    { ...remote, [gameUrl]: update },
+    Object.fromEntries(flushed.files),
+  )
+  const result = await flushPendingGame(waiting, 'CN')
+  assert.equal(result.pushes.length, 1)
+  assert.equal(result.pushes[0][2].predownload, null)
+  const message = await renderGameMessage(result)
+  assert.match(message, /^鸣潮 Win CN REL 更新/)
+  assert.match(message, /`3\.7\.1`/)
+  assert.doesNotMatch(message, /3\.8\.0/)
+})
+
+test('release and predownload updates are kept separate while both notifications survive', async () => {
+  const remote = {
+    [gameUrl]: game,
+    [osGameUrl]: withPredownload(),
+    ...preResourceResponses,
+  }
+  const waiting = await runScript('getWWWinGameVersion.js', ['cn'], remote)
+  const next = await runScript(
+    'getWWWinGameVersion.js',
+    ['os'],
+    remote,
+    Object.fromEntries(waiting.files),
+  )
+  assert.equal(next.pushes.length, 1)
+  assert.equal(next.pushes[0][1], 'CN')
+  assert.equal(next.pushes[0][2].predownload, null)
+  assert.equal(next.pushes[0][5], undefined)
+  const last = await runScript(
+    'getWWWinGameVersion.js',
+    ['cn'],
+    remote,
+    Object.fromEntries(next.files),
+  )
+  assert.equal(last.pushes.length, 1)
+  assert.equal(last.pushes[0][1], 'OS')
+  assert.equal(last.pushes[0][2].predownload.version, '3.8.0')
+  assert.equal(last.files.has(pendingGamePath), false)
+})
+
+test('gray game updates still push independently without a formal waiting marker', async () => {
+  const source = fs.readFileSync(
+    new URL('getWWWinGameVersion.js', import.meta.url),
+    'utf8',
+  )
+  const url = source.match(/OS_NEW:\s*'([^']+)'/)[1]
+  const result = await runScript('getWWWinGameVersion.js', ['os', 'new'], {
+    [url]: { data: game },
+  })
+  assert.equal(result.exitCode, 0)
+  assert.equal(result.pushes.length, 1)
+  assert.equal(result.pushes[0][1], 'OS_NEW')
+  assert.equal(result.pushes[0][4], true)
+  assert.equal(result.files.has(pendingGamePath), false)
+})
 
 const exeApi =
   'https://download.kurogames.com/mc_WnGtDn85y8lJB4mTmYHYuNjIl9n6YGVm/official/cn/zh-Hans/pc_app.json'
@@ -158,7 +398,7 @@ test('OS official launcher uses the migrated app index and matching official EXE
   assert.ok(result.files.has('./Scripts/data/WW/latest_Win_Launcher_OS.json'))
 })
 
-test('OS migrated game detects release and predownload independently of CN', async () => {
+test('OS migrated game detects release and predownload before waiting for CN', async () => {
   const data = structuredClone(game)
   for (const value of Object.values(data.resourcePacks)) value.version = '3.7.2'
   data.predownload = {
@@ -183,8 +423,10 @@ test('OS migrated game detects release and predownload independently of CN', asy
     [cache]: JSON.stringify({ default: { version: '3.7.1' } }),
   })
   assert.equal(result.exitCode, 0)
-  assert.equal(result.pushes.length, 1)
-  const [, server, pushed, , gray] = result.pushes[0]
+  assert.equal(result.pushes.length, 0)
+  const flushed = await flushPendingGame(result, 'OS')
+  assert.equal(flushed.pushes.length, 1)
+  const [, server, pushed, , gray] = flushed.pushes[0]
   assert.equal(server, 'OS')
   assert.equal(gray, false)
   assert.equal(pushed.default.version, '3.7.2')
@@ -201,7 +443,7 @@ test('OS migrated game detects release and predownload independently of CN', asy
     'getWWWinGameVersion.js',
     ['os'],
     remote,
-    Object.fromEntries(result.files),
+    Object.fromEntries(flushed.files),
   )
   assert.equal(unchanged.exitCode, 0)
   assert.equal(unchanged.pushes.length, 0)
@@ -219,10 +461,12 @@ test('CN official game counts every resource level and fetches common only once'
     },
   })
   assert.equal(result.exitCode, 0)
-  assert.equal(result.pushes.length, 1)
-  assert.equal(result.pushes[0][1], 'CN')
-  assert.equal(result.pushes[0][4], false)
-  const data = result.pushes[0][2]
+  assert.equal(result.pushes.length, 0)
+  const flushed = await flushPendingGame(result, 'CN')
+  assert.equal(flushed.pushes.length, 1)
+  assert.equal(flushed.pushes[0][1], 'CN')
+  assert.equal(flushed.pushes[0][4], false)
+  const data = flushed.pushes[0][2]
   assert.equal(data.default.version, '3.7.0')
   assert.equal(data.default.resourceLevel, 'HD')
   assert.deepEqual(data.default.resourceLevelSizes, { UHD: 40, HD: 30, SD: 15 })
@@ -284,7 +528,8 @@ test('same-version resource migration pushes once and retries failed manifests',
   const migrated = await runScript('getWWWinGameVersion.js', ['cn'], remote, {
     [cache]: old,
   })
-  assert.equal(migrated.pushes.length, 1)
+  assert.equal(migrated.pushes.length, 0)
+  assert.equal((await flushPendingGame(migrated, 'CN')).pushes.length, 1)
   const unchanged = await runScript(
     'getWWWinGameVersion.js',
     ['cn'],
@@ -319,7 +564,7 @@ test('official game message shows all Chinese resource levels without equal vers
     },
     initialFiles,
   )
-  const message = await renderGameMessage(result)
+  const message = await renderGameMessage(await flushPendingGame(result, 'CN'))
   assert.match(message, /^鸣潮 Win CN REL 更新/)
   assert.match(message, /\n文件数: `2`\n/)
   assert.match(message, /极致: `40B`/)
@@ -389,7 +634,8 @@ test('existing HD cache refreshes once to add all resource level sizes', async (
       default: { version: '3.7.0', resourceLevel: 'HD' },
     }),
   })
-  assert.equal(result.pushes.length, 1)
+  assert.equal(result.pushes.length, 0)
+  assert.equal((await flushPendingGame(result, 'CN')).pushes.length, 1)
   const unchanged = await runScript(
     'getWWWinGameVersion.js',
     ['cn'],
@@ -435,7 +681,7 @@ test('PRE message uses the upcoming sizes for every resource level', async () =>
       './Scripts/data/WW/latest_Win_Game_OS.json': '{}',
     },
   )
-  const message = await renderGameMessage(result)
+  const message = await renderGameMessage(await flushPendingGame(result, 'CN'))
   assert.match(message, /^鸣潮 Win CN PRE 更新/)
   assert.match(message, /`3\.8\.0`/)
   assert.match(message, /极致: `80B`/)
@@ -463,7 +709,7 @@ test('each field expands only when it differs between resource levels', async ()
       './Scripts/data/WW/latest_Win_Game_OS.json': '{}',
     },
   )
-  const message = await renderGameMessage(result)
+  const message = await renderGameMessage(await flushPendingGame(result, 'CN'))
   assert.match(
     message,
     /版本:\n极致: `3\.7\.0 \+ 3\.8\.0`\n高清: `3\.7\.0`\n流畅: `3\.7\.0`/,
@@ -497,7 +743,7 @@ test('equal current counts still show differing changes from previous counts', a
       },
     }),
   )
-  const message = await renderGameMessage(result)
+  const message = await renderGameMessage(await flushPendingGame(result, 'CN'))
   assert.match(
     message,
     /文件数:\n极致: `1` \\=\\> `2`\n高清: `2`\n流畅: `3` \\=\\> `2`/,

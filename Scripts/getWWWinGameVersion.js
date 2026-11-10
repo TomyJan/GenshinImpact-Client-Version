@@ -154,6 +154,83 @@ async function getGameResources(info) {
   }
 }
 
+// 正式通道先等待另一服的下一次检查；同类型更新合并，另一服无更新则单独推送。
+async function pushOrWait(jsonData, changed, type) {
+  const forType = (data, updateType) =>
+    updateType === 'REL' ? { ...data, predownload: null } : data
+  if (isNewApi) {
+    if (changed)
+      await push.pushWinGame(
+        ApiInfo[game].name,
+        server,
+        forType(jsonData, type),
+        true,
+        true,
+      )
+    return
+  }
+
+  const pendingPath = `${scriptDataPath}tmp-not_pushed_win_${game}_server.txt`
+  let pending = null
+  if (fs.existsSync(pendingPath)) {
+    const content = fs.readFileSync(pendingPath, 'utf-8').trim()
+    // 兼容旧版只记录服务器名的等待标记。
+    pending = content.startsWith('{')
+      ? JSON.parse(content)
+      : { server: content }
+    if (!['CN', 'OS'].includes(pending.server))
+      throw new Error(`无效的等待服务器: ${pending.server}`)
+  }
+  const savePending = () =>
+    fs.writeFileSync(
+      pendingPath,
+      JSON.stringify({ server, type }) + '\n',
+      'utf-8',
+    )
+
+  if (pending && pending.server !== server) {
+    const otherData = JSON.parse(
+      fs.readFileSync(
+        `${scriptDataPath}latest_Win_Game_${pending.server}.json`,
+        'utf-8',
+      ),
+    )
+    const otherType =
+      pending.type || (otherData.predownload?.version ? 'PRE' : 'REL')
+    const canMerge =
+      changed &&
+      type === otherType &&
+      (type !== 'PRE' ||
+        jsonData.predownload.version === otherData.predownload?.version)
+    // 推送函数成功后会退出进程，须先保存下一条等待项或清除已处理的标记。
+    if (changed && !canMerge) savePending()
+    else fs.unlinkSync(pendingPath)
+    if (canMerge) {
+      await push.pushWinGame(
+        ApiInfo[game].name,
+        server,
+        forType(jsonData, type),
+        true,
+        false,
+        { server: pending.server, data: forType(otherData, otherType) },
+      )
+    } else {
+      await push.pushWinGame(
+        ApiInfo[game].name,
+        pending.server,
+        forType(otherData, otherType),
+        true,
+        false,
+      )
+    }
+  } else if (changed) {
+    savePending()
+    console.log(
+      `游戏 ${game} 的 ${server} ${type} 更新已缓存，等待另一服检查后推送...`,
+    )
+  }
+}
+
 async function getWinGameVersion() {
   // try {
   // 发送GET请求获取JSON数据
@@ -230,16 +307,20 @@ async function getWinGameVersion() {
     '.json'
   //console.log('文件名:', fileName);
 
-  // 比较版本并更新本地数据
-  if (
-    localData.default?.version !== latestVersion ||
+  // 按实际变化判断通知类型，预下载存在但未变化时仍可推送正式版更新。
+  const preChanged =
     localData.predownload?.version !== preDownloadVersion ||
-    localData.default?.resourceLevel !== jsonData.default.resourceLevel ||
-    JSON.stringify(localData.default?.resourceLevels) !==
-      JSON.stringify(jsonData.default.resourceLevels) ||
     JSON.stringify(localData.predownload?.resourceLevels) !==
       JSON.stringify(jsonData.predownload?.resourceLevels)
-  ) {
+  const updateType = preDownloadVersion && preChanged ? 'PRE' : 'REL'
+  // 比较版本并更新本地数据
+  const changed =
+    localData.default?.version !== latestVersion ||
+    preChanged ||
+    localData.default?.resourceLevel !== jsonData.default.resourceLevel ||
+    JSON.stringify(localData.default?.resourceLevels) !==
+      JSON.stringify(jsonData.default.resourceLevels)
+  if (changed) {
     console.log('数据有变化，正在更新...')
     // 所有清单取齐后才更新版本缓存，失败时下次仍能重试。
     let resJsonData = {}
@@ -308,150 +389,10 @@ async function getWinGameVersion() {
     console.log('资源数据已写出到:', outputResFilePath)
 
     console.log('所有数据已更新并保存成功。')
-
-    // 如果只有单个服务器更新, 先写一下临时文件, 等两个都更新了再推送
-    // 灰度或已迁移到分包接口的服务器独立推送，避免等待旧接口服务器。
-    if (isNewApi || jsonData.resourcePacks) {
-      console.log(`游戏 ${game} 的 ${server} 服务器已更新, 正在推送...`)
-      await push.pushWinGame(
-        ApiInfo[game].name,
-        server,
-        jsonData,
-        true,
-        isNewApi,
-      )
-      process.exit(0)
-    }
-    // 检查临时文件是否存在
-    const tmpFileName = `${scriptDataPath}tmp-not_pushed_win_${game}_server.txt`
-    if (fs.existsSync(tmpFileName)) {
-      // 读取文件
-      const tmpServer = await fs.readFileSync(tmpFileName, 'utf-8')
-      if (tmpServer !== server) {
-        // 获取另一个服务器的数据
-        const otherServer = tmpServer
-        const otherServerPath = `./${game}/Win/Game/${otherServer}/${getLatestJsonFileName(
-          `./${game}/Win/Game/${otherServer}/`,
-        )}`
-        const otherServerData = JSON.parse(
-          await fs.readFileSync(otherServerPath, 'utf-8'),
-        )
-
-        // 读取两个服务器的last数据
-        const lastCNContent = await fs.readFileSync(
-          `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'CN' : 'OS'}${
-            isNewApi ? '_NEW' : ''
-          }.json`,
-          'utf-8',
-        )
-        const lastOSContent = await fs.readFileSync(
-          `${scriptDataPath}last_Win_Game_${server === 'CN' ? 'OS' : 'CN'}${
-            isNewApi ? '_NEW' : ''
-          }.json`,
-          'utf-8',
-        )
-        const lastCN = JSON.parse(lastCNContent)
-        const lastOS = JSON.parse(lastOSContent)
-
-        // 检查两个服务器是否都有更新
-        const serverUpdated =
-          server === 'CN'
-            ? lastCN.default.version !== jsonData.default.version ||
-              (jsonData.predownload?.version &&
-                lastCN.predownload?.version !== jsonData.predownload?.version)
-            : lastOS.default.version !== jsonData.default.version ||
-              (jsonData.predownload?.version &&
-                lastOS.predownload?.version !== jsonData.predownload?.version)
-        const otherServerUpdated =
-          server === 'CN'
-            ? lastOS.default.version !== otherServerData.default.version ||
-              (otherServerData.predownload?.version &&
-                lastOS.predownload?.version !==
-                  otherServerData.predownload?.version)
-            : lastCN.default.version !== otherServerData.default.version ||
-              (otherServerData.predownload?.version &&
-                lastCN.predownload?.version !==
-                  otherServerData.predownload?.version)
-
-        console.log(
-          '当前服务器版本:',
-          server === 'CN' ? lastCN.default.version : lastOS.default.version,
-          '->',
-          server === 'CN'
-            ? jsonData.default.version
-            : otherServerData.default.version,
-        )
-        console.log(
-          '另一服务器版本:',
-          server === 'CN' ? lastOS.default.version : lastCN.default.version,
-          '->',
-          server === 'CN'
-            ? otherServerData.default.version
-            : jsonData.default.version,
-        )
-
-        // 删除缓存的文件
-        await fs.unlinkSync(tmpFileName)
-
-        if (serverUpdated && otherServerUpdated) {
-          // 两个服务器都更新了，一起推送
-          console.log(
-            `从临时文件获取当前已缓存${game} 版本信息: 两个服务器都已更新, 正在推送...`,
-          )
-          await push.pushWinGame(
-            ApiInfo[game].name,
-            server,
-            jsonData,
-            true,
-            isNewApi,
-            {
-              server: otherServer,
-              data: otherServerData,
-            },
-          )
-        } else if (serverUpdated) {
-          // 只有当前服务器更新了
-          console.log(
-            `从临时文件获取当前已缓存${game} 版本信息: 只有 ${server} 服务器更新, 正在推送...`,
-          )
-          await push.pushWinGame(
-            ApiInfo[game].name,
-            server,
-            jsonData,
-            true,
-            isNewApi,
-          )
-        } else if (otherServerUpdated) {
-          // 只有另一个服务器更新了
-          console.log(
-            `从临时文件获取当前已缓存${game} 版本信息: 只有 ${otherServer} 服务器更新, 正在推送...`,
-          )
-          await push.pushWinGame(
-            ApiInfo[game].name,
-            otherServer,
-            otherServerData,
-            true,
-            isNewApi,
-          )
-        } else {
-          console.log('两个服务器都没有更新，无需推送')
-        }
-        process.exit(0)
-      } else {
-        // 这咋回事给我搞懵了, 别推, 等下次再检查吧
-        console.error(
-          '意料之外的错误: 临时文件中的服务器信息与当前服务器信息相同',
-        )
-        process.exit(5)
-      }
-    } // 没缓存文件, 说明只检查到了一个服务器的更新, 先不推送, 缓存
-    else await fs.writeFileSync(tmpFileName, server, 'utf-8')
-    console.log(
-      `游戏 ${game} 只检查到了 ${server} 服务器的更新, 已缓存, 等待另一个服务器更新后再推送...`,
-    )
   } else {
     console.log('数据无变化，无需更新。')
   }
+  await pushOrWait(jsonData, changed, updateType)
   // } catch (error) {
   //   console.error('发生错误:', error.message)
   //   process.exit(6)

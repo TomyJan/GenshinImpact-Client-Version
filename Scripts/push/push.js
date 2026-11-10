@@ -145,146 +145,171 @@ class Push {
           }
 
           if (
-            jsonDataCN?.default?.version === jsonDataOS?.default?.version &&
-            jsonDataCNLast?.default?.version ===
-              jsonDataOSLast?.default?.version
+            jsonDataCN.default.resourceLevels &&
+            jsonDataOS.default.resourceLevels &&
+            jsonDataCNRes.resourceLevels &&
+            jsonDataOSRes.resourceLevels
           ) {
-            pushUrl += encodeURIComponent(
-              `版本: ${
-                jsonDataCNLast.default.version
-                  ? `\`${jsonDataCNLast.default.version}\` \\=\\> `
-                  : ''
-              }\`${jsonDataCN.default.version}\`\n`,
+            const cn = getWWResourceFields(
+              jsonDataCN.default,
+              jsonDataCNRes,
+              jsonDataCNLast.default,
+              jsonDataCNResLast,
             )
+            const os = getWWResourceFields(
+              jsonDataOS.default,
+              jsonDataOSRes,
+              jsonDataOSLast.default,
+              jsonDataOSResLast,
+            )
+            for (let i = 0; i < cn.length; i++) {
+              pushUrl += encodeURIComponent(
+                cn[i] === os[i] ? cn[i] : `CN ${cn[i]}OS ${os[i]}`,
+              )
+            }
           } else {
-            pushUrl += encodeURIComponent(
-              `CN 版本: ${
-                jsonDataCNLast.default.version
-                  ? `\`${jsonDataCNLast.default.version}\` \\=\\> `
-                  : ''
-              }\`${jsonDataCN.default.version}\`\nOS 版本: ${
-                jsonDataOSLast.default.version
-                  ? `\`${jsonDataOSLast.default.version}\` \\=\\> `
-                  : ''
-              }\`${jsonDataOS.default.version}\`\n`,
-            )
-          }
+            if (
+              jsonDataCN?.default?.version === jsonDataOS?.default?.version &&
+              jsonDataCNLast?.default?.version ===
+                jsonDataOSLast?.default?.version
+            ) {
+              pushUrl += encodeURIComponent(
+                `版本: ${
+                  jsonDataCNLast.default.version
+                    ? `\`${jsonDataCNLast.default.version}\` \\=\\> `
+                    : ''
+                }\`${jsonDataCN.default.version}\`\n`,
+              )
+            } else {
+              pushUrl += encodeURIComponent(
+                `CN 版本: ${
+                  jsonDataCNLast.default.version
+                    ? `\`${jsonDataCNLast.default.version}\` \\=\\> `
+                    : ''
+                }\`${jsonDataCN.default.version}\`\nOS 版本: ${
+                  jsonDataOSLast.default.version
+                    ? `\`${jsonDataOSLast.default.version}\` \\=\\> `
+                    : ''
+                }\`${jsonDataOS.default.version}\`\n`,
+              )
+            }
 
-          if (
-            jsonDataCNRes.resource.length === jsonDataOSRes.resource.length &&
-            jsonDataCNResLast.resource.length ===
-              jsonDataOSResLast.resource.length
-          ) {
-            pushUrl += encodeURIComponent(
-              `文件数: ${
-                Array.isArray(jsonDataCNResLast?.resource)
-                  ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> `
-                  : ''
-              }\`${jsonDataCNRes.resource.length}\`\n`,
-            )
-          } else {
-            pushUrl += encodeURIComponent(
-              `CN 文件数: ${
-                Array.isArray(jsonDataCNResLast?.resource)
-                  ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> `
-                  : ''
-              }\`${jsonDataCNRes.resource.length}\`\nOS 文件数: ${
-                Array.isArray(jsonDataOSResLast?.resource)
-                  ? `\`${jsonDataOSResLast.resource.length}\` \\=\\> `
-                  : ''
-              }\`${jsonDataOSRes.resource.length}\`\n`,
-            )
-          }
+            if (
+              jsonDataCNRes.resource.length === jsonDataOSRes.resource.length &&
+              jsonDataCNResLast.resource.length ===
+                jsonDataOSResLast.resource.length
+            ) {
+              pushUrl += encodeURIComponent(
+                `文件数: ${
+                  Array.isArray(jsonDataCNResLast?.resource)
+                    ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> `
+                    : ''
+                }\`${jsonDataCNRes.resource.length}\`\n`,
+              )
+            } else {
+              pushUrl += encodeURIComponent(
+                `CN 文件数: ${
+                  Array.isArray(jsonDataCNResLast?.resource)
+                    ? `\`${jsonDataCNResLast.resource.length}\` \\=\\> `
+                    : ''
+                }\`${jsonDataCNRes.resource.length}\`\nOS 文件数: ${
+                  Array.isArray(jsonDataOSResLast?.resource)
+                    ? `\`${jsonDataOSResLast.resource.length}\` \\=\\> `
+                    : ''
+                }\`${jsonDataOSRes.resource.length}\`\n`,
+              )
+            }
 
-          // 计算大小
-          let lastSizeCN = 0
-          let lastSizeOS = 0
-          let sizeCN = 0
-          let sizeOS = 0
-          let updateSizeCN = 0
-          let updateSizeOS = 0
-          if (Array.isArray(jsonDataCNResLast?.resource)) {
-            for (let i = 0; i < jsonDataCNResLast.resource.length; i++) {
-              lastSizeCN += jsonDataCNResLast.resource[i].size
+            // 计算大小
+            let lastSizeCN = 0
+            let lastSizeOS = 0
+            let sizeCN = 0
+            let sizeOS = 0
+            let updateSizeCN = 0
+            let updateSizeOS = 0
+            if (Array.isArray(jsonDataCNResLast?.resource)) {
+              for (let i = 0; i < jsonDataCNResLast.resource.length; i++) {
+                lastSizeCN += jsonDataCNResLast.resource[i].size
+              }
             }
-          }
-          if (Array.isArray(jsonDataOSResLast?.resource)) {
-            for (let i = 0; i < jsonDataOSResLast.resource.length; i++) {
-              lastSizeOS += jsonDataOSResLast.resource[i].size
+            if (Array.isArray(jsonDataOSResLast?.resource)) {
+              for (let i = 0; i < jsonDataOSResLast.resource.length; i++) {
+                lastSizeOS += jsonDataOSResLast.resource[i].size
+              }
             }
-          }
-          for (let i = 0; i < jsonDataCNRes.resource.length; i++) {
-            sizeCN += jsonDataCNRes.resource[i].size
-          }
-          for (let i = 0; i < jsonDataOSRes.resource.length; i++) {
-            sizeOS += jsonDataOSRes.resource[i].size
-          }
-          // 使用 jsonDataCN.default.config.patchConfig 数组中 version==jsonDataCNLast.default.version 的 size 作为更新大小
-          if (Array.isArray(jsonDataCN.default.config.patchConfig)) {
-            let patchConfigCN = jsonDataCN.default.config.patchConfig.find(
-              (item) => item.version === jsonDataCNLast.default.version,
-            )
-            if (patchConfigCN) {
-              updateSizeCN = patchConfigCN.size
+            for (let i = 0; i < jsonDataCNRes.resource.length; i++) {
+              sizeCN += jsonDataCNRes.resource[i].size
             }
-          }
-          if (Array.isArray(jsonDataOS.default.config.patchConfig)) {
-            let patchConfigOS = jsonDataOS.default.config.patchConfig.find(
-              (item) => item.version === jsonDataOSLast.default.version,
-            )
-            if (patchConfigOS) {
-              updateSizeOS = patchConfigOS.size
+            for (let i = 0; i < jsonDataOSRes.resource.length; i++) {
+              sizeOS += jsonDataOSRes.resource[i].size
             }
-          }
-          if (
-            lastSizeCN === lastSizeOS &&
-            sizeCN === sizeOS &&
-            updateSizeCN === updateSizeOS
-          ) {
-            pushUrl += encodeURIComponent(
-              `大小: ${
-                lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
-              }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(
-                updateSizeCN,
-              )}\`\\)\n`,
-            )
-          } else {
-            pushUrl += encodeURIComponent(
-              `CN 大小: ${
-                lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
-              }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(
-                updateSizeCN,
-              )}\`\\)\nOS 大小: ${
-                lastSizeOS ? `\`${formatBytes(lastSizeOS)}\` \\=\\> ` : ''
-              }\`${formatBytes(sizeOS)}\` \\(UP:\`${formatBytes(
-                updateSizeOS,
-              )}\`\\)\n`,
-            )
-          }
+            // 使用 jsonDataCN.default.config.patchConfig 数组中 version==jsonDataCNLast.default.version 的 size 作为更新大小
+            if (Array.isArray(jsonDataCN.default.config.patchConfig)) {
+              let patchConfigCN = jsonDataCN.default.config.patchConfig.find(
+                (item) => item.version === jsonDataCNLast.default.version,
+              )
+              if (patchConfigCN) {
+                updateSizeCN = patchConfigCN.size
+              }
+            }
+            if (Array.isArray(jsonDataOS.default.config.patchConfig)) {
+              let patchConfigOS = jsonDataOS.default.config.patchConfig.find(
+                (item) => item.version === jsonDataOSLast.default.version,
+              )
+              if (patchConfigOS) {
+                updateSizeOS = patchConfigOS.size
+              }
+            }
+            if (
+              lastSizeCN === lastSizeOS &&
+              sizeCN === sizeOS &&
+              updateSizeCN === updateSizeOS
+            ) {
+              pushUrl += encodeURIComponent(
+                `大小: ${
+                  lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
+                }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(
+                  updateSizeCN,
+                )}\`\\)\n`,
+              )
+            } else {
+              pushUrl += encodeURIComponent(
+                `CN 大小: ${
+                  lastSizeCN ? `\`${formatBytes(lastSizeCN)}\` \\=\\> ` : ''
+                }\`${formatBytes(sizeCN)}\` \\(UP:\`${formatBytes(
+                  updateSizeCN,
+                )}\`\\)\nOS 大小: ${
+                  lastSizeOS ? `\`${formatBytes(lastSizeOS)}\` \\=\\> ` : ''
+                }\`${formatBytes(sizeOS)}\` \\(UP:\`${formatBytes(
+                  updateSizeOS,
+                )}\`\\)\n`,
+              )
+            }
 
-          if (
-            jsonDataCN?.default?.changelog?.['zh-Hans'] ===
-            jsonDataOS?.default?.changelog?.['zh-Hans']
-          ) {
-            pushUrl += encodeURIComponent(
-              `更新日志: \n\`\`\`${
-                jsonDataCN.default.changelog['zh-Hans']
-                  ? jsonDataCN.default.changelog['zh-Hans']
-                  : '暂无'
-              }\`\`\`\n`,
-            )
-          } else {
-            pushUrl += encodeURIComponent(
-              `CN 更新日志: \n\`\`\`${
-                jsonDataCN.default.changelog['zh-Hans']
-                  ? jsonDataCN.default.changelog['zh-Hans']
-                  : '暂无'
-              }\`\`\`\nOS 更新日志: \n\`\`\`${
-                jsonDataOS.default.changelog
-                  ? jsonDataOS.default.changelog['zh-Hans']
-                  : '暂无'
-              }\`\`\`\n`,
-            )
+            if (
+              jsonDataCN?.default?.changelog?.['zh-Hans'] ===
+              jsonDataOS?.default?.changelog?.['zh-Hans']
+            ) {
+              pushUrl += encodeURIComponent(
+                `更新日志: \n\`\`\`${
+                  jsonDataCN.default.changelog['zh-Hans']
+                    ? jsonDataCN.default.changelog['zh-Hans']
+                    : '暂无'
+                }\`\`\`\n`,
+              )
+            } else {
+              pushUrl += encodeURIComponent(
+                `CN 更新日志: \n\`\`\`${
+                  jsonDataCN.default.changelog['zh-Hans']
+                    ? jsonDataCN.default.changelog['zh-Hans']
+                    : '暂无'
+                }\`\`\`\nOS 更新日志: \n\`\`\`${
+                  jsonDataOS.default.changelog
+                    ? jsonDataOS.default.changelog['zh-Hans']
+                    : '暂无'
+                }\`\`\`\n`,
+              )
+            }
           }
         } catch (error) {
           console.error('读取本地数据失败3:', error.message)
@@ -300,11 +325,9 @@ class Push {
         let jsonDataResLast = {}
         //console.log('filePath:', `./Win/Game/${server}/${getLatestJsonFileName(`./Win/Game/${server}/`)}`)
         try {
-          // 获取 /win/Game/CN 和 OS 目录下最新的 .json 作为传入的文件名
+          // 使用服务器最新缓存，避免等待期间按文件时间误选历史记录。
           const jsonDataContent = fs.readFileSync(
-            `./${gameId}/Win/Game/${server}/${getLatestJsonFileName(
-              `./${gameId}/Win/Game/${server}/`,
-            )}`,
+            `./Scripts/data/${gameId}/latest_Win_Game_${server}.json`,
             'utf-8',
           )
           const jsonDataContentRes = fs.readFileSync(
@@ -942,7 +965,11 @@ class Push {
 }
 
 // 每个字段分别比较三档画质；仅当值或变化过程不同才展开等级。
-function formatWWResourceFields(
+function formatWWResourceFields(...args) {
+  return getWWResourceFields(...args).join('')
+}
+
+function getWWResourceFields(
   info,
   resources,
   lastInfo = {},
@@ -968,19 +995,19 @@ function formatWWResourceFields(
     return `${title}:\n${rows.map((row) => `${resourceLevelNames[row.level]}: ${row.text}\n`).join('')}`
   }
   const code = (value) => `\`${value}\``
-  return (
+  return [
     field(
       '版本',
       (level) => info.resourceLevels[level].version,
       (level) => lastInfo.resourceLevels?.[level]?.version ?? lastInfo.version,
       code,
-    ) +
+    ),
     field(
       '文件数',
       (level) => resources.resourceLevels[level].fileCount,
       (level) => lastResources.resourceLevels?.[level]?.fileCount,
       code,
-    ) +
+    ),
     field(
       '资源大小',
       (level) => info.resourceLevels[level].size,
@@ -988,14 +1015,14 @@ function formatWWResourceFields(
         lastInfo.resourceLevels?.[level]?.size ??
         lastInfo.resourceLevelSizes?.[level],
       (value) => code(formatBytes(value)),
-    ) +
+    ),
     field(
       '更新日志',
       (level) => info.resourceLevels[level].changelog?.['zh-Hans'] || '暂无',
       null,
       (value) => `\n\`\`\`${value}\`\`\``,
-    )
-  )
+    ),
+  ]
 }
 
 function escapeCharacters(inputString) {

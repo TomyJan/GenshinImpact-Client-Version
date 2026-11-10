@@ -113,9 +113,8 @@ class ProgressManager {
     let width = 0
     for (const char of str) {
       const code = char.codePointAt(0)
-      // emoji 及界面中带变体选择器的图标占两列，选择器本身不占列。
-      if (/\p{Emoji_Presentation}/u.test(char) || '⏭⏱⏸⬇'.includes(char))
-        width += 2
+      // emoji 范围（简化判断）
+      if (code >= 0x1f300 && code <= 0x1f9ff) width += 2
       // 中文等宽字符
       else if (code >= 0x4e00 && code <= 0x9fff) width += 2
       // 全角字符

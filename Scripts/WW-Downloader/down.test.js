@@ -258,9 +258,6 @@ test('overall progress and ETA use bytes and current network speed, excluding ve
 test('progress header and worker rows align with borders and reserve every rendered line', () => {
   const { ProgressManager, setTime, output } = loadDownloaderRuntime()
   const progress = new ProgressManager(924, 2, 110 * 1024 ** 3)
-  for (const icon of ['📊', '✅', '❌', '⏱️', '⏸️', '⬇️', '⏳', '⏭️']) {
-    assert.equal(progress.getDisplayWidth(icon), 2, icon)
-  }
   progress.updateDownloaded(0, 50 * 1024 ** 3, true)
   progress.completed = 800
   progress.succeeded = 800
@@ -292,6 +289,40 @@ test('progress header and worker rows align with borders and reserve every rende
   }
   assert.equal(rendered.split('\n').length - 1, progress.headerLines + 2)
   assert.equal(output[0], `\x1b[${progress.headerLines + 2}A`)
+})
+
+test('worker status icons preserve their original spacing before filenames', () => {
+  const { ProgressManager, output } = loadDownloaderRuntime()
+  const progress = new ProgressManager(1, 1, 10)
+  const name = 'status-test.pak'
+  for (const [phase, expected] of [
+    ['download', '⬇️  '],
+    ['verify', '🔍 '],
+    ['done', '✅  '],
+    ['error', '❌  '],
+    ['skip', '⏭️  '],
+    ['waiting', '⏳  '],
+  ]) {
+    progress.updateSlot(0, {
+      index: 0,
+      name,
+      phase,
+      percent: 50,
+      speed: 5,
+      current: 5,
+      total: 10,
+      elapsed: 1,
+      eta: 1,
+    })
+    output.length = 0
+    progress.forceRender()
+    const row = output
+      .at(-1)
+      .split('\n')
+      .find((line) => line.includes(name))
+    const start = row.indexOf(expected.trimEnd())
+    assert.equal(row.slice(start, row.indexOf(name)), expected, phase)
+  }
 })
 
 test('retries reset byte progress and completed or skipped files are counted once', () => {

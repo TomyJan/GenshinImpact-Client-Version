@@ -51,8 +51,12 @@ const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: concurrency })
 
 // ==================== 进度管理器 ====================
 class ProgressManager {
-  constructor(total, concurrency) {
+  constructor(total, concurrency, totalBytes) {
     this.total = total
+    this.totalBytes = totalBytes
+    this.downloadedBytes = 0
+    this.fileBytes = new Map()
+    this.transferredBytes = 0
     this.concurrency = concurrency
     this.completed = 0
     this.succeeded = 0
@@ -60,6 +64,7 @@ class ProgressManager {
     this.failedFiles = [] // 收集失败文件
     this.slots = new Array(concurrency).fill(null) // 每个并发线程的状态
     this.startTime = Date.now()
+    this.speedSamples = [{ time: this.startTime, bytes: 0 }]
     this.lastRender = 0
     this.renderInterval = 100 // 渲染间隔 ms
     this.isTTY = process.stdout.isTTY
@@ -108,8 +113,9 @@ class ProgressManager {
     let width = 0
     for (const char of str) {
       const code = char.codePointAt(0)
-      // emoji 范围（简化判断）
-      if (code >= 0x1f300 && code <= 0x1f9ff) width += 2
+      // emoji 及界面中带变体选择器的图标占两列，选择器本身不占列。
+      if (/\p{Emoji_Presentation}/u.test(char) || '⏭⏱⏸⬇'.includes(char))
+        width += 2
       // 中文等宽字符
       else if (code >= 0x4e00 && code <= 0x9fff) width += 2
       // 全角字符
@@ -161,8 +167,49 @@ class ProgressManager {
 
   // 更新槽位状态
   updateSlot(slotIndex, state) {
+    if (state.phase === 'done' || state.phase === 'skip') {
+      this.updateDownloaded(state.index, state.total)
+    } else if (state.phase === 'error') {
+      this.updateDownloaded(state.index, 0)
+    }
     this.slots[slotIndex] = state
     this.throttledRender()
+  }
+
+  // 按文件记录有效下载量；重试会回退该文件进度，校验和跳过不计入网速。
+  updateDownloaded(index, current, fromNetwork = false) {
+    const previous = this.fileBytes.get(index) || 0
+    this.fileBytes.set(index, current)
+    this.downloadedBytes += current - previous
+    if (fromNetwork) this.transferredBytes += Math.max(0, current - previous)
+  }
+
+  getOverallProgress() {
+    const now = Date.now()
+    this.speedSamples.push({ time: now, bytes: this.transferredBytes })
+    // 保留最近一秒的采样及窗口前一个采样，汇总所有线程的实际传输速度。
+    while (
+      this.speedSamples.length > 2 &&
+      this.speedSamples[1].time <= now - 1000
+    ) {
+      this.speedSamples.shift()
+    }
+    const first = this.speedSamples[0]
+    const speed =
+      now > first.time
+        ? ((this.transferredBytes - first.bytes) * 1000) / (now - first.time)
+        : 0
+    const remaining = Math.max(0, this.totalBytes - this.downloadedBytes)
+    return {
+      percent:
+        this.totalBytes > 0
+          ? Math.min(100, (this.downloadedBytes / this.totalBytes) * 100)
+          : this.completed === this.total
+            ? 100
+            : 0,
+      speed,
+      eta: remaining === 0 ? 0 : speed > 0 ? remaining / speed : Infinity,
+    }
   }
 
   // 清除槽位
@@ -202,11 +249,7 @@ class ProgressManager {
     if (!this.isTTY) return // 非 TTY 环境不刷新
 
     const elapsed = (Date.now() - this.startTime) / 1000
-    const overallPercent =
-      this.total > 0 ? (this.completed / this.total) * 100 : 0
-    const avgTimePerFile = this.completed > 0 ? elapsed / this.completed : 0
-    const remaining = this.total - this.completed
-    const eta = avgTimePerFile * remaining
+    const { percent: overallPercent, speed, eta } = this.getOverallProgress()
 
     const pad = '    ' // 左边距
     const width = 150 // 固定内容宽度
@@ -223,14 +266,9 @@ class ProgressManager {
     const totalStr = String(this.total)
     const progressBar = this.makeProgressBar(overallPercent, 30)
     const percentStr = overallPercent.toFixed(1).padStart(5)
-    const headerContent = ` 📊 总进度   ${progressBar} ${percentStr}% (${completedStr}/${totalStr})          ✅ ${String(
-      this.succeeded,
-    ).padStart(4)}  ❌ ${String(this.failed).padStart(
-      3,
-    )}                         ⏱️  用时: ${this.formatTime(elapsed).padStart(
-      5,
-    )}  预计剩余: ${this.formatTime(eta).padStart(5)} `
-    lines.push(pad + '║' + this.padEndDisplay(headerContent, width - 2) + '║')
+    const sizeStr = `${this.formatSize(this.downloadedBytes)}/${this.formatSize(this.totalBytes)}`
+    const headerContent = ` 📊 总进度 ${progressBar} ${percentStr}% ${sizeStr} (${completedStr}/${totalStr}) ✅ ${this.succeeded} ❌ ${this.failed} ${this.formatSpeed(speed)} ⏱️ 用时: ${this.formatTime(elapsed)} 预计剩余: ${this.formatTime(eta)} `
+    lines.push(pad + '║' + this.padEndDisplay(headerContent, width) + '║')
     lines.push(pad + '╠' + '═'.repeat(width) + '╣')
 
     // 固定宽度定义
@@ -457,6 +495,10 @@ async function handleFile(fileObj, index, total, slotIndex) {
     const startTime = Date.now()
     let lastUpdate = 0
     return (current) => {
+      // 每个数据块都计入总进度，避免渲染节流遗漏文件尾部的数据。
+      if (phase === 'download') {
+        progressManager.updateDownloaded(index, current, true)
+      }
       const now = Date.now()
       if (now - lastUpdate < 100) return // 节流
       lastUpdate = now
@@ -588,6 +630,8 @@ async function handleFile(fileObj, index, total, slotIndex) {
 
 // ==================== 并发执行器 ====================
 function runWithConcurrency(data, limit) {
+  // 大文件先占用线程，小文件填补后续空位，减少末尾只剩大文件的等待。
+  data = [...data].sort((a, b) => b.size - a.size)
   return new Promise((resolve) => {
     let nextIndex = 0
     const total = data.length
@@ -680,7 +724,8 @@ async function main() {
   console.log('')
 
   // 初始化进度管理器
-  progressManager = new ProgressManager(total, concurrency)
+  const totalBytes = data.reduce((sum, file) => sum + file.size, 0)
+  progressManager = new ProgressManager(total, concurrency, totalBytes)
   progressManager.init()
 
   // 执行下载

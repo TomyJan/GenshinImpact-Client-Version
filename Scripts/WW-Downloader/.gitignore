@@ -1,1 +1,6 @@
-ww/
+# 仅跟踪明确列出的源码文件，其余下载包体、分片和本地产物全部忽略。
+/*
+!/.gitignore
+!/down.js
+!/down.test.js
+!/transfer.js

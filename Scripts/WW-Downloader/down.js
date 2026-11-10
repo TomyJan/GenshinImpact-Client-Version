@@ -346,7 +346,7 @@ class ProgressManager {
         // 使用 emoji 图标（通过 padEndDisplay 处理宽度）
         let phaseIcon = '⏳'
         if (phase === 'download') phaseIcon = '⬇️'
-        else if (phase === 'assemble') phaseIcon = '🧩'
+        else if (phase === 'migrate') phaseIcon = '🧩'
         else if (phase === 'verify') phaseIcon = '🔍'
         else if (phase === 'done') phaseIcon = '✅'
         else if (phase === 'error') phaseIcon = '❌'
@@ -452,7 +452,7 @@ class ProgressManager {
     if (interrupted) {
       printStat(
         '已保留进度',
-        `${this.formatSize(this.downloadedBytes)} / ${this.formatSize(this.totalBytes)}（含已完成文件和已识别的续传分片，未全部校验）`,
+        `${this.formatSize(this.downloadedBytes)} / ${this.formatSize(this.totalBytes)}（含已完成文件和已识别的续传数据，未全部校验）`,
       )
     }
     printStat(
@@ -480,7 +480,7 @@ class ProgressManager {
         console.log(`  [${f.index + 1}] ${f.path || f.name}`)
         console.log(`      原因: ${f.reason}`)
       }
-      console.log('  重新运行会校验已有文件，并继续可用的下载分片。')
+      console.log('  重新运行会校验已有文件，并继续可用的断点数据。')
       console.log('')
     }
   }
@@ -491,11 +491,12 @@ let progressManager = null
 
 // ==================== 下载逻辑 ====================
 
-// 分片、续传和所有文件共用的线程预算由同一个调度器管理。
+// aria2 直接写入单个临时文件，调度器统一管理所有文件的连接预算。
 function downloadFile(url, dest, onProgress, fileObj) {
   return downloadScheduler.download(url, dest, {
     ...fileObj,
     onProgress,
+    onMessage: (message) => progressManager?.log(message),
     signal: downloadController.signal,
   })
 }
@@ -551,13 +552,13 @@ async function handleFile(fileObj, index, total, slotIndex) {
     let resumedBytes = 0
     return (current, fromNetwork = true) => {
       // 每个数据块都计入总进度，避免渲染节流遗漏文件尾部的数据。
-      if (phase === 'download') {
+      if (phase === 'download' || phase === 'migrate') {
         progressManager.updateDownloaded(index, current, fromNetwork)
         if (!fromNetwork) resumedBytes = current
       }
       const now = Date.now()
       const force = lastUpdate === null || current === fileSize
-      // 阶段起点和终点必须立即显示，不能被刚结束的下载或合并刷新吞掉。
+      // 阶段起点和终点必须立即显示，不能被刚结束的阶段刷新吞掉。
       if (!force && now - lastUpdate < 100) return // 节流
       lastUpdate = now
 
@@ -627,13 +628,22 @@ async function handleFile(fileObj, index, total, slotIndex) {
     const downloadUpdater = createProgressUpdater('download')
     downloadUpdater(0, false)
 
-    let assembleUpdater = null
+    let migrationUpdater = null
+    let nativeVerifyUpdater = null
+    let downloadResult
     try {
-      await downloadFile(url, fullPath, downloadUpdater, {
+      downloadResult = await downloadFile(url, fullPath, downloadUpdater, {
         ...fileObj,
-        onAssembleProgress: (current) => {
-          assembleUpdater ||= createProgressUpdater('assemble')
-          assembleUpdater(current, false)
+        onMigrationProgress: (current) => {
+          if (!migrationUpdater) {
+            progressManager.log(`正在一次性导入旧断点数据: ${relativePath}`)
+            migrationUpdater = createProgressUpdater('migrate')
+          }
+          migrationUpdater(current, false)
+        },
+        onVerifyProgress: (current) => {
+          nativeVerifyUpdater ||= createProgressUpdater('verify')
+          nativeVerifyUpdater(current, false)
         },
       })
     } catch (e) {
@@ -647,17 +657,18 @@ async function handleFile(fileObj, index, total, slotIndex) {
     // 校验下载的文件
     signal.throwIfAborted()
     const verifyUpdater = createProgressUpdater('verify')
-    verifyUpdater(0)
+    if (!downloadResult?.verified) verifyUpdater(0)
 
     try {
       const stats = fs.statSync(fullPath)
       if (stats.size !== fileSize) {
         throw new Error('文件大小不匹配')
       }
-      const md5 = await getFileMD5(fullPath, verifyUpdater)
-      signal.throwIfAborted()
-      if (md5 !== fileObj.md5) {
-        throw new Error('MD5 校验失败')
+      // 新下载交给 aria2 校验一次；已有目标文件仍由上面的扫描校验处理。
+      if (!downloadResult?.verified) {
+        const md5 = await getFileMD5(fullPath, verifyUpdater)
+        signal.throwIfAborted()
+        if (md5 !== fileObj.md5) throw new Error('MD5 校验失败')
       }
 
       progressManager.updateSlot(slotIndex, {
@@ -858,6 +869,7 @@ async function main() {
     }
   } finally {
     try {
+      await downloadScheduler.close()
       if (progressManager) progressManager.finish({ interrupted })
       else if (interrupted) {
         console.log(

@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
 import * as wwResources from '../utils/wwResources.js'
 import * as transfer from './transfer.js'
+import { readAria2Progress } from './aria2-resume.js'
 
 const indexUrl =
   'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/G152/official/index.json'
@@ -218,6 +219,7 @@ function loadDownloaderRuntime(fileSystem = fs, options = {}) {
       `\nreturn {
         ProgressManager, runWithConcurrency, handleFile, downloadFile,
         parseConcurrencyArg, main,
+        close() { return downloadScheduler.close() },
         getManager() { return progressManager },
         setResources(value) { loadResources = value },
         setManager(value) { progressManager = value },
@@ -406,13 +408,70 @@ test('downloaded-file verification is visible immediately and renders its final 
   assert.equal(progress.transferredBytes, 400)
 })
 
+test('native checksum polling keeps intermediate scan progress visible after download reaches 100 percent', async () => {
+  const runtime = loadDownloaderRuntime({
+    mkdirSync() {},
+    existsSync: () => false,
+    statSync: () => ({ size: 400 }),
+  })
+  const manager = new runtime.ProgressManager(1, 1, 400)
+  runtime.setManager(manager)
+  const frames = []
+  runtime.setMD5(() => {
+    throw new Error('duplicate MD5 scan')
+  })
+  runtime.setDownload(async (_url, _destination, onProgress, options) => {
+    const scheduler = new transfer.DownloadScheduler(4)
+    const job = {
+      size: 400,
+      downloaded: 0,
+      options: { ...options, onProgress },
+    }
+    for (const [time, verifiedLength] of [
+      [1000, '0'],
+      [1200, '200'],
+      [1201, '400'],
+    ]) {
+      runtime.setTime(time)
+      scheduler.report(job, {
+        status: 'active',
+        totalLength: '400',
+        completedLength: '400',
+        connections: '0',
+        verifiedLength,
+        verifyIntegrityPending: 'false',
+      })
+      frames.push(runtime.output.at(-1))
+    }
+    return { verified: true }
+  })
+  assert.equal(
+    await runtime.handleFile(
+      {
+        dest: 'scan.pak',
+        url: 'https://unused.invalid',
+        size: 400,
+        md5: 'verified',
+      },
+      0,
+      1,
+      0,
+    ),
+    true,
+  )
+  assert.match(frames[0], /🔍 .*0\.0%/)
+  assert.match(frames[1], /🔍 .*50\.0%/)
+  assert.match(frames[2], /🔍 .*100\.0%/)
+  assert.equal(manager.transferredBytes, 400)
+})
+
 test('worker status icons preserve their original spacing before filenames', () => {
   const { ProgressManager, output } = loadDownloaderRuntime()
   const progress = new ProgressManager(1, 1, 10)
   const name = 'status-test.pak'
   for (const [phase, expected] of [
     ['download', '⬇️  '],
-    ['assemble', '🧩 '],
+    ['migrate', '🧩 '],
     ['verify', '🔍 '],
     ['done', '✅  '],
     ['error', '❌  '],
@@ -612,44 +671,7 @@ function sendDownloadRange(req, res, content, delay = 20) {
   setTimeout(() => res.end(content.subarray(start, end + 1)), delay)
 }
 
-test('a single file uses multiple range requests and assembles the original bytes', async (t) => {
-  const content = Buffer.from(
-    Array.from({ length: 4 * 1024 ** 2 }, (_, i) => i % 251),
-  )
-  let active = 0
-  let maximumActive = 0
-  const { url, destination } = await createDownloadServer(
-    t,
-    content,
-    (req, res, body) => {
-      active++
-      maximumActive = Math.max(maximumActive, active)
-      res.on('close', () => active--)
-      sendDownloadRange(req, res, body)
-    },
-  )
-  const { downloadFile } = loadDownloaderRuntime(fs, {
-    transport: http,
-    argv: ['-c', '16'],
-  })
-  const assemblyProgress = []
-  await downloadFile(url, destination, () => {}, {
-    size: content.length,
-    md5: 'fixture-identity',
-    onAssembleProgress: (current) => assemblyProgress.push(current),
-  })
-  assert.deepEqual(fs.readFileSync(destination), content)
-  assert.equal(assemblyProgress[0], 0)
-  assert.equal(assemblyProgress.at(-1), content.length)
-  assert.ok(assemblyProgress.length > 2)
-  for (let i = 1; i < assemblyProgress.length; i++) {
-    assert.ok(assemblyProgress[i] > assemblyProgress[i - 1])
-  }
-  assert.ok(maximumActive >= 4, `only ${maximumActive} simultaneous requests`)
-  assert.ok(maximumActive <= 16, `${maximumActive} requests exceeded the limit`)
-})
-
-test('the file handler displays assembly before MD5 verification without recounting transferred bytes', async (t) => {
+test('the file handler renders native verification without assembly or a second checksum scan', async (t) => {
   const content = Buffer.alloc(1024 ** 2, 31)
   const { url, directory } = await createDownloadServer(
     t,
@@ -658,6 +680,10 @@ test('the file handler displays assembly before MD5 verification without recount
   )
   const runtime = loadDownloaderRuntime(fs, { targetDir: directory })
   const progress = new runtime.ProgressManager(1, 1, content.length)
+  t.after(() => runtime.close())
+  runtime.setMD5(() => {
+    throw new Error('duplicate verification')
+  })
   const states = []
   const updateSlot = progress.updateSlot.bind(progress)
   progress.updateSlot = (slot, state, ...args) => {
@@ -682,15 +708,8 @@ test('the file handler displays assembly before MD5 verification without recount
   const phases = states
     .map((state) => state.phase)
     .filter((phase, index, all) => phase !== all[index - 1])
-  assert.deepEqual(phases, ['download', 'assemble', 'verify', 'done'])
-  assert.deepEqual(
-    states.filter((state) => state.phase === 'assemble'),
-    [
-      { phase: 'assemble', current: 0 },
-      { phase: 'assemble', current: content.length },
-    ],
-  )
-  assert.match(runtime.output.join(''), /🧩/)
+  assert.deepEqual(phases, ['download', 'verify', 'done'])
+  assert.doesNotMatch(runtime.output.join(''), /🧩/)
   assert.match(runtime.output.join(''), /🔍/)
   assert.equal(progress.downloadedBytes, content.length)
   assert.equal(progress.transferredBytes, content.length)
@@ -730,285 +749,6 @@ test('thread allocation follows remaining sizes and redistributes spare capacity
   )
 })
 
-test(
-  'multiple files share the global limit and the large tail receives idle threads',
-  { timeout: 15000 },
-  async (t) => {
-    const large = Buffer.alloc(4 * 1024 ** 2, 19)
-    const small = Buffer.alloc(512 * 1024, 73)
-    const active = { large: 0, small: 0 }
-    const snapshots = []
-    const probes = new Map()
-    const heldLargeResponses = []
-    let largeReleased = false
-    let smallSent = 0
-    let smallFinished = false
-    const { url, directory } = await createDownloadServer(
-      t,
-      large,
-      (req, res) => {
-        const name = req.url === '/small' ? 'small' : 'large'
-        const content = name === 'small' ? small : large
-        active[name]++
-        snapshots.push({ ...active, smallFinished })
-        res.on('finish', () => {
-          active[name]--
-          if (name === 'small') {
-            const [, start, end] = /^bytes=(\d+)-(\d+)$/
-              .exec(req.headers.range)
-              .map(Number)
-            smallSent += end - start + 1
-            smallFinished = smallSent === small.length
-          }
-        })
-        const send = () => {
-          if (name === 'large' && !largeReleased) {
-            const [, start, end] = /^bytes=(\d+)-(\d+)$/
-              .exec(req.headers.range)
-              .map(Number)
-            res.writeHead(206, {
-              'Content-Length': end - start + 1,
-              'Content-Range': `bytes ${start}-${end}/${content.length}`,
-            })
-            res.flushHeaders()
-            heldLargeResponses.push(() =>
-              res.end(content.subarray(start, end + 1)),
-            )
-            // 等小文件结束、第四个大文件请求真正到达后再放行，避免依赖毫秒级时序。
-            if (smallFinished && active.large === 4) {
-              largeReleased = true
-              for (const finish of heldLargeResponses) finish()
-            }
-          } else {
-            sendDownloadRange(req, res, content)
-          }
-        }
-        if (!probes.has(name)) {
-          probes.set(name, send)
-          if (probes.size === 2) for (const send of probes.values()) send()
-        } else {
-          send()
-        }
-      },
-    )
-    const scheduler = new transfer.DownloadScheduler(4)
-    await Promise.all([
-      scheduler.download(
-        new URL('/large', url).href,
-        path.join(directory, 'large.pak'),
-        { size: large.length, md5: 'large' },
-      ),
-      scheduler.download(
-        new URL('/small', url).href,
-        path.join(directory, 'small.pak'),
-        { size: small.length, md5: 'small' },
-      ),
-    ])
-    assert.equal(smallSent, small.length)
-    assert.ok(snapshots.every((value) => value.large + value.small <= 4))
-    assert.ok(snapshots.some((value) => value.large === 3 && value.small === 1))
-    assert.ok(
-      snapshots.some((value) => value.smallFinished && value.large === 4),
-    )
-    assert.deepEqual(fs.readFileSync(path.join(directory, 'large.pak')), large)
-    assert.deepEqual(fs.readFileSync(path.join(directory, 'small.pak')), small)
-  },
-)
-
-test('restarting after an interruption resumes partial ranges without counting them as network bytes', async (t) => {
-  const content = Buffer.alloc(4 * 1024 ** 2, 37)
-  const controller = new AbortController()
-  const resumedRequests = []
-  let restarting = false
-  const { url, destination } = await createDownloadServer(
-    t,
-    content,
-    (req, res, body) => {
-      if (restarting) {
-        resumedRequests.push(req.headers.range)
-        sendDownloadRange(req, res, body)
-        return
-      }
-      const [, start, end] = /^bytes=(\d+)-(\d+)$/
-        .exec(req.headers.range)
-        .map(Number)
-      res.writeHead(206, {
-        'Content-Length': end - start + 1,
-        'Content-Range': `bytes ${start}-${end}/${body.length}`,
-      })
-      res.flushHeaders()
-      res.write(body.subarray(start, start + 65536))
-      const timer = setTimeout(
-        () => res.end(body.subarray(start + 65536, end + 1)),
-        500,
-      )
-      res.on('close', () => clearTimeout(timer))
-    },
-  )
-  await assert.rejects(
-    new transfer.DownloadScheduler(16).download(url, destination, {
-      size: content.length,
-      md5: 'resume-fixture',
-      signal: controller.signal,
-      onProgress(current, fromNetwork) {
-        if (fromNetwork && current >= 65536)
-          controller.abort(new Error('test interruption'))
-      },
-    }),
-    /test interruption/,
-  )
-  const partialBytes = fs
-    .readdirSync(destination + '.parts')
-    .filter((name) => name.endsWith('.part'))
-    .reduce(
-      (sum, name) =>
-        sum + fs.statSync(path.join(destination + '.parts', name)).size,
-      0,
-    )
-  assert.ok(partialBytes > 0 && partialBytes < content.length)
-  const progress = []
-  restarting = true
-  await new transfer.DownloadScheduler(4).download(url, destination, {
-    size: content.length,
-    md5: 'resume-fixture',
-    onProgress: (current, fromNetwork) =>
-      progress.push({ current, fromNetwork }),
-  })
-  assert.deepEqual(progress[0], { current: partialBytes, fromNetwork: false })
-  const requestedBytes = resumedRequests.reduce((sum, value) => {
-    const [, start, end] = /^bytes=(\d+)-(\d+)$/.exec(value).map(Number)
-    return sum + end - start + 1
-  }, 0)
-  assert.equal(requestedBytes, content.length - partialBytes)
-  assert.equal(progress.at(-1).current, content.length)
-  assert.ok(progress.slice(1).every((value) => value.fromNetwork))
-  assert.deepEqual(fs.readFileSync(destination), content)
-  assert.equal(fs.existsSync(destination + '.parts'), false)
-  assert.equal(fs.existsSync(destination + '.assembling'), false)
-})
-
-test('legacy partial target files resume from their existing continuous prefix', async (t) => {
-  const content = Buffer.alloc(2 * 1024 ** 2, 61)
-  const requests = []
-  const { url, destination } = await createDownloadServer(
-    t,
-    content,
-    (req, res, body) => {
-      requests.push(req.headers.range)
-      sendDownloadRange(req, res, body)
-    },
-  )
-  const prefixSize = 700000
-  fs.writeFileSync(destination, content.subarray(0, prefixSize))
-  await new transfer.DownloadScheduler(8).download(url, destination, {
-    size: content.length,
-    md5: 'legacy-fixture',
-  })
-  const requestedBytes = requests.reduce((sum, value) => {
-    const [, start, end] = /^bytes=(\d+)-(\d+)$/.exec(value).map(Number)
-    assert.ok(start >= prefixSize)
-    return sum + end - start + 1
-  }, 0)
-  assert.equal(requestedBytes, content.length - prefixSize)
-  assert.deepEqual(fs.readFileSync(destination), content)
-})
-
-test('HTTP 200 fallback restarts safely without appending a full response to resumed bytes', async (t) => {
-  const content = Buffer.alloc(1024 ** 2, 47)
-  let requests = 0
-  const { url, destination } = await createDownloadServer(
-    t,
-    content,
-    (_req, res, body) => {
-      requests++
-      res.writeHead(200, { 'Content-Length': body.length })
-      res.end(body)
-    },
-  )
-  fs.writeFileSync(destination, content.subarray(0, 400000))
-  await new transfer.DownloadScheduler(16).download(url, destination, {
-    size: content.length,
-    md5: 'fallback-fixture',
-  })
-  assert.equal(requests, 1)
-  assert.deepEqual(fs.readFileSync(destination), content)
-})
-
-test('invalid Content-Range is rejected before writing response bytes', async (t) => {
-  const content = Buffer.alloc(1024 ** 2, 29)
-  const { url, destination } = await createDownloadServer(
-    t,
-    content,
-    (req, res, body) => {
-      const [, start, end] = /^bytes=(\d+)-(\d+)$/
-        .exec(req.headers.range)
-        .map(Number)
-      res.writeHead(206, {
-        'Content-Length': end - start + 1,
-        'Content-Range': `bytes ${start + 1}-${end}/${body.length}`,
-      })
-      res.end(body.subarray(start, end + 1))
-    },
-  )
-  await assert.rejects(
-    new transfer.DownloadScheduler(16).download(url, destination, {
-      size: content.length,
-      md5: 'range-fixture',
-    }),
-    /Content-Range/,
-  )
-  assert.equal(fs.existsSync(destination), false)
-  assert.deepEqual(
-    fs
-      .readdirSync(destination + '.parts')
-      .filter((name) => name.endsWith('.part')),
-    [],
-  )
-})
-
-test('a changed manifest checksum discards old-version partial data at the same URL', async (t) => {
-  const oldContent = Buffer.alloc(1024 ** 2, 11)
-  const newContent = Buffer.alloc(1024 ** 2, 23)
-  const controller = new AbortController()
-  let updated = false
-  const requested = []
-  const { url, destination } = await createDownloadServer(
-    t,
-    oldContent,
-    (req, res, body) => {
-      if (updated) {
-        requested.push(req.headers.range)
-        sendDownloadRange(req, res, newContent)
-      } else {
-        sendDownloadRange(req, res, body)
-      }
-    },
-  )
-  await assert.rejects(
-    new transfer.DownloadScheduler(4).download(url, destination, {
-      size: oldContent.length,
-      md5: 'old-version',
-      signal: controller.signal,
-      onProgress(current, network) {
-        if (network && current > 0)
-          controller.abort(new Error('old version stopped'))
-      },
-    }),
-    /old version stopped/,
-  )
-  updated = true
-  await new transfer.DownloadScheduler(4).download(url, destination, {
-    size: newContent.length,
-    md5: 'new-version',
-  })
-  const requestedBytes = requested.reduce((sum, value) => {
-    const [, start, end] = /^bytes=(\d+)-(\d+)$/.exec(value).map(Number)
-    return sum + end - start + 1
-  }, 0)
-  assert.equal(requestedBytes, newContent.length)
-  assert.deepEqual(fs.readFileSync(destination), newContent)
-})
-
 test('the file handler resumes after a dropped connection and verifies the final MD5', async (t) => {
   const content = Buffer.alloc(2 * 1024 ** 2, 83)
   let dropped = false
@@ -1021,10 +761,10 @@ test('the file handler resumes after a dropped connection and verifies the final
         return
       }
       dropped = true
-      const [, start, end] = /^bytes=(\d+)-(\d+)$/
-        .exec(req.headers.range)
-        .map(Number)
-      res.writeHead(206, {
+      const range = /bytes=(\d+)-(\d*)/.exec(req.headers.range || '')
+      const start = range ? Number(range[1]) : 0
+      const end = range?.[2] ? Number(range[2]) : body.length - 1
+      res.writeHead(range ? 206 : 200, {
         'Content-Length': end - start + 1,
         'Content-Range': `bytes ${start}-${end}/${body.length}`,
       })
@@ -1037,6 +777,7 @@ test('the file handler resumes after a dropped connection and verifies the final
     targetDir: directory,
     argv: ['-c', '4'],
   })
+  t.after(() => runtime.close())
   const progress = new runtime.ProgressManager(1, 1, content.length)
   progress.isTTY = false
   runtime.setManager(progress)
@@ -1140,7 +881,7 @@ test('a fully cached run reports zero downloads and zero network speed', () => {
 
 test(
   'Ctrl+C stops queued files, closes transfers and prints one resumable interruption summary',
-  { timeout: 5000 },
+  { timeout: 15000 },
   async (t) => {
     const content = Buffer.alloc(1024 ** 2, 47)
     const requests = []
@@ -1149,7 +890,25 @@ test(
       content,
       (req, res, body) => {
         requests.push(req.url)
-        sendDownloadRange(req, res, body)
+        const range = /bytes=(\d+)-(\d*)/.exec(req.headers.range || '')
+        let offset = range ? Number(range[1]) : 0
+        const end = range?.[2] ? Number(range[2]) : body.length - 1
+        res.writeHead(range ? 206 : 200, {
+          'Content-Length': end - offset + 1,
+          ...(range
+            ? { 'Content-Range': `bytes ${offset}-${end}/${body.length}` }
+            : {}),
+        })
+        const timer = setInterval(() => {
+          const next = Math.min(end + 1, offset + 16384)
+          res.write(body.subarray(offset, next))
+          offset = next
+          if (offset > end) {
+            clearInterval(timer)
+            res.end()
+          }
+        }, 20)
+        res.on('close', () => clearInterval(timer))
       },
     )
     const runtime = loadDownloaderRuntime(fs, { targetDir: directory })
@@ -1166,7 +925,7 @@ test(
     const updateDownloaded = runtime.ProgressManager.prototype.updateDownloaded
     runtime.ProgressManager.prototype.updateDownloaded = function (...args) {
       updateDownloaded.apply(this, args)
-      if (args[2] && !interrupted) {
+      if (args[2] && args[1] > 65536 && !interrupted) {
         interrupted = true
         runtime.setTime(2000)
         runtime.process.emit('SIGINT')
@@ -1190,22 +949,16 @@ test(
       !requests.includes('/4.pak'),
       'queued file was started after interruption',
     )
-    const retained = fs
+    const controls = fs
       .readdirSync(directory)
-      .filter((name) => name.endsWith('.parts'))
-      .reduce((sum, name) => {
-        const parts = path.join(directory, name)
-        return (
-          sum +
-          fs
-            .readdirSync(parts)
-            .filter((part) => part.endsWith('.part'))
-            .reduce(
-              (size, part) => size + fs.statSync(path.join(parts, part)).size,
-              0,
-            )
-        )
-      }, 0)
+      .filter((name) => name.endsWith('.download.aria2'))
+    const saved = await Promise.all(
+      controls.map((name) => readAria2Progress(path.join(directory, name))),
+    )
+    const retained = saved.reduce(
+      (sum, value) => sum + value.completedLength,
+      0,
+    )
     assert.ok(retained > 0 && retained < content.length * 5)
     assert.equal(progress.downloadedBytes, retained)
     assert.equal(runtime.process.listenerCount('SIGINT'), 0)
@@ -1229,82 +982,6 @@ test('SIGTERM during resource loading exits cleanly without inventing download s
   assert.equal(runtime.getManager(), null)
   assert.equal(runtime.process.listenerCount('SIGINT'), 0)
   assert.equal(runtime.process.listenerCount('SIGTERM'), 0)
-})
-
-test('interrupting a resume scan still reports the partial bytes it has identified', async (t) => {
-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'ww-scan-interrupt-'))
-  t.after(() => fs.rmSync(directory, { recursive: true, force: true }))
-  const parts = path.join(directory, 'file.pak.parts')
-  fs.mkdirSync(parts)
-  fs.writeFileSync(
-    path.join(parts, 'manifest.json'),
-    JSON.stringify({
-      version: 1,
-      size: 1024 ** 2,
-      identity: 'scan-fixture',
-      partSize: 256 * 1024,
-    }),
-  )
-  fs.writeFileSync(path.join(parts, '0.part'), Buffer.alloc(65536))
-  fs.writeFileSync(path.join(parts, '262144.part'), Buffer.alloc(65536))
-  const runtime = loadDownloaderRuntime(fs, { targetDir: directory })
-  runtime.process.stdout.isTTY = false
-  runtime.setResources(async () => [
-    {
-      dest: 'file.pak',
-      url: 'http://unused.invalid/file',
-      size: 1024 ** 2,
-      md5: 'scan-fixture',
-    },
-  ])
-  const stat = fs.promises.stat
-  t.mock.method(fs.promises, 'stat', async function (name, ...args) {
-    const result = await stat.call(this, name, ...args)
-    if (name === path.join(parts, '262144.part')) runtime.process.emit('SIGINT')
-    return result
-  })
-  await runtime.main()
-  assert.equal(runtime.getManager().downloadedBytes, 131072)
-  assert.equal(runtime.getManager().transferredBytes, 0)
-  assert.match(runtime.logs.join('\n'), /已保留进度.*128\.00 KB/)
-  assert.equal(runtime.process.exitCode, 130)
-})
-
-test('interrupting legacy-prefix migration reports saved bytes and keeps the original prefix', async (t) => {
-  const directory = fs.mkdtempSync(
-    path.join(os.tmpdir(), 'ww-migrate-interrupt-'),
-  )
-  t.after(() => fs.rmSync(directory, { recursive: true, force: true }))
-  const destination = path.join(directory, 'file.pak')
-  const prefix = Buffer.alloc(300 * 1024, 19)
-  fs.writeFileSync(destination, prefix)
-  const runtime = loadDownloaderRuntime(fs, { targetDir: directory })
-  runtime.process.stdout.isTTY = false
-  runtime.setResources(async () => [
-    {
-      dest: 'file.pak',
-      url: 'http://unused.invalid/file',
-      size: 1024 ** 2,
-      md5: 'migrate-fixture',
-    },
-  ])
-  const createWriteStream = fs.createWriteStream
-  t.mock.method(fs, 'createWriteStream', function (name, options) {
-    const stream = createWriteStream.call(this, name, {
-      ...options,
-      highWaterMark: 1,
-    })
-    stream.once('drain', () => runtime.process.emit('SIGINT'))
-    return stream
-  })
-  await runtime.main()
-  const retained = fs.statSync(path.join(destination + '.parts', '0.part')).size
-  assert.ok(retained > 0 && retained < prefix.length)
-  assert.equal(runtime.getManager().downloadedBytes, retained)
-  assert.equal(runtime.getManager().transferredBytes, 0)
-  assert.equal(runtime.getManager().failed, 0)
-  assert.equal(runtime.process.exitCode, 130)
-  assert.deepEqual(fs.readFileSync(destination), prefix)
 })
 
 for (const cached of [true, false]) {
@@ -1356,41 +1033,3 @@ for (const cached of [true, false]) {
     assert.deepEqual(fs.readFileSync(destination), content)
   })
 }
-
-test('interruption during assembly retains complete parts and can finish without more requests', async (t) => {
-  const content = Buffer.alloc(1024 ** 2, 97)
-  let requests = 0
-  const { url, destination } = await createDownloadServer(
-    t,
-    content,
-    (req, res, body) => {
-      requests++
-      sendDownloadRange(req, res, body)
-    },
-  )
-  const controller = new AbortController()
-  const open = fs.promises.open
-  t.mock.method(fs.promises, 'open', async function (name, ...args) {
-    const handle = await open.call(this, name, ...args)
-    if (name === destination + '.assembling')
-      controller.abort(new Error('assembly interrupted'))
-    return handle
-  })
-  await assert.rejects(
-    new transfer.DownloadScheduler(4).download(url, destination, {
-      size: content.length,
-      md5: 'assembly-fixture',
-      signal: controller.signal,
-    }),
-    /assembly interrupted|aborted/,
-  )
-  assert.equal(fs.existsSync(destination), false)
-  assert.equal(fs.existsSync(destination + '.parts'), true)
-  const requestsBeforeResume = requests
-  await new transfer.DownloadScheduler(4).download(url, destination, {
-    size: content.length,
-    md5: 'assembly-fixture',
-  })
-  assert.equal(requests, requestsBeforeResume)
-  assert.deepEqual(fs.readFileSync(destination), content)
-})

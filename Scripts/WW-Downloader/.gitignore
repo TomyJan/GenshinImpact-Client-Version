@@ -4,3 +4,9 @@
 !/down.js
 !/down.test.js
 !/transfer.js
+!/transfer.test.js
+!/aria2-engine.js
+!/aria2-engine.test.js
+!/aria2-resume.js
+!/aria2-resume.test.js
+!/README.md

@@ -14,7 +14,7 @@ const gameIndexUrl =
   'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/G152/official/index.json'
 // 下载版本：default = 当前正式版（默认），pre = 预下载版本。
 // pre 未开放时会报错退出；预下载下载的是所选画质的完整包体，不是增量补丁。
-const versionType = 'default'
+const versionType = 'pre'
 // 下载资源等级：UHD = 极致（最高，默认），HD = 高清，SD = 流畅。
 // 只需修改此变量；每个等级都会自动包含 common 公共包，不下载其他等级的包。
 // 在同一目录切换版本或等级会保留原有文件；如需纯净包体，请使用空目录。

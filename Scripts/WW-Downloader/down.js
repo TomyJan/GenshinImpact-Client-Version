@@ -271,7 +271,7 @@ class ProgressManager {
     const W_INDEX = 12
     const W_NAME = 44
     const W_BAR = 15
-    const W_PERCENT = 5
+    const W_PERCENT = 6 // 为 100.0% 预留完整宽度，避免后续列右移。
     const W_SPEED = 12
     const W_SIZE = 24
     const W_TIME = 14

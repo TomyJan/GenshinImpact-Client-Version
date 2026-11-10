@@ -326,6 +326,39 @@ test('progress header and worker rows align with borders and reserve every rende
   assert.equal(output[0], `\x1b[${progress.headerLines + 2}A`)
 })
 
+test('100.0 percent reserves the same columns as lower progress in header and worker rows', () => {
+  const { ProgressManager, setTime, output } = loadDownloaderRuntime()
+  const progress = new ProgressManager(2, 2, 2000)
+  setTime(1000)
+  progress.updateDownloaded(0, 1000, true)
+  for (const [index, percent] of [99.9, 100].entries()) {
+    progress.updateSlot(index, {
+      index,
+      name: `${index}.pak`,
+      phase: 'download',
+      percent,
+      speed: 1024 ** 2,
+      current: 1000,
+      total: 1000,
+      elapsed: 1,
+      eta: 1,
+    })
+  }
+  progress.forceRender()
+  const rows = output
+    .at(-1)
+    .split('\n')
+    .filter((line) => line.includes('║') && !line.includes('空闲'))
+  const speedColumns = rows.map((row) => {
+    const speed = row.match(/(?:1000 B\/s|1\.0 MB\/s)/)
+    assert.ok(speed, row)
+    return progress.getDisplayWidth(row.slice(0, speed.index))
+  })
+  assert.equal(new Set(speedColumns).size, 1, rows.join('\n'))
+  for (const row of rows) assert.equal(progress.getDisplayWidth(row), 156, row)
+  assert.match(rows.at(-1), /100\.0%/)
+})
+
 test('worker status icons preserve their original spacing before filenames', () => {
   const { ProgressManager, output } = loadDownloaderRuntime()
   const progress = new ProgressManager(1, 1, 10)

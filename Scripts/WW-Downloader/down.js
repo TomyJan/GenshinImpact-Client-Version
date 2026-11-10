@@ -12,9 +12,12 @@ const __dirname = dirname(__filename)
 // 国服正式资源入口：自动获取当前版本及其分包清单，无需手动修改版本路径。
 const gameIndexUrl =
   'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/G152/official/index.json'
+// 下载版本：default = 当前正式版（默认），pre = 预下载版本。
+// pre 未开放时会报错退出；预下载下载的是所选画质的完整包体，不是增量补丁。
+const versionType = 'default'
 // 下载资源等级：UHD = 极致（最高，默认），HD = 高清，SD = 流畅。
 // 只需修改此变量；每个等级都会自动包含 common 公共包，不下载其他等级的包。
-// 在同一目录切换等级会保留原有文件；如需纯净包体，请使用空目录。
+// 在同一目录切换版本或等级会保留原有文件；如需纯净包体，请使用空目录。
 const resourceLevel = 'UHD'
 const targetDir = path.join(__dirname, 'ww')
 
@@ -619,12 +622,22 @@ function runWithConcurrency(data, limit) {
 
 // ==================== 主函数 ====================
 async function loadResources() {
+  if (!['default', 'pre'].includes(versionType)) {
+    throw new Error(`不支持的下载版本: ${versionType}，可选 default/pre`)
+  }
   const fetchJson = async (url) => {
     const res = await fetch(url)
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`)
     return res.json()
   }
-  const gameData = await fetchJson(gameIndexUrl)
+  const indexData = await fetchJson(gameIndexUrl)
+  if (versionType === 'pre' && !indexData.predownload?.resourcePacks) {
+    throw new Error('预下载尚未开放')
+  }
+  const gameData =
+    versionType === 'pre'
+      ? { ...indexData, ...indexData.predownload }
+      : indexData
   const packs = getWWResourcePacks(gameData, resourceLevel)
   const cdnUrl = gameData.cdnList[0].url
   const files = []
@@ -660,6 +673,7 @@ async function main() {
   }
 
   const total = data.length
+  console.log(`下载版本: ${versionType === 'pre' ? '预下载' : '正式版'}`)
   console.log(`资源等级: ${resourceLevelNames[resourceLevel]}`)
   console.log(`共 ${total} 个文件，并发数: ${concurrency}`)
   console.log(`目标目录: ${targetDir}`)

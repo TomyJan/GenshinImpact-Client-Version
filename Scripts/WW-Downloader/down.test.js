@@ -9,7 +9,7 @@ import * as wwResources from '../utils/wwResources.js'
 const indexUrl =
   'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/G152/official/index.json'
 
-async function loadDownloaderResources(level) {
+async function loadDownloaderResources(level, versionType, predownload = null) {
   const requests = []
   let source = fs
     .readFileSync(new URL('down.js', import.meta.url), 'utf8')
@@ -20,6 +20,11 @@ async function loadDownloaderResources(level) {
     source = source.replace(
       "const resourceLevel = 'UHD'",
       `const resourceLevel = '${level}'`,
+    )
+  if (versionType)
+    source = source.replace(
+      "const versionType = 'default'",
+      `const versionType = '${versionType}'`,
     )
   const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor
   const files = await new AsyncFunction(
@@ -44,6 +49,7 @@ async function loadDownloaderResources(level) {
           ok: true,
           json: async () => ({
             cdnList: [{ url: 'https://cdn.example/' }],
+            predownload,
             bundles: {
               UHD: { resourcePacks: ['common', 'uhd'] },
               HD: { resourcePacks: ['common', 'hd'] },
@@ -102,4 +108,64 @@ test('downloader selects HD or SD without loading other quality packs', async ()
 
 test('invalid downloader resource level fails before fetching pack manifests', async () => {
   await assert.rejects(loadDownloaderResources('INVALID'), /资源等级/)
+})
+
+test('pre downloads the selected upcoming bundle using the default CDN', async () => {
+  for (const level of ['UHD', 'HD', 'SD']) {
+    const { files, requests } = await loadDownloaderResources(level, 'pre', {
+      bundles: { [level]: { resourcePacks: ['common', level.toLowerCase()] } },
+      resourcePacks: Object.fromEntries(
+        ['common', level.toLowerCase()].map((name) => [
+          name,
+          {
+            indexFile: `pre/${name}/index.json`,
+            baseUrl: `pre/${name}/zip/`,
+          },
+        ]),
+      ),
+    })
+    assert.deepEqual(requests, [
+      indexUrl,
+      'https://cdn.example/pre/common/index.json',
+      `https://cdn.example/pre/${level.toLowerCase()}/index.json`,
+    ])
+    assert.ok(
+      files.every((file) => file.url.startsWith('https://cdn.example/pre/')),
+    )
+  }
+})
+
+test('pre uses its own CDN when provided and inherits default bundle definitions', async () => {
+  const { requests } = await loadDownloaderResources('UHD', 'pre', {
+    cdnList: [{ url: 'https://pre.example/' }],
+    resourcePacks: Object.fromEntries(
+      ['common', 'uhd'].map((name) => [
+        name,
+        {
+          indexFile: `${name}/index.json`,
+          baseUrl: `${name}/zip/`,
+        },
+      ]),
+    ),
+  })
+  assert.deepEqual(requests, [
+    indexUrl,
+    'https://pre.example/common/index.json',
+    'https://pre.example/uhd/index.json',
+  ])
+})
+
+test('pre refuses unavailable predownloads instead of downloading the release', async () => {
+  await assert.rejects(loadDownloaderResources('UHD', 'pre'), /预下载.*开放/)
+  await assert.rejects(
+    loadDownloaderResources('UHD', 'pre', {}),
+    /预下载.*开放/,
+  )
+})
+
+test('invalid version type is rejected', async () => {
+  await assert.rejects(
+    loadDownloaderResources('UHD', 'invalid'),
+    /default\/pre/,
+  )
 })

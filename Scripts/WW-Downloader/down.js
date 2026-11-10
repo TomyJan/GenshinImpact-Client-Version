@@ -1,10 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
-import https from 'https'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import { getWWResourcePacks, resourceLevelNames } from '../utils/wwResources.js'
+import { DownloadScheduler, discardPartialDownload } from './transfer.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -22,6 +22,9 @@ const resourceLevel = 'UHD'
 const targetDir = path.join(__dirname, 'ww')
 
 // ==================== 配置 ====================
+// -c/--concurrency 或 DOWNLOAD_CONCURRENCY 设置所有文件合计的下载线程上限。
+// 默认 16，限制为 4–16；最多同时处理 4 个文件，按剩余大小动态分配分片线程。
+// 少量尾片或服务器不支持 Range 时，实际连接数可能低于 4。
 function parseConcurrencyArg() {
   const argv = process.argv.slice(2)
   let c = undefined
@@ -41,13 +44,13 @@ function parseConcurrencyArg() {
     const envC = parseInt(process.env.DOWNLOAD_CONCURRENCY || '', 10)
     if (Number.isFinite(envC) && envC > 0) c = envC
   }
-  if (!Number.isFinite(c) || c <= 0) c = 4
-  c = Math.max(1, Math.min(c, 16))
+  if (!Number.isFinite(c) || c <= 0) c = 16
+  c = Math.max(4, Math.min(c, 16))
   return c
 }
 
 const concurrency = parseConcurrencyArg()
-const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: concurrency })
+const downloadScheduler = new DownloadScheduler(concurrency)
 
 // ==================== 进度管理器 ====================
 class ProgressManager {
@@ -169,7 +172,7 @@ class ProgressManager {
     if (state.phase === 'done' || state.phase === 'skip') {
       this.updateDownloaded(state.index, state.total)
     } else if (state.phase === 'error') {
-      this.updateDownloaded(state.index, 0)
+      this.updateDownloaded(state.index, state.current || 0)
     }
     this.slots[slotIndex] = state
     this.throttledRender()
@@ -438,40 +441,9 @@ let progressManager = null
 
 // ==================== 下载逻辑 ====================
 
-// 下载文件（带进度回调）
-function downloadFile(url, dest, onProgress) {
-  return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(dest)
-    let downloaded = 0
-
-    const req = https
-      .get(url, { agent: httpsAgent }, (res) => {
-        if (res.statusCode !== 200) {
-          fs.unlink(dest, () => {})
-          return reject(new Error(`HTTP ${res.statusCode}`))
-        }
-
-        res.on('data', (chunk) => {
-          downloaded += chunk.length
-          if (onProgress) onProgress(downloaded)
-        })
-
-        res.pipe(file)
-        file.on('finish', () => file.close(resolve))
-      })
-      .on('error', (err) => {
-        fs.unlink(dest, () => {})
-        reject(err)
-      })
-
-    file.on('error', (err) => {
-      try {
-        req.destroy()
-      } catch {}
-      fs.unlink(dest, () => {})
-      reject(err)
-    })
-  })
+// 分片、续传和所有文件共用的线程预算由同一个调度器管理。
+function downloadFile(url, dest, onProgress, fileObj) {
+  return downloadScheduler.download(url, dest, { ...fileObj, onProgress })
 }
 
 // 计算文件 MD5（带进度回调）
@@ -506,17 +478,19 @@ async function handleFile(fileObj, index, total, slotIndex) {
   const createProgressUpdater = (phase) => {
     const startTime = Date.now()
     let lastUpdate = 0
-    return (current) => {
+    let resumedBytes = 0
+    return (current, fromNetwork = true) => {
       // 每个数据块都计入总进度，避免渲染节流遗漏文件尾部的数据。
       if (phase === 'download') {
-        progressManager.updateDownloaded(index, current, true)
+        progressManager.updateDownloaded(index, current, fromNetwork)
+        if (!fromNetwork) resumedBytes = current
       }
       const now = Date.now()
       if (now - lastUpdate < 100) return // 节流
       lastUpdate = now
 
       const elapsed = (now - startTime) / 1000
-      const speed = elapsed > 0 ? current / elapsed : 0
+      const speed = elapsed > 0 ? (current - resumedBytes) / elapsed : 0
       const percent = fileSize > 0 ? (current / fileSize) * 100 : 0
       const eta = speed > 0 ? (fileSize - current) / speed : 0
 
@@ -561,18 +535,19 @@ async function handleFile(fileObj, index, total, slotIndex) {
           }
         } catch {}
       }
-      // 文件有问题，需要重新下载
-      try {
+      // 不完整的旧文件保留连续前缀；完整但校验失败的文件必须重新下载。
+      if (stats.size >= fileSize) {
         fs.unlinkSync(fullPath)
-      } catch {}
+        await discardPartialDownload(fullPath)
+      }
     }
 
     // 下载文件
     const downloadUpdater = createProgressUpdater('download')
-    downloadUpdater(0)
+    downloadUpdater(0, false)
 
     try {
-      await downloadFile(url, fullPath, downloadUpdater)
+      await downloadFile(url, fullPath, downloadUpdater, fileObj)
     } catch (e) {
       if (!isRetry) {
         return await checkAndDownload(true)
@@ -611,6 +586,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
         try {
           fs.unlinkSync(fullPath)
         } catch {}
+        await discardPartialDownload(fullPath)
         return await checkAndDownload(true)
       }
       return { success: false, reason: `校验失败: ${e.message}` }
@@ -630,7 +606,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
       speed: 0,
       elapsed: 0,
       eta: 0,
-      current: 0,
+      current: progressManager.fileBytes.get(index) || 0,
       total: fileSize,
     })
     progressManager.markComplete(false, { index, name, reason: result.reason })
@@ -659,16 +635,23 @@ function runWithConcurrency(data, limit) {
         const currentIndex = nextIndex++
         const slotIndex = availableSlots.shift() // 取出一个可用槽位
 
-        handleFile(data[currentIndex], currentIndex, total, slotIndex).finally(
-          () => {
+        handleFile(data[currentIndex], currentIndex, total, slotIndex)
+          .catch((error) => {
+            progressManager.clearSlot(slotIndex)
+            progressManager.markComplete(false, {
+              index: currentIndex,
+              name: path.basename(data[currentIndex].dest),
+              reason: error.message,
+            })
+          })
+          .finally(() => {
             availableSlots.push(slotIndex) // 归还槽位
             if (progressManager.completed === total) {
               resolve()
             } else {
               runNext()
             }
-          },
-        )
+          })
       }
     }
 
@@ -731,17 +714,20 @@ async function main() {
   const total = data.length
   console.log(`下载版本: ${versionType === 'pre' ? '预下载' : '正式版'}`)
   console.log(`资源等级: ${resourceLevelNames[resourceLevel]}`)
-  console.log(`共 ${total} 个文件，并发数: ${concurrency}`)
+  console.log(
+    `共 ${total} 个文件，下载线程上限: ${concurrency}，同时处理最多 4 个文件`,
+  )
   console.log(`目标目录: ${targetDir}`)
   console.log('')
 
   // 初始化进度管理器
   const totalBytes = data.reduce((sum, file) => sum + file.size, 0)
-  progressManager = new ProgressManager(total, concurrency, totalBytes)
+  const fileConcurrency = Math.min(4, concurrency)
+  progressManager = new ProgressManager(total, fileConcurrency, totalBytes)
   progressManager.init()
 
   // 执行下载
-  await runWithConcurrency(data, concurrency)
+  await runWithConcurrency(data, fileConcurrency)
 
   // 输出最终结果
   progressManager.finish()

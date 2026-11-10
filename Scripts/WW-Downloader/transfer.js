@@ -84,6 +84,7 @@ async function prepareDownload(url, destination, options, limit) {
     directory,
     size,
     onProgress: options.onProgress,
+    onAssembleProgress: options.onAssembleProgress,
     signal: options.signal,
     controller: new AbortController(),
     active: 0,
@@ -387,16 +388,20 @@ export class DownloadScheduler {
 
   async assemble(job) {
     job.signal?.throwIfAborted()
+    let assembled = 0
     const temporary = job.destination + '.assembling'
     const output = await fs.promises.open(temporary, 'w')
     try {
       job.signal?.throwIfAborted()
+      job.onAssembleProgress?.(0)
       for (const part of job.parts) {
         job.signal?.throwIfAborted()
         for await (const chunk of fs.createReadStream(part.path, {
           signal: job.signal,
         })) {
           await output.writeFile(chunk)
+          assembled += chunk.length
+          job.onAssembleProgress?.(assembled)
         }
       }
     } finally {

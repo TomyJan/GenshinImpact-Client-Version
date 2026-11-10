@@ -359,12 +359,60 @@ test('100.0 percent reserves the same columns as lower progress in header and wo
   assert.match(rows.at(-1), /100\.0%/)
 })
 
+test('downloaded-file verification is visible immediately and renders its final chunk despite throttling', async () => {
+  let exists = false
+  const runtime = loadDownloaderRuntime({
+    mkdirSync() {},
+    existsSync: () => exists,
+    statSync: () => ({ size: 400 }),
+  })
+  const progress = new runtime.ProgressManager(1, 1, 400)
+  runtime.setManager(progress)
+  runtime.setTime(1000)
+  progress.forceRender()
+  runtime.setDownload(async (_url, _dest, onProgress) => {
+    exists = true
+    runtime.setTime(1001)
+    onProgress(400)
+  })
+  const verificationFrames = []
+  runtime.setMD5(async (_dest, onProgress) => {
+    verificationFrames.push(runtime.output.at(-1))
+    runtime.setTime(1200)
+    onProgress(200)
+    verificationFrames.push(runtime.output.at(-1))
+    runtime.setTime(1201)
+    onProgress(400)
+    verificationFrames.push(runtime.output.at(-1))
+    return 'verified'
+  })
+  assert.equal(
+    await runtime.handleFile(
+      {
+        dest: 'scan.pak',
+        url: 'https://unused.invalid/file',
+        size: 400,
+        md5: 'verified',
+      },
+      0,
+      1,
+      0,
+    ),
+    true,
+  )
+  assert.match(verificationFrames[0], /🔍 .*0\.0%/)
+  assert.match(verificationFrames[1], /🔍 .*50\.0%/)
+  assert.match(verificationFrames[2], /🔍 .*100\.0%/)
+  assert.equal(progress.transferredBytes, 400)
+})
+
 test('worker status icons preserve their original spacing before filenames', () => {
   const { ProgressManager, output } = loadDownloaderRuntime()
   const progress = new ProgressManager(1, 1, 10)
   const name = 'status-test.pak'
   for (const [phase, expected] of [
     ['download', '⬇️  '],
+    ['assemble', '🧩 '],
     ['verify', '🔍 '],
     ['done', '✅  '],
     ['error', '❌  '],
@@ -584,13 +632,69 @@ test('a single file uses multiple range requests and assembles the original byte
     transport: http,
     argv: ['-c', '16'],
   })
+  const assemblyProgress = []
   await downloadFile(url, destination, () => {}, {
     size: content.length,
     md5: 'fixture-identity',
+    onAssembleProgress: (current) => assemblyProgress.push(current),
   })
   assert.deepEqual(fs.readFileSync(destination), content)
+  assert.equal(assemblyProgress[0], 0)
+  assert.equal(assemblyProgress.at(-1), content.length)
+  assert.ok(assemblyProgress.length > 2)
+  for (let i = 1; i < assemblyProgress.length; i++) {
+    assert.ok(assemblyProgress[i] > assemblyProgress[i - 1])
+  }
   assert.ok(maximumActive >= 4, `only ${maximumActive} simultaneous requests`)
   assert.ok(maximumActive <= 16, `${maximumActive} requests exceeded the limit`)
+})
+
+test('the file handler displays assembly before MD5 verification without recounting transferred bytes', async (t) => {
+  const content = Buffer.alloc(1024 ** 2, 31)
+  const { url, directory } = await createDownloadServer(
+    t,
+    content,
+    (req, res, body) => sendDownloadRange(req, res, body),
+  )
+  const runtime = loadDownloaderRuntime(fs, { targetDir: directory })
+  const progress = new runtime.ProgressManager(1, 1, content.length)
+  const states = []
+  const updateSlot = progress.updateSlot.bind(progress)
+  progress.updateSlot = (slot, state, ...args) => {
+    states.push({ phase: state.phase, current: state.current })
+    updateSlot(slot, state, ...args)
+  }
+  runtime.setManager(progress)
+  assert.equal(
+    await runtime.handleFile(
+      {
+        dest: 'stages.pak',
+        url,
+        size: content.length,
+        md5: crypto.createHash('md5').update(content).digest('hex'),
+      },
+      0,
+      1,
+      0,
+    ),
+    true,
+  )
+  const phases = states
+    .map((state) => state.phase)
+    .filter((phase, index, all) => phase !== all[index - 1])
+  assert.deepEqual(phases, ['download', 'assemble', 'verify', 'done'])
+  assert.deepEqual(
+    states.filter((state) => state.phase === 'assemble'),
+    [
+      { phase: 'assemble', current: 0 },
+      { phase: 'assemble', current: content.length },
+    ],
+  )
+  assert.match(runtime.output.join(''), /🧩/)
+  assert.match(runtime.output.join(''), /🔍/)
+  assert.equal(progress.downloadedBytes, content.length)
+  assert.equal(progress.transferredBytes, content.length)
+  assert.deepEqual(fs.readFileSync(path.join(directory, 'stages.pak')), content)
 })
 
 test('thread allocation follows remaining sizes and redistributes spare capacity', () => {

@@ -170,7 +170,7 @@ class ProgressManager {
   }
 
   // 更新槽位状态
-  updateSlot(slotIndex, state) {
+  updateSlot(slotIndex, state, force = false) {
     if (state.phase === 'done' || state.phase === 'skip') {
       this.updateDownloaded(state.index, state.total)
       this.completedFiles.set(state.index, {
@@ -182,7 +182,8 @@ class ProgressManager {
       this.completedFiles.delete(state.index)
     }
     this.slots[slotIndex] = state
-    this.throttledRender()
+    if (force) this.forceRender()
+    else this.throttledRender()
   }
 
   // 按文件记录有效下载量；重试会回退该文件进度，校验和跳过不计入网速。
@@ -345,6 +346,7 @@ class ProgressManager {
         // 使用 emoji 图标（通过 padEndDisplay 处理宽度）
         let phaseIcon = '⏳'
         if (phase === 'download') phaseIcon = '⬇️'
+        else if (phase === 'assemble') phaseIcon = '🧩'
         else if (phase === 'verify') phaseIcon = '🔍'
         else if (phase === 'done') phaseIcon = '✅'
         else if (phase === 'error') phaseIcon = '❌'
@@ -545,7 +547,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
   // 创建进度更新函数
   const createProgressUpdater = (phase) => {
     const startTime = Date.now()
-    let lastUpdate = 0
+    let lastUpdate = null
     let resumedBytes = 0
     return (current, fromNetwork = true) => {
       // 每个数据块都计入总进度，避免渲染节流遗漏文件尾部的数据。
@@ -554,7 +556,9 @@ async function handleFile(fileObj, index, total, slotIndex) {
         if (!fromNetwork) resumedBytes = current
       }
       const now = Date.now()
-      if (now - lastUpdate < 100) return // 节流
+      const force = lastUpdate === null || current === fileSize
+      // 阶段起点和终点必须立即显示，不能被刚结束的下载或合并刷新吞掉。
+      if (!force && now - lastUpdate < 100) return // 节流
       lastUpdate = now
 
       const elapsed = (now - startTime) / 1000
@@ -562,17 +566,21 @@ async function handleFile(fileObj, index, total, slotIndex) {
       const percent = fileSize > 0 ? (current / fileSize) * 100 : 0
       const eta = speed > 0 ? (fileSize - current) / speed : 0
 
-      progressManager.updateSlot(slotIndex, {
-        index,
-        name,
-        phase,
-        percent,
-        speed,
-        elapsed,
-        eta,
-        current,
-        total: fileSize,
-      })
+      progressManager.updateSlot(
+        slotIndex,
+        {
+          index,
+          name,
+          phase,
+          percent,
+          speed,
+          elapsed,
+          eta,
+          current,
+          total: fileSize,
+        },
+        force,
+      )
     }
   }
 
@@ -619,8 +627,15 @@ async function handleFile(fileObj, index, total, slotIndex) {
     const downloadUpdater = createProgressUpdater('download')
     downloadUpdater(0, false)
 
+    let assembleUpdater = null
     try {
-      await downloadFile(url, fullPath, downloadUpdater, fileObj)
+      await downloadFile(url, fullPath, downloadUpdater, {
+        ...fileObj,
+        onAssembleProgress: (current) => {
+          assembleUpdater ||= createProgressUpdater('assemble')
+          assembleUpdater(current, false)
+        },
+      })
     } catch (e) {
       signal.throwIfAborted()
       if (!isRetry) {

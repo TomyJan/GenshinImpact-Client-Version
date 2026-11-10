@@ -8,6 +8,10 @@ const appUrl =
   'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/app/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/index.json'
 const gameUrl =
   'https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/G152/official/index.json'
+const osAppUrl =
+  'https://prod-alicdn-gamestarter.kurogame.com/launcher/app/50004_P7xcUZnEr1AXIGON25E6KjpOgTlVrg6e/index.json'
+const osGameUrl =
+  'https://prod-alicdn-gamestarter.kurogame.com/launcher/game/50004_P7xcUZnEr1AXIGON25E6KjpOgTlVrg6e/G153/official/index.json'
 const cdnList = [{ url: 'https://cdn.example/' }]
 const launcher = {
   default: {
@@ -136,6 +140,72 @@ test('unchanged official launcher does not push again', async () => {
   )
   assert.equal(result.pushes.length, 0)
   assert.equal(result.exitCode, 0)
+})
+
+test('OS official launcher uses the migrated app index and matching official EXE', async () => {
+  const result = await runScript('getWWWinLauncherVersion.js', ['os'], {
+    [osAppUrl]: launcher,
+    'https://download.kurogames.net/mc_WnGtDn85y8lJB4mTmYHYuNjIl9n6YGVm/official/global/en/pc_app.json':
+      { version: '3.0.1', primary: 'https://example.com/os-setup.exe' },
+  })
+  assert.equal(result.exitCode, 0)
+  assert.equal(result.pushes.length, 1)
+  const [, server, data, , gray] = result.pushes[0]
+  assert.equal(server, 'OS')
+  assert.equal(gray, false)
+  assert.equal(data.new.version, '3.0.1.0')
+  assert.equal(data.new.url, 'https://example.com/os-setup.exe')
+  assert.ok(result.files.has('./Scripts/data/WW/latest_Win_Launcher_OS.json'))
+})
+
+test('OS migrated game detects release and predownload independently of CN', async () => {
+  const data = structuredClone(game)
+  for (const value of Object.values(data.resourcePacks)) value.version = '3.7.2'
+  data.predownload = {
+    resourcePacks: Object.fromEntries(
+      Object.entries(data.resourcePacks).map(([name, value]) => [
+        name,
+        { ...value, version: '3.8.0', indexFile: `pre/${name}.json` },
+      ]),
+    ),
+  }
+  const remote = {
+    [osGameUrl]: data,
+    ...Object.fromEntries(
+      ['common', 'uhd', 'hd', 'sd'].map((name) => [
+        `https://cdn.example/pre/${name}.json`,
+        { resource: [{ dest: `pre-${name}.pak` }] },
+      ]),
+    ),
+  }
+  const cache = './Scripts/data/WW/latest_Win_Game_OS.json'
+  const result = await runScript('getWWWinGameVersion.js', ['os'], remote, {
+    [cache]: JSON.stringify({ default: { version: '3.7.1' } }),
+  })
+  assert.equal(result.exitCode, 0)
+  assert.equal(result.pushes.length, 1)
+  const [, server, pushed, , gray] = result.pushes[0]
+  assert.equal(server, 'OS')
+  assert.equal(gray, false)
+  assert.equal(pushed.default.version, '3.7.2')
+  assert.equal(pushed.predownload.version, '3.8.0')
+  const resources = JSON.parse(
+    result.files.get('./Scripts/data/WW/latest_Win_Game_OS_Res.json'),
+  )
+  for (const level of ['UHD', 'HD', 'SD']) {
+    assert.equal(resources.resourceLevels[level].fileCount, 2)
+    assert.equal(resources.predownload.resourceLevels[level].fileCount, 2)
+  }
+  assert.ok(result.files.has('./WW/Win/Game/OS/REL3.7.2+PRE3.8.0.json'))
+  const unchanged = await runScript(
+    'getWWWinGameVersion.js',
+    ['os'],
+    remote,
+    Object.fromEntries(result.files),
+  )
+  assert.equal(unchanged.exitCode, 0)
+  assert.equal(unchanged.pushes.length, 0)
+  assert.deepEqual(unchanged.requests, [osGameUrl])
 })
 
 test('CN official game counts every resource level and fetches common only once', async () => {

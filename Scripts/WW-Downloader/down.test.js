@@ -183,6 +183,7 @@ test('invalid version type is rejected', async () => {
 function loadDownloaderRuntime(fileSystem = fs, options = {}) {
   let now = 0
   const output = []
+  const logs = []
   const source = fs
     .readFileSync(new URL('down.js', import.meta.url), 'utf8')
     .replace(/^import .+\r?\n/gm, '')
@@ -204,6 +205,7 @@ function loadDownloaderRuntime(fileSystem = fs, options = {}) {
     'process',
     'Date',
     'crypto',
+    'console',
     ...Object.keys(transfer),
     source +
       `\nreturn {
@@ -232,9 +234,10 @@ function loadDownloaderRuntime(fileSystem = fs, options = {}) {
       }
     },
     crypto,
+    { log: (...values) => logs.push(values.join(' ')) },
     ...Object.values(transfer),
   )
-  return { ...runtime, output, setTime: (value) => (now = value) }
+  return { ...runtime, output, logs, setTime: (value) => (now = value) }
 }
 
 test('overall progress and ETA use bytes and current network speed, excluding verification', () => {
@@ -930,3 +933,55 @@ test(
     assert.match(progress.failedFiles[0].reason, /disk unavailable/)
   },
 )
+
+test('the final summary separates downloads, skips, verified data and actual transfer with complete failures', () => {
+  const { ProgressManager, logs, setTime } = loadDownloaderRuntime()
+  const progress = new ProgressManager(3, 2, 1000)
+  progress.isTTY = false
+  progress.updateSlot(0, { index: 0, phase: 'skip', total: 200 })
+  progress.markComplete(true)
+  progress.updateDownloaded(1, 400, true)
+  progress.updateSlot(0, { index: 1, phase: 'done', total: 400 })
+  progress.markComplete(true)
+  progress.updateDownloaded(2, 100, true)
+  const failedPath =
+    'Client/Content/Paks/' + 'long-package-name-'.repeat(5) + '.pak'
+  const reason =
+    'connection closed while downloading ' + 'long-detail-'.repeat(8)
+  progress.updateSlot(1, { index: 2, phase: 'error', current: 100, total: 400 })
+  progress.markComplete(false, {
+    index: 2,
+    name: 'failed.pak',
+    path: failedPath,
+    reason,
+  })
+  setTime(2000)
+  progress.finish()
+  const summary = logs.join('\n')
+  assert.match(summary, /下载结束.*部分失败/)
+  assert.match(summary, /总计 3.*下载成功 1.*校验跳过 1.*失败 1/)
+  assert.match(summary, /校验完成.*600 B.*1000 B.*60\.0%/)
+  assert.match(summary, /本次传输.*500 B/)
+  assert.match(summary, /平均速度.*250 B\/s/)
+  assert.match(summary, /总用时.*00:02/)
+  assert.match(summary, /保存目录/)
+  assert.ok(summary.includes(failedPath))
+  assert.ok(summary.includes(reason))
+})
+
+test('a fully cached run reports zero downloads and zero network speed', () => {
+  const { ProgressManager, logs, setTime } = loadDownloaderRuntime()
+  const progress = new ProgressManager(1, 1, 400)
+  progress.isTTY = false
+  progress.updateSlot(0, { index: 0, phase: 'skip', total: 400 })
+  progress.updateSlot(0, { index: 0, phase: 'skip', total: 400 })
+  progress.markComplete(true)
+  setTime(1000)
+  progress.finish()
+  const summary = logs.join('\n')
+  assert.match(summary, /总计 1.*下载成功 0.*校验跳过 1.*失败 0/)
+  assert.match(summary, /校验完成.*400 B.*400 B.*100\.0%/)
+  assert.match(summary, /本次传输.*0 B/)
+  assert.match(summary, /平均速度.*0 B\/s/)
+  assert.doesNotMatch(summary, /Infinity|NaN|失败文件/)
+})

@@ -65,6 +65,7 @@ class ProgressManager {
     this.succeeded = 0
     this.failed = 0
     this.failedFiles = [] // 收集失败文件
+    this.completedFiles = new Map() // 去重记录校验通过的大小与已存在文件。
     this.slots = new Array(concurrency).fill(null) // 每个并发线程的状态
     this.startTime = Date.now()
     this.speedSamples = [{ time: this.startTime, bytes: 0 }]
@@ -171,8 +172,13 @@ class ProgressManager {
   updateSlot(slotIndex, state) {
     if (state.phase === 'done' || state.phase === 'skip') {
       this.updateDownloaded(state.index, state.total)
+      this.completedFiles.set(state.index, {
+        size: state.total,
+        skipped: state.phase === 'skip',
+      })
     } else if (state.phase === 'error') {
       this.updateDownloaded(state.index, state.current || 0)
+      this.completedFiles.delete(state.index)
     }
     this.slots[slotIndex] = state
     this.throttledRender()
@@ -403,34 +409,62 @@ class ProgressManager {
     }
 
     const elapsed = (Date.now() - this.startTime) / 1000
+    const completedFiles = [...this.completedFiles.values()]
+    const skipped = completedFiles.filter((file) => file.skipped).length
+    const verifiedBytes = completedFiles.reduce(
+      (sum, file) => sum + file.size,
+      0,
+    )
+    const verifiedPercent =
+      this.totalBytes > 0
+        ? (verifiedBytes / this.totalBytes) * 100
+        : this.succeeded === this.total
+          ? 100
+          : 0
+    const averageSpeed =
+      this.transferredBytes === 0
+        ? '0 B/s'
+        : this.formatSpeed(elapsed > 0 ? this.transferredBytes / elapsed : 0)
+    const title =
+      this.failed === 0
+        ? '下载完成'
+        : this.succeeded === 0
+          ? '下载失败'
+          : '下载结束（部分失败）'
+    const printStat = (label, value) =>
+      console.log(`  ${this.padEndDisplay(label + ':', 12)}${value}`)
     console.log('')
     console.log('═'.repeat(60))
-    console.log(`  下载完成！`)
-    console.log(
-      `  总文件: ${this.total} | 成功: ${this.succeeded} | 失败: ${this.failed}`,
+    console.log(`  ${title}`)
+    printStat(
+      '文件统计',
+      `总计 ${this.total} | 下载成功 ${this.succeeded - skipped} | 校验跳过 ${skipped} | 失败 ${this.failed}`,
     )
-    console.log(`  总用时: ${this.formatTime(elapsed)}`)
+    printStat(
+      '校验完成',
+      `${this.formatSize(verifiedBytes)} / ${this.formatSize(this.totalBytes)} (${verifiedPercent.toFixed(1)}%)`,
+    )
+    printStat(
+      '本次传输',
+      `${this.formatSize(this.transferredBytes)}（含重试流量，不含校验读取）`,
+    )
+    printStat('平均速度', `${averageSpeed}（按总耗时计算）`)
+    printStat('总用时', this.formatTime(elapsed))
+    printStat('下载线程', `上限 ${concurrency}，文件并发 ${this.concurrency}`)
+    printStat('保存目录', targetDir)
     console.log('═'.repeat(60))
 
     // 醒目展示失败文件
     if (this.failedFiles.length > 0) {
       console.log('')
-      console.log('\x1b[31m' + '╔' + '═'.repeat(58) + '╗' + '\x1b[0m')
-      console.log(
-        '\x1b[31m' +
-          '║' +
-          '  ⚠️  以下文件下载失败:'.padEnd(57) +
-          '║' +
-          '\x1b[0m',
-      )
-      console.log('\x1b[31m' + '╠' + '═'.repeat(58) + '╣' + '\x1b[0m')
+      const red = this.isTTY ? '\x1b[31m' : ''
+      const reset = this.isTTY ? '\x1b[0m' : ''
+      console.log(`${red}  失败文件:${reset}`)
       for (const f of this.failedFiles) {
-        const line = `  [${f.index + 1}] ${f.name}`.slice(0, 56)
-        console.log('\x1b[31m' + '║' + line.padEnd(58) + '║' + '\x1b[0m')
-        const reason = `      原因: ${f.reason}`.slice(0, 56)
-        console.log('\x1b[31m' + '║' + reason.padEnd(58) + '║' + '\x1b[0m')
+        console.log(`  [${f.index + 1}] ${f.path || f.name}`)
+        console.log(`      原因: ${f.reason}`)
       }
-      console.log('\x1b[31m' + '╚' + '═'.repeat(58) + '╝' + '\x1b[0m')
+      console.log('  重新运行会校验已有文件，并继续可用的下载分片。')
       console.log('')
     }
   }
@@ -609,7 +643,12 @@ async function handleFile(fileObj, index, total, slotIndex) {
       current: progressManager.fileBytes.get(index) || 0,
       total: fileSize,
     })
-    progressManager.markComplete(false, { index, name, reason: result.reason })
+    progressManager.markComplete(false, {
+      index,
+      name,
+      path: relativePath,
+      reason: result.reason,
+    })
   }
 
   progressManager.clearSlot(slotIndex)
@@ -641,6 +680,7 @@ function runWithConcurrency(data, limit) {
             progressManager.markComplete(false, {
               index: currentIndex,
               name: path.basename(data[currentIndex].dest),
+              path: data[currentIndex].dest,
               reason: error.message,
             })
           })

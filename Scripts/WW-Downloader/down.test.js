@@ -249,7 +249,7 @@ test('overall progress and ETA use bytes and current network speed, excluding ve
   progress.forceRender()
   assert.match(output.join(''), /40\.0%/)
   assert.match(output.join(''), /400 B\/1000 B/)
-  assert.match(output.join(''), /预计剩余: 00:03/)
+  assert.match(output.join(''), /00:01\/00:03/)
   setTime(2000)
   assert.equal(progress.getOverallProgress().speed, 0)
   assert.equal(progress.getOverallProgress().eta, Infinity)
@@ -281,6 +281,15 @@ test('progress header and worker rows align with borders and reserve every rende
   const rendered = output.at(-1)
   const rows = rendered.split('\n').filter((line) => line.includes('║'))
   for (const row of rows) assert.equal(progress.getDisplayWidth(row), 156, row)
+  const header = rows.find((row) => row.includes('总进度'))
+  const worker = rows.find((row) => /线程\s*1/.test(row))
+  for (const value of ['45.5%', '50.00 GB/110.00 GB']) {
+    assert.equal(
+      progress.getDisplayWidth(header.slice(0, header.indexOf(value))),
+      progress.getDisplayWidth(worker.slice(0, worker.indexOf(value))),
+      value,
+    )
+  }
   assert.equal(rendered.split('\n').length - 1, progress.headerLines + 2)
   assert.equal(output[0], `\x1b[${progress.headerLines + 2}A`)
 })

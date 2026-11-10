@@ -257,29 +257,42 @@ class ProgressManager {
     // 构建输出
     const lines = []
 
+    // 总进度与线程行共用列宽，字段长度变化时仍保持纵向对齐。
+    const W_THREAD = 6
+    const W_INDEX = 12
+    const W_NAME = 44
+    const W_BAR = 15
+    const W_PERCENT = 5
+    const W_SPEED = 12
+    const W_SIZE = 24
+    const W_TIME = 14
+
     // 顶部空行和边框
     lines.push('')
     lines.push(pad + '╔' + '═'.repeat(width) + '╗')
 
     // 头部：总体进度
-    const completedStr = String(this.completed)
-    const totalStr = String(this.total)
-    const progressBar = this.makeProgressBar(overallPercent, 30)
-    const percentStr = overallPercent.toFixed(1).padStart(5)
-    const sizeStr = `${this.formatSize(this.downloadedBytes)}/${this.formatSize(this.totalBytes)}`
-    const headerContent = ` 📊 总进度 ${progressBar} ${percentStr}% ${sizeStr} (${completedStr}/${totalStr}) ✅ ${this.succeeded} ❌ ${this.failed} ${this.formatSpeed(speed)} ⏱️ 用时: ${this.formatTime(elapsed)} 预计剩余: ${this.formatTime(eta)} `
+    const labelStr = this.padEndDisplay('总进度', W_THREAD)
+    const countStr =
+      `[${String(this.completed).padStart(4, '0')}/${String(this.total).padStart(4, '0')}]`.padEnd(
+        W_INDEX,
+      )
+    const summaryStr = this.padEndDisplay(
+      `成功: ${this.succeeded}  失败: ${this.failed}`,
+      W_NAME,
+    )
+    const progressBar = this.makeProgressBar(overallPercent, W_BAR)
+    const percentStr = `${overallPercent.toFixed(1)}%`.padStart(W_PERCENT)
+    const speedStr = this.formatSpeed(speed).padStart(W_SPEED)
+    const sizeStr =
+      `${this.formatSize(this.downloadedBytes)}/${this.formatSize(this.totalBytes)}`.padStart(
+        W_SIZE,
+      )
+    const timeStr =
+      `${this.formatTime(elapsed)}/${this.formatTime(eta)}`.padEnd(W_TIME)
+    const headerContent = ` ${labelStr} │ ${countStr}${this.padEndDisplay('📊', 3)}${summaryStr} ${progressBar} ${percentStr} ${speedStr} ${sizeStr} ${timeStr}`
     lines.push(pad + '║' + this.padEndDisplay(headerContent, width) + '║')
     lines.push(pad + '╠' + '═'.repeat(width) + '╣')
-
-    // 固定宽度定义
-    const W_THREAD = 6 // "线程 1" 等
-    const W_INDEX = 12 // "[0001/1000]"
-    const W_NAME = 44 // 文件名
-    const W_BAR = 15 // 进度条
-    const W_PERCENT = 5 // "100.0%"
-    const W_SPEED = 12 // "999.9 MB/s"
-    const W_SIZE = 24 // "1000.00 MB/1000.00 MB"
-    const W_TIME = 14 // "00:00/00:00"
 
     // 各个并发线程
     for (let i = 0; i < this.concurrency; i++) {

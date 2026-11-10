@@ -5,6 +5,7 @@ import https from 'node:https'
 import http from 'node:http'
 import os from 'node:os'
 import crypto from 'node:crypto'
+import { EventEmitter } from 'node:events'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
 import * as wwResources from '../utils/wwResources.js'
@@ -184,6 +185,11 @@ function loadDownloaderRuntime(fileSystem = fs, options = {}) {
   let now = 0
   const output = []
   const logs = []
+  const process = Object.assign(new EventEmitter(), {
+    argv: ['node', 'down.js', ...(options.argv || [])],
+    env: options.env || {},
+    stdout: { isTTY: true, write: (value) => output.push(value) },
+  })
   const source = fs
     .readFileSync(new URL('down.js', import.meta.url), 'utf8')
     .replace(/^import .+\r?\n/gm, '')
@@ -206,11 +212,14 @@ function loadDownloaderRuntime(fileSystem = fs, options = {}) {
     'Date',
     'crypto',
     'console',
+    ...Object.keys(wwResources),
     ...Object.keys(transfer),
     source +
       `\nreturn {
         ProgressManager, runWithConcurrency, handleFile, downloadFile,
-        parseConcurrencyArg,
+        parseConcurrencyArg, main,
+        getManager() { return progressManager },
+        setResources(value) { loadResources = value },
         setManager(value) { progressManager = value },
         setHandler(value) { handleFile = value },
         setDownload(value) { downloadFile = value },
@@ -223,21 +232,27 @@ function loadDownloaderRuntime(fileSystem = fs, options = {}) {
     fileURLToPath,
     path.dirname,
     import.meta.url,
-    {
-      argv: ['node', 'down.js', ...(options.argv || [])],
-      env: options.env || {},
-      stdout: { isTTY: true, write: (value) => output.push(value) },
-    },
+    process,
     class extends Date {
       static now() {
         return now
       }
     },
     crypto,
-    { log: (...values) => logs.push(values.join(' ')) },
+    {
+      log: (...values) => logs.push(values.join(' ')),
+      error: (...values) => logs.push(values.join(' ')),
+    },
+    ...Object.values(wwResources),
     ...Object.values(transfer),
   )
-  return { ...runtime, output, logs, setTime: (value) => (now = value) }
+  return {
+    ...runtime,
+    process,
+    output,
+    logs,
+    setTime: (value) => (now = value),
+  }
 }
 
 test('overall progress and ETA use bytes and current network speed, excluding verification', () => {
@@ -984,4 +999,261 @@ test('a fully cached run reports zero downloads and zero network speed', () => {
   assert.match(summary, /本次传输.*0 B/)
   assert.match(summary, /平均速度.*0 B\/s/)
   assert.doesNotMatch(summary, /Infinity|NaN|失败文件/)
+})
+
+test(
+  'Ctrl+C stops queued files, closes transfers and prints one resumable interruption summary',
+  { timeout: 5000 },
+  async (t) => {
+    const content = Buffer.alloc(1024 ** 2, 47)
+    const requests = []
+    const { url, directory } = await createDownloadServer(
+      t,
+      content,
+      (req, res, body) => {
+        requests.push(req.url)
+        sendDownloadRange(req, res, body)
+      },
+    )
+    const runtime = loadDownloaderRuntime(fs, { targetDir: directory })
+    runtime.process.stdout.isTTY = false
+    runtime.setResources(async () =>
+      Array.from({ length: 5 }, (_, index) => ({
+        dest: `${index}.pak`,
+        url: new URL(`/${index}.pak`, url).href,
+        size: content.length,
+        md5: crypto.createHash('md5').update(content).digest('hex'),
+      })),
+    )
+    let interrupted = false
+    const updateDownloaded = runtime.ProgressManager.prototype.updateDownloaded
+    runtime.ProgressManager.prototype.updateDownloaded = function (...args) {
+      updateDownloaded.apply(this, args)
+      if (args[2] && !interrupted) {
+        interrupted = true
+        runtime.setTime(2000)
+        runtime.process.emit('SIGINT')
+        runtime.process.emit('SIGINT')
+      }
+    }
+    await runtime.main()
+    const progress = runtime.getManager()
+    const summary = runtime.logs.join('\n')
+    assert.equal(summary.match(/下载已中断/g)?.length, 1)
+    assert.match(summary, /SIGINT/)
+    assert.match(summary, /总计 5.*失败 0.*未完成 5/)
+    assert.match(summary, /已保留进度/)
+    assert.match(summary, /本次传输/)
+    assert.match(summary, /总用时.*00:02/)
+    assert.match(summary, /重新运行.*续传/)
+    assert.equal(runtime.process.exitCode, 130)
+    assert.equal(progress.failed, 0)
+    assert.equal(progress.completed, 0)
+    assert.ok(
+      !requests.includes('/4.pak'),
+      'queued file was started after interruption',
+    )
+    const retained = fs
+      .readdirSync(directory)
+      .filter((name) => name.endsWith('.parts'))
+      .reduce((sum, name) => {
+        const parts = path.join(directory, name)
+        return (
+          sum +
+          fs
+            .readdirSync(parts)
+            .filter((part) => part.endsWith('.part'))
+            .reduce(
+              (size, part) => size + fs.statSync(path.join(parts, part)).size,
+              0,
+            )
+        )
+      }, 0)
+    assert.ok(retained > 0 && retained < content.length * 5)
+    assert.equal(progress.downloadedBytes, retained)
+    assert.equal(runtime.process.listenerCount('SIGINT'), 0)
+    assert.equal(runtime.process.listenerCount('SIGTERM'), 0)
+  },
+)
+
+test('SIGTERM during resource loading exits cleanly without inventing download statistics', async () => {
+  const runtime = loadDownloaderRuntime()
+  runtime.setResources(async (signal) => {
+    runtime.process.emit('SIGTERM')
+    signal?.throwIfAborted()
+    return []
+  })
+  await runtime.main()
+  const summary = runtime.logs.join('\n')
+  assert.match(summary, /已中断.*SIGTERM/)
+  assert.match(summary, /尚未开始下载/)
+  assert.doesNotMatch(summary, /下载完成|文件统计|无法加载资源列表/)
+  assert.equal(runtime.process.exitCode, 143)
+  assert.equal(runtime.getManager(), null)
+  assert.equal(runtime.process.listenerCount('SIGINT'), 0)
+  assert.equal(runtime.process.listenerCount('SIGTERM'), 0)
+})
+
+test('interrupting a resume scan still reports the partial bytes it has identified', async (t) => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'ww-scan-interrupt-'))
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }))
+  const parts = path.join(directory, 'file.pak.parts')
+  fs.mkdirSync(parts)
+  fs.writeFileSync(
+    path.join(parts, 'manifest.json'),
+    JSON.stringify({
+      version: 1,
+      size: 1024 ** 2,
+      identity: 'scan-fixture',
+      partSize: 256 * 1024,
+    }),
+  )
+  fs.writeFileSync(path.join(parts, '0.part'), Buffer.alloc(65536))
+  fs.writeFileSync(path.join(parts, '262144.part'), Buffer.alloc(65536))
+  const runtime = loadDownloaderRuntime(fs, { targetDir: directory })
+  runtime.process.stdout.isTTY = false
+  runtime.setResources(async () => [
+    {
+      dest: 'file.pak',
+      url: 'http://unused.invalid/file',
+      size: 1024 ** 2,
+      md5: 'scan-fixture',
+    },
+  ])
+  const stat = fs.promises.stat
+  t.mock.method(fs.promises, 'stat', async function (name, ...args) {
+    const result = await stat.call(this, name, ...args)
+    if (name === path.join(parts, '262144.part')) runtime.process.emit('SIGINT')
+    return result
+  })
+  await runtime.main()
+  assert.equal(runtime.getManager().downloadedBytes, 131072)
+  assert.equal(runtime.getManager().transferredBytes, 0)
+  assert.match(runtime.logs.join('\n'), /已保留进度.*128\.00 KB/)
+  assert.equal(runtime.process.exitCode, 130)
+})
+
+test('interrupting legacy-prefix migration reports saved bytes and keeps the original prefix', async (t) => {
+  const directory = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'ww-migrate-interrupt-'),
+  )
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }))
+  const destination = path.join(directory, 'file.pak')
+  const prefix = Buffer.alloc(300 * 1024, 19)
+  fs.writeFileSync(destination, prefix)
+  const runtime = loadDownloaderRuntime(fs, { targetDir: directory })
+  runtime.process.stdout.isTTY = false
+  runtime.setResources(async () => [
+    {
+      dest: 'file.pak',
+      url: 'http://unused.invalid/file',
+      size: 1024 ** 2,
+      md5: 'migrate-fixture',
+    },
+  ])
+  const createWriteStream = fs.createWriteStream
+  t.mock.method(fs, 'createWriteStream', function (name, options) {
+    const stream = createWriteStream.call(this, name, {
+      ...options,
+      highWaterMark: 1,
+    })
+    stream.once('drain', () => runtime.process.emit('SIGINT'))
+    return stream
+  })
+  await runtime.main()
+  const retained = fs.statSync(path.join(destination + '.parts', '0.part')).size
+  assert.ok(retained > 0 && retained < prefix.length)
+  assert.equal(runtime.getManager().downloadedBytes, retained)
+  assert.equal(runtime.getManager().transferredBytes, 0)
+  assert.equal(runtime.getManager().failed, 0)
+  assert.equal(runtime.process.exitCode, 130)
+  assert.deepEqual(fs.readFileSync(destination), prefix)
+})
+
+for (const cached of [true, false]) {
+  test(`interrupting ${cached ? 'existing' : 'downloaded'}-file verification closes the reader and never deletes or retries the target`, async (t) => {
+    const directory = fs.mkdtempSync(
+      path.join(os.tmpdir(), 'ww-verify-interrupt-'),
+    )
+    t.after(() => fs.rmSync(directory, { recursive: true, force: true }))
+    const content = Buffer.alloc(1024 ** 2, 89)
+    const destination = path.join(directory, 'cached.pak')
+    if (cached) fs.writeFileSync(destination, content)
+    let closed = false
+    const runtime = loadDownloaderRuntime(
+      {
+        ...fs,
+        createReadStream(...args) {
+          const stream = fs.createReadStream(...args)
+          stream.once('data', () => runtime.process.emit('SIGINT'))
+          stream.once('close', () => {
+            closed = true
+          })
+          return stream
+        },
+      },
+      { targetDir: directory },
+    )
+    runtime.process.stdout.isTTY = false
+    runtime.setResources(async () => [
+      {
+        dest: 'cached.pak',
+        url: 'http://unused.invalid/file',
+        size: content.length,
+        md5: crypto.createHash('md5').update(content).digest('hex'),
+      },
+    ])
+    let downloadCalls = 0
+    runtime.setDownload(async (_url, dest, onProgress) => {
+      downloadCalls++
+      assert.equal(cached, false, 'existing target must not be downloaded')
+      fs.writeFileSync(dest, content)
+      onProgress(content.length, true)
+    })
+    await runtime.main()
+    assert.match(runtime.logs.join('\n'), /下载已中断/)
+    assert.equal(closed, true)
+    assert.equal(downloadCalls, cached ? 0 : 1)
+    assert.equal(runtime.getManager().failed, 0)
+    assert.equal(runtime.process.exitCode, 130)
+    assert.deepEqual(fs.readFileSync(destination), content)
+  })
+}
+
+test('interruption during assembly retains complete parts and can finish without more requests', async (t) => {
+  const content = Buffer.alloc(1024 ** 2, 97)
+  let requests = 0
+  const { url, destination } = await createDownloadServer(
+    t,
+    content,
+    (req, res, body) => {
+      requests++
+      sendDownloadRange(req, res, body)
+    },
+  )
+  const controller = new AbortController()
+  const open = fs.promises.open
+  t.mock.method(fs.promises, 'open', async function (name, ...args) {
+    const handle = await open.call(this, name, ...args)
+    if (name === destination + '.assembling')
+      controller.abort(new Error('assembly interrupted'))
+    return handle
+  })
+  await assert.rejects(
+    new transfer.DownloadScheduler(4).download(url, destination, {
+      size: content.length,
+      md5: 'assembly-fixture',
+      signal: controller.signal,
+    }),
+    /assembly interrupted|aborted/,
+  )
+  assert.equal(fs.existsSync(destination), false)
+  assert.equal(fs.existsSync(destination + '.parts'), true)
+  const requestsBeforeResume = requests
+  await new transfer.DownloadScheduler(4).download(url, destination, {
+    size: content.length,
+    md5: 'assembly-fixture',
+  })
+  assert.equal(requests, requestsBeforeResume)
+  assert.deepEqual(fs.readFileSync(destination), content)
 })

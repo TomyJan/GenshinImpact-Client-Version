@@ -51,6 +51,7 @@ function parseConcurrencyArg() {
 
 const concurrency = parseConcurrencyArg()
 const downloadScheduler = new DownloadScheduler(concurrency)
+const downloadController = new AbortController()
 
 // ==================== 进度管理器 ====================
 class ProgressManager {
@@ -401,7 +402,7 @@ class ProgressManager {
   }
 
   // 完成时的最终输出
-  finish() {
+  finish({ interrupted = null } = {}) {
     if (this.isTTY) {
       // 移到进度区域下方
       const totalLines = this.headerLines + this.concurrency
@@ -425,8 +426,9 @@ class ProgressManager {
       this.transferredBytes === 0
         ? '0 B/s'
         : this.formatSpeed(elapsed > 0 ? this.transferredBytes / elapsed : 0)
-    const title =
-      this.failed === 0
+    const title = interrupted
+      ? `下载已中断（${interrupted}）`
+      : this.failed === 0
         ? '下载完成'
         : this.succeeded === 0
           ? '下载失败'
@@ -438,12 +440,19 @@ class ProgressManager {
     console.log(`  ${title}`)
     printStat(
       '文件统计',
-      `总计 ${this.total} | 下载成功 ${this.succeeded - skipped} | 校验跳过 ${skipped} | 失败 ${this.failed}`,
+      `总计 ${this.total} | 下载成功 ${this.succeeded - skipped} | 校验跳过 ${skipped} | 失败 ${this.failed}` +
+        (interrupted ? ` | 未完成 ${this.total - this.completed}` : ''),
     )
     printStat(
       '校验完成',
       `${this.formatSize(verifiedBytes)} / ${this.formatSize(this.totalBytes)} (${verifiedPercent.toFixed(1)}%)`,
     )
+    if (interrupted) {
+      printStat(
+        '已保留进度',
+        `${this.formatSize(this.downloadedBytes)} / ${this.formatSize(this.totalBytes)}（含已完成文件和已识别的续传分片，未全部校验）`,
+      )
+    }
     printStat(
       '本次传输',
       `${this.formatSize(this.transferredBytes)}（含重试流量，不含校验读取）`,
@@ -453,6 +462,11 @@ class ProgressManager {
     printStat('下载线程', `上限 ${concurrency}，文件并发 ${this.concurrency}`)
     printStat('保存目录', targetDir)
     console.log('═'.repeat(60))
+    if (interrupted) {
+      console.log(
+        '  断点数据已保留，重新运行会校验已有文件并续传；未完成的校验会重新开始。',
+      )
+    }
 
     // 醒目展示失败文件
     if (this.failedFiles.length > 0) {
@@ -477,15 +491,23 @@ let progressManager = null
 
 // 分片、续传和所有文件共用的线程预算由同一个调度器管理。
 function downloadFile(url, dest, onProgress, fileObj) {
-  return downloadScheduler.download(url, dest, { ...fileObj, onProgress })
+  return downloadScheduler.download(url, dest, {
+    ...fileObj,
+    onProgress,
+    signal: downloadController.signal,
+  })
 }
 
 // 计算文件 MD5（带进度回调）
 function getFileMD5(filePath, onProgress) {
   return new Promise((resolve, reject) => {
     const hash = crypto.createHash('md5')
-    const stream = fs.createReadStream(filePath)
+    const stream = fs.createReadStream(filePath, {
+      signal: downloadController.signal,
+    })
     let processed = 0
+    let digest
+    let readError
 
     stream.on('data', (chunk) => {
       hash.update(chunk)
@@ -493,13 +515,25 @@ function getFileMD5(filePath, onProgress) {
       if (onProgress) onProgress(processed)
     })
 
-    stream.on('end', () => resolve(hash.digest('hex')))
-    stream.on('error', reject)
+    stream.on('end', () => {
+      digest = hash.digest('hex')
+    })
+    stream.on('error', (error) => {
+      readError = error
+    })
+    // 等待文件描述符关闭后才结束任务，确保中断统计之后没有后台读写。
+    stream.on('close', () => {
+      if (readError) reject(readError)
+      else if (digest !== undefined) resolve(digest)
+      else reject(new Error('校验读取提前结束'))
+    })
   })
 }
 
 // 处理单个文件
 async function handleFile(fileObj, index, total, slotIndex) {
+  const signal = downloadController.signal
+  signal.throwIfAborted()
   const relativePath = fileObj.dest
   const fullPath = path.join(targetDir, relativePath)
   const url = fileObj.url
@@ -543,6 +577,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
   }
 
   const checkAndDownload = async (isRetry = false) => {
+    signal.throwIfAborted()
     // 检查已存在文件
     if (fs.existsSync(fullPath)) {
       const stats = fs.statSync(fullPath)
@@ -553,6 +588,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
 
         try {
           const md5 = await getFileMD5(fullPath, progressUpdater)
+          signal.throwIfAborted()
           if (md5 === fileObj.md5) {
             progressManager.updateSlot(slotIndex, {
               index,
@@ -567,10 +603,13 @@ async function handleFile(fileObj, index, total, slotIndex) {
             })
             return { success: true }
           }
-        } catch {}
+        } catch {
+          signal.throwIfAborted()
+        }
       }
       // 不完整的旧文件保留连续前缀；完整但校验失败的文件必须重新下载。
       if (stats.size >= fileSize) {
+        signal.throwIfAborted()
         fs.unlinkSync(fullPath)
         await discardPartialDownload(fullPath)
       }
@@ -583,6 +622,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
     try {
       await downloadFile(url, fullPath, downloadUpdater, fileObj)
     } catch (e) {
+      signal.throwIfAborted()
       if (!isRetry) {
         return await checkAndDownload(true)
       }
@@ -590,6 +630,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
     }
 
     // 校验下载的文件
+    signal.throwIfAborted()
     const verifyUpdater = createProgressUpdater('verify')
     verifyUpdater(0)
 
@@ -599,6 +640,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
         throw new Error('文件大小不匹配')
       }
       const md5 = await getFileMD5(fullPath, verifyUpdater)
+      signal.throwIfAborted()
       if (md5 !== fileObj.md5) {
         throw new Error('MD5 校验失败')
       }
@@ -616,6 +658,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
       })
       return { success: true }
     } catch (e) {
+      signal.throwIfAborted()
       if (!isRetry) {
         try {
           fs.unlinkSync(fullPath)
@@ -661,6 +704,7 @@ function runWithConcurrency(data, limit) {
   data = [...data].sort((a, b) => b.size - a.size)
   return new Promise((resolve) => {
     let nextIndex = 0
+    let running = 0
     const total = data.length
 
     if (total === 0) return resolve()
@@ -670,13 +714,19 @@ function runWithConcurrency(data, limit) {
     for (let i = 0; i < limit; i++) availableSlots.push(i)
 
     function runNext() {
-      while (availableSlots.length > 0 && nextIndex < total) {
+      while (
+        !downloadController.signal.aborted &&
+        availableSlots.length > 0 &&
+        nextIndex < total
+      ) {
         const currentIndex = nextIndex++
         const slotIndex = availableSlots.shift() // 取出一个可用槽位
+        running++
 
         handleFile(data[currentIndex], currentIndex, total, slotIndex)
           .catch((error) => {
             progressManager.clearSlot(slotIndex)
+            if (downloadController.signal.aborted) return
             progressManager.markComplete(false, {
               index: currentIndex,
               name: path.basename(data[currentIndex].dest),
@@ -685,14 +735,17 @@ function runWithConcurrency(data, limit) {
             })
           })
           .finally(() => {
+            running--
             availableSlots.push(slotIndex) // 归还槽位
-            if (progressManager.completed === total) {
-              resolve()
-            } else {
-              runNext()
-            }
+            runNext()
           })
       }
+      // 中断后不再补位，等所有在途任务关闭文件和请求，再输出统计。
+      if (
+        running === 0 &&
+        (nextIndex === total || downloadController.signal.aborted)
+      )
+        resolve()
     }
 
     runNext()
@@ -700,12 +753,12 @@ function runWithConcurrency(data, limit) {
 }
 
 // ==================== 主函数 ====================
-async function loadResources() {
+async function loadResources(signal = downloadController.signal) {
   if (!['default', 'pre'].includes(versionType)) {
     throw new Error(`不支持的下载版本: ${versionType}，可选 default/pre`)
   }
   const fetchJson = async (url) => {
-    const res = await fetch(url)
+    const res = await fetch(url, { signal })
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`)
     return res.json()
   }
@@ -734,51 +787,76 @@ async function loadResources() {
 }
 
 async function main() {
-  console.log(
-    `[${new Date().toTimeString().split(' ')[0]}] 正在加载资源列表...`,
-  )
-
-  let data
+  let interrupted = null
+  const onSignal = (signal) => {
+    if (interrupted) return
+    interrupted = signal
+    process.exitCode = signal === 'SIGINT' ? 130 : 143
+    downloadController.abort(new Error(`下载已中断（${signal}）`))
+  }
+  const onSIGINT = () => onSignal('SIGINT')
+  const onSIGTERM = () => onSignal('SIGTERM')
+  process.on('SIGINT', onSIGINT)
+  process.on('SIGTERM', onSIGTERM)
   try {
-    data = await loadResources()
-  } catch (err) {
-    console.error(`无法加载资源列表: ${err.message}`)
-    process.exit(1)
-  }
+    console.log(
+      `[${new Date().toTimeString().split(' ')[0]}] 正在加载资源列表...`,
+    )
 
-  if (!data || data.length === 0) {
-    console.log('资源列表为空，无需下载')
-    return
-  }
+    let data
+    try {
+      data = await loadResources(downloadController.signal)
+      downloadController.signal.throwIfAborted()
+    } catch (err) {
+      if (downloadController.signal.aborted) return
+      console.error(`无法加载资源列表: ${err.message}`)
+      process.exitCode = 1
+      return
+    }
 
-  const total = data.length
-  console.log(`下载版本: ${versionType === 'pre' ? '预下载' : '正式版'}`)
-  console.log(`资源等级: ${resourceLevelNames[resourceLevel]}`)
-  console.log(
-    `共 ${total} 个文件，下载线程上限: ${concurrency}，同时处理最多 4 个文件`,
-  )
-  console.log(`目标目录: ${targetDir}`)
-  console.log('')
+    if (!data || data.length === 0) {
+      console.log('资源列表为空，无需下载')
+      return
+    }
 
-  // 初始化进度管理器
-  const totalBytes = data.reduce((sum, file) => sum + file.size, 0)
-  const fileConcurrency = Math.min(4, concurrency)
-  progressManager = new ProgressManager(total, fileConcurrency, totalBytes)
-  progressManager.init()
+    const total = data.length
+    console.log(`下载版本: ${versionType === 'pre' ? '预下载' : '正式版'}`)
+    console.log(`资源等级: ${resourceLevelNames[resourceLevel]}`)
+    console.log(
+      `共 ${total} 个文件，下载线程上限: ${concurrency}，同时处理最多 4 个文件`,
+    )
+    console.log(`目标目录: ${targetDir}`)
+    console.log('')
 
-  // 执行下载
-  await runWithConcurrency(data, fileConcurrency)
+    // 初始化进度管理器
+    const totalBytes = data.reduce((sum, file) => sum + file.size, 0)
+    const fileConcurrency = Math.min(4, concurrency)
+    progressManager = new ProgressManager(total, fileConcurrency, totalBytes)
+    progressManager.init()
 
-  // 输出最终结果
-  progressManager.finish()
+    // 执行下载
+    await runWithConcurrency(data, fileConcurrency)
 
-  // 如果有失败，返回非零退出码
-  if (progressManager.failed > 0) {
-    process.exit(1)
+    // 如果有失败，返回非零退出码
+    if (!interrupted && progressManager.failed > 0) {
+      process.exitCode = 1
+    }
+  } finally {
+    try {
+      if (progressManager) progressManager.finish({ interrupted })
+      else if (interrupted) {
+        console.log(
+          `已中断（${interrupted}）：资源列表尚未加载完成，尚未开始下载。`,
+        )
+      }
+    } finally {
+      process.off('SIGINT', onSIGINT)
+      process.off('SIGTERM', onSIGTERM)
+    }
   }
 }
 
 main().catch((err) => {
   console.error(`主函数出错: ${err.message}`)
-  process.exit(1)
+  process.exitCode = 1
 })

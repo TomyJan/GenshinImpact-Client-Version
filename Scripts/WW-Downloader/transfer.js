@@ -59,6 +59,7 @@ async function saveManifest(job) {
 }
 
 async function prepareDownload(url, destination, options, limit) {
+  options.signal?.throwIfAborted()
   const { size, md5 } = options
   if (!Number.isSafeInteger(size) || size < 0) throw new Error('无效的文件大小')
   const directory = destination + '.parts'
@@ -103,53 +104,72 @@ async function prepareDownload(url, destination, options, limit) {
         },
   }
   if (!reusable) {
+    options.signal?.throwIfAborted()
     await discardPartialDownload(destination)
     await fs.promises.mkdir(directory, { recursive: true })
     await saveManifest(job)
   }
 
-  for (let start = 0; start < size; start += job.manifest.partSize) {
-    const end = Math.min(size, start + job.manifest.partSize) - 1
-    const part = {
-      start,
-      end,
-      path: path.join(directory, `${start}.part`),
-      active: false,
-      downloaded: 0,
-    }
-    try {
-      const stats = await fs.promises.stat(part.path)
-      if (stats.size <= end - start + 1) part.downloaded = stats.size
-      else await fs.promises.truncate(part.path, 0)
-    } catch (error) {
-      if (error.code !== 'ENOENT') throw error
-    }
-    job.parts.push(part)
-  }
-
-  // 兼容旧脚本直接写入目标文件留下的连续前缀，迁移完才删除原文件。
-  if (!reusable) {
-    let existingSize = 0
-    try {
-      existingSize = (await fs.promises.stat(destination)).size
-    } catch (error) {
-      if (error.code !== 'ENOENT') throw error
-    }
-    if (existingSize > 0 && existingSize < size) {
-      for (const part of job.parts) {
-        if (part.start >= existingSize) break
-        const end = Math.min(part.end, existingSize - 1)
-        await pipeline(
-          fs.createReadStream(destination, { start: part.start, end }),
-          fs.createWriteStream(part.path),
-        )
-        part.downloaded = end - part.start + 1
+  try {
+    for (let start = 0; start < size; start += job.manifest.partSize) {
+      options.signal?.throwIfAborted()
+      const end = Math.min(size, start + job.manifest.partSize) - 1
+      const part = {
+        start,
+        end,
+        path: path.join(directory, `${start}.part`),
+        active: false,
+        downloaded: 0,
       }
-      await fs.promises.unlink(destination)
+      try {
+        const stats = await fs.promises.stat(part.path)
+        if (stats.size <= end - start + 1) part.downloaded = stats.size
+        else await fs.promises.truncate(part.path, 0)
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error
+      }
+      job.parts.push(part)
     }
+
+    // 兼容旧脚本直接写入目标文件留下的连续前缀，迁移完才删除原文件。
+    if (!reusable) {
+      let existingSize = 0
+      try {
+        existingSize = (await fs.promises.stat(destination)).size
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error
+      }
+      if (existingSize > 0 && existingSize < size) {
+        for (const part of job.parts) {
+          options.signal?.throwIfAborted()
+          if (part.start >= existingSize) break
+          const end = Math.min(part.end, existingSize - 1)
+          try {
+            await pipeline(
+              fs.createReadStream(destination, { start: part.start, end }),
+              fs.createWriteStream(part.path),
+              { signal: options.signal },
+            )
+          } catch (error) {
+            // pipeline 中断时已关闭读写流，补记当前迁移片段实际保存的字节。
+            try {
+              part.downloaded = (await fs.promises.stat(part.path)).size
+            } catch (statError) {
+              if (statError.code !== 'ENOENT') throw statError
+            }
+            throw error
+          }
+          part.downloaded = end - part.start + 1
+        }
+        options.signal?.throwIfAborted()
+        await fs.promises.unlink(destination)
+      }
+    }
+  } finally {
+    // 扫描或迁移途中退出，也要回报已经识别并保留下来的续传数据。
+    job.downloaded = job.parts.reduce((sum, part) => sum + part.downloaded, 0)
+    job.onProgress?.(job.downloaded, false)
   }
-  job.downloaded = job.parts.reduce((sum, part) => sum + part.downloaded, 0)
-  job.onProgress?.(job.downloaded, false)
   return job
 }
 
@@ -366,17 +386,23 @@ export class DownloadScheduler {
   }
 
   async assemble(job) {
+    job.signal?.throwIfAborted()
     const temporary = job.destination + '.assembling'
     const output = await fs.promises.open(temporary, 'w')
     try {
+      job.signal?.throwIfAborted()
       for (const part of job.parts) {
-        for await (const chunk of fs.createReadStream(part.path)) {
+        job.signal?.throwIfAborted()
+        for await (const chunk of fs.createReadStream(part.path, {
+          signal: job.signal,
+        })) {
           await output.writeFile(chunk)
         }
       }
     } finally {
       await output.close()
     }
+    job.signal?.throwIfAborted()
     await fs.promises.rename(temporary, job.destination)
     await fs.promises.rm(job.directory, { recursive: true, force: true })
   }

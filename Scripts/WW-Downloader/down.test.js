@@ -408,7 +408,7 @@ test('downloaded-file verification is visible immediately and renders its final 
   assert.equal(progress.transferredBytes, 400)
 })
 
-test('native checksum polling keeps intermediate scan progress visible after download reaches 100 percent', async () => {
+test('parallel checksum callbacks keep scan progress visible after download reaches 100 percent', async () => {
   const runtime = loadDownloaderRuntime({
     mkdirSync() {},
     existsSync: () => false,
@@ -421,26 +421,14 @@ test('native checksum polling keeps intermediate scan progress visible after dow
     throw new Error('duplicate MD5 scan')
   })
   runtime.setDownload(async (_url, _destination, onProgress, options) => {
-    const scheduler = new transfer.DownloadScheduler(4)
-    const job = {
-      size: 400,
-      downloaded: 0,
-      options: { ...options, onProgress },
-    }
+    onProgress(400)
     for (const [time, verifiedLength] of [
       [1000, '0'],
       [1200, '200'],
       [1201, '400'],
     ]) {
       runtime.setTime(time)
-      scheduler.report(job, {
-        status: 'active',
-        totalLength: '400',
-        completedLength: '400',
-        connections: '0',
-        verifiedLength,
-        verifyIntegrityPending: 'false',
-      })
+      options.onVerifyProgress(Number(verifiedLength))
       frames.push(runtime.output.at(-1))
     }
     return { verified: true }
@@ -639,6 +627,28 @@ test('the total download thread budget is clamped to 4 through 16', () => {
       expected,
     )
   }
+})
+
+test('main uses the configured file concurrency instead of a four-file cap', async () => {
+  const runtime = loadDownloaderRuntime(fs, { argv: ['-c', '8'] })
+  runtime.setResources(async () =>
+    Array.from({ length: 8 }, (_, i) => ({ dest: `${i}.pak`, size: 1 })),
+  )
+  const pending = []
+  let peak = 0
+  runtime.setHandler(
+    () =>
+      new Promise((resolve) => {
+        pending.push(resolve)
+        peak = Math.max(peak, pending.length)
+        setImmediate(() => {
+          pending.splice(pending.indexOf(resolve), 1)
+          resolve()
+        })
+      }),
+  )
+  await runtime.main()
+  assert.equal(peak, 8)
 })
 
 async function createDownloadServer(t, content, handler) {

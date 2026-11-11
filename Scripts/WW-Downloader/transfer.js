@@ -9,6 +9,43 @@ import { migrateLegacy, readAria2Progress } from './aria2-resume.js'
 const MiB = 1024 ** 2
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
+// 文件间并行读取，不使用 aria2 的串行校验队列，也不阻塞下载调度。
+async function getFileMD5(filename, signal, onProgress) {
+  signal?.throwIfAborted()
+  onProgress?.(0)
+  const hash = createHash('md5')
+  const stream = fs.createReadStream(filename, {
+    signal,
+    highWaterMark: MiB,
+  })
+  return new Promise((resolve, reject) => {
+    let processed = 0
+    let digest
+    let failure
+    stream.on('data', (chunk) => {
+      try {
+        hash.update(chunk)
+        processed += chunk.length
+        onProgress?.(processed)
+      } catch (error) {
+        stream.destroy(error)
+      }
+    })
+    stream.on('end', () => {
+      digest = hash.digest('hex')
+    })
+    stream.on('error', (error) => {
+      failure = error
+    })
+    // 中断/关闭时等待读取句柄释放，再结束该任务。
+    stream.on('close', () => {
+      if (failure) reject(failure)
+      else if (digest !== undefined) resolve(digest)
+      else reject(new Error('校验读取提前结束'))
+    })
+  })
+}
+
 export function normalizeThreadLimit(value = 16) {
   const count = Number(value)
   return Math.max(
@@ -97,7 +134,7 @@ class Aria2Client {
         '--file-allocation=trunc',
         '--disk-cache=0',
         '--auto-save-interval=1',
-        '--max-concurrent-downloads=4',
+        `--max-concurrent-downloads=${limit}`,
         '--max-overall-download-limit=0',
         `--stop-with-process=${process.pid}`,
         `--max-connection-per-server=${limit}`,
@@ -259,18 +296,12 @@ async function prepareDownload(url, destination, options) {
     if (native) {
       let verified = false
       if (native.size === size && md5) {
-        const hash = createHash('md5')
-        let processed = 0
-        options.onVerifyProgress?.(0)
-        for await (const chunk of fs.createReadStream(
-          destination + '.download',
-          { signal },
-        )) {
-          hash.update(chunk)
-          processed += chunk.length
-          options.onVerifyProgress?.(processed)
-        }
-        verified = hash.digest('hex') === md5.toLowerCase()
+        verified =
+          (await getFileMD5(
+            destination + '.download',
+            signal,
+            options.onVerifyProgress,
+          )) === md5.toLowerCase()
       }
       signal?.throwIfAborted()
       if (verified) {
@@ -307,6 +338,7 @@ export class DownloadScheduler {
   constructor(limit = 16) {
     this.limit = normalizeThreadLimit(limit)
     this.jobs = new Set()
+    this.verificationController = new AbortController()
     this.revision = 0
   }
 
@@ -352,7 +384,8 @@ export class DownloadScheduler {
           // RPC/子进程失败必须关闭原生写入后才结束任务。
           const client = this.client
           await client.close(error)
-          const failedJobs = [...this.jobs]
+          // 已下载完、正在本地校验的文件不受网络引擎退出影响。
+          const failedJobs = [...this.jobs].filter((job) => !job.verification)
           // 旧进程已停写后才允许下一次重试启动新引擎，继续复用原生断点。
           this.initializing = undefined
           this.client = undefined
@@ -392,8 +425,6 @@ export class DownloadScheduler {
       'connections',
       'errorCode',
       'errorMessage',
-      'verifiedLength',
-      'verifyIntegrityPending',
     ])
   }
 
@@ -407,15 +438,53 @@ export class DownloadScheduler {
       job.options.onProgress?.(completed, true)
       job.downloaded = completed
     }
-    if (
-      status.verifiedLength !== undefined ||
-      status.verifyIntegrityPending === 'true'
-    ) {
-      if (!job.verifying) {
-        job.verifying = true
-        job.options.onVerifyProgress?.(0)
+  }
+
+  async rejectCorruptDownload(job) {
+    await discardNative(job.destination)
+    // 保留旧来源，但校验失败后不能再次导入同一批损坏数据。
+    await fs.promises.writeFile(
+      job.destination + '.download.json',
+      JSON.stringify({
+        version: 1,
+        identity: job.options.md5 || job.url,
+        size: job.size,
+        legacyRejected: true,
+      }),
+    )
+    job.downloaded = 0
+    job.options.onProgress?.(0, false)
+  }
+
+  async verifyAndPublish(job) {
+    const signal = job.options.signal
+      ? AbortSignal.any([
+          job.options.signal,
+          this.verificationController.signal,
+        ])
+      : this.verificationController.signal
+    try {
+      signal.throwIfAborted()
+      const filename = job.destination + '.download'
+      if ((await fs.promises.stat(filename)).size !== job.size)
+        throw new Error('下载文件大小与清单不匹配')
+      if (job.options.md5) {
+        const md5 = await getFileMD5(
+          filename,
+          signal,
+          job.options.onVerifyProgress,
+        )
+        signal.throwIfAborted()
+        if (md5 !== job.options.md5.toLowerCase()) {
+          await this.rejectCorruptDownload(job)
+          throw new Error('MD5 校验失败')
+        }
       }
-      job.options.onVerifyProgress?.(Number(status.verifiedLength) || 0)
+      signal.throwIfAborted()
+      await publishDownload(job)
+      this.settle(job, null, { verified: !!job.options.md5 })
+    } catch (error) {
+      this.settle(job, error)
     }
   }
 
@@ -447,9 +516,9 @@ export class DownloadScheduler {
 
   async tick() {
     for (const job of this.jobs) {
+      if (job.verification) continue
       try {
         if (!job.gid && !job.error) {
-          const md5 = job.options.md5
           job.gid = await this.client.rpc('addUri', [job.url], {
             dir: path.dirname(job.destination),
             out: path.basename(job.destination) + '.download',
@@ -457,8 +526,8 @@ export class DownloadScheduler {
             continue: 'true',
             'auto-file-renaming': 'false',
             'allow-overwrite': 'true',
-            'check-integrity': 'true',
-            ...(md5 ? { checksum: `md5=${md5}` } : {}),
+            // MD5 在下载后由独立的并行读取完成；aria2 只负责传输和断点。
+            'check-integrity': 'false',
             split: '1',
             'max-connection-per-server': '1',
             'min-split-size': '1M',
@@ -493,19 +562,7 @@ export class DownloadScheduler {
         if (job.error) continue
         if (status.status === 'error' || status.status === 'removed') {
           if (status.errorCode === '32') {
-            await discardNative(job.destination)
-            // 源碎片仍保留，但校验失败的旧来源不能在重试时再次导入。
-            await fs.promises.writeFile(
-              job.destination + '.download.json',
-              JSON.stringify({
-                version: 1,
-                identity: job.options.md5 || job.url,
-                size: job.size,
-                legacyRejected: true,
-              }),
-            )
-            job.downloaded = 0
-            job.options.onProgress?.(0, false)
+            await this.rejectCorruptDownload(job)
           }
           this.settle(
             job,
@@ -515,17 +572,11 @@ export class DownloadScheduler {
           )
           await this.client.rpc('removeDownloadResult', job.gid).catch(() => {})
         } else if (status.status === 'complete') {
-          const size = (await fs.promises.stat(job.destination + '.download'))
-            .size
-          if (size !== job.size) throw new Error('下载文件大小与清单不匹配')
-          if (job.options.md5) {
-            if (!job.verifying) job.options.onVerifyProgress?.(0)
-            job.options.onVerifyProgress?.(job.size)
-          }
           if (job.error) continue
-          await publishDownload(job)
-          this.settle(job, null, { verified: !!job.options.md5 })
           await this.client.rpc('removeDownloadResult', job.gid).catch(() => {})
+          // 不 await 校验，允许其他文件继续下载或同时校验。
+          job.verification = this.verifyAndPublish(job)
+          this.revision++
         }
       } catch (error) {
         if (this.client.error || error.code === 'ARIA2_RPC_TRANSPORT')
@@ -537,12 +588,8 @@ export class DownloadScheduler {
           await this.client.rpc('forceRemove', job.gid).catch(() => {})
       }
     }
-    // 完整下载后的原生校验不占网络额度，也不能被配额调整暂停而重新扫描。
-    const jobs = [...this.jobs].filter(
-      (job) =>
-        !job.error &&
-        !(job.size > 0 && job.downloaded >= job.size && !job.connections),
-    )
+    // 本地校验不占网络额度，也不受连接配额调整影响。
+    const jobs = [...this.jobs].filter((job) => !job.error && !job.verification)
     if (!jobs.length) return
     if (
       this.plannedRevision === this.revision &&
@@ -551,18 +598,12 @@ export class DownloadScheduler {
       return
     const revision = this.revision
     const allocation = allocateThreads(
-      jobs.map((job, i) => ({
+      jobs.map((job) => ({
         remaining: Math.max(1, job.size - job.downloaded),
-        capacity:
-          i < 4
-            ? Math.max(
-                1,
-                Math.min(
-                  this.limit,
-                  Math.floor((job.size - job.downloaded) / MiB),
-                ),
-              )
-            : 0,
+        capacity: Math.max(
+          1,
+          Math.min(this.limit, Math.floor((job.size - job.downloaded) / MiB)),
+        ),
       })),
       this.limit,
     )
@@ -592,8 +633,10 @@ export class DownloadScheduler {
     if (this.closing) return this.closing
     this.closing = (async () => {
       clearTimeout(this.timer)
+      this.verificationController.abort(new Error('下载器已关闭'))
       await this.initializing?.catch(() => {})
       await this.ticking
+      await Promise.all([...this.jobs].map((job) => job.verification))
       if (this.client) {
         await this.client.close()
         for (const job of this.jobs) this.settle(job, new Error('下载器已关闭'))

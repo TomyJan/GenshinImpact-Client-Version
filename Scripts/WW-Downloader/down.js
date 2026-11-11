@@ -23,7 +23,7 @@ const targetDir = path.join(__dirname, 'ww')
 
 // ==================== 配置 ====================
 // -c/--concurrency 或 DOWNLOAD_CONCURRENCY 设置所有文件合计的下载线程上限。
-// 默认 16，限制为 4–16；最多同时处理 4 个文件，按剩余大小动态分配分片线程。
+// 默认 16，限制为 4–16；文件处理并发使用同一上限，校验不占下载连接。
 // 少量尾片或服务器不支持 Range 时，实际连接数可能低于 4。
 function parseConcurrencyArg() {
   const argv = process.argv.slice(2)
@@ -507,6 +507,7 @@ function getFileMD5(filePath, onProgress) {
     const hash = crypto.createHash('md5')
     const stream = fs.createReadStream(filePath, {
       signal: downloadController.signal,
+      highWaterMark: 1024 ** 2,
     })
     let processed = 0
     let digest
@@ -664,7 +665,7 @@ async function handleFile(fileObj, index, total, slotIndex) {
       if (stats.size !== fileSize) {
         throw new Error('文件大小不匹配')
       }
-      // 新下载交给 aria2 校验一次；已有目标文件仍由上面的扫描校验处理。
+      // 新下载由调度器并行校验一次；已有目标文件由上面的扫描校验处理。
       if (!downloadResult?.verified) {
         const md5 = await getFileMD5(fullPath, verifyUpdater)
         signal.throwIfAborted()
@@ -849,14 +850,14 @@ async function main() {
     console.log(`下载版本: ${versionType === 'pre' ? '预下载' : '正式版'}`)
     console.log(`资源等级: ${resourceLevelNames[resourceLevel]}`)
     console.log(
-      `共 ${total} 个文件，下载线程上限: ${concurrency}，同时处理最多 4 个文件`,
+      `共 ${total} 个文件，下载线程上限: ${concurrency}，同时处理最多 ${concurrency} 个文件`,
     )
     console.log(`目标目录: ${targetDir}`)
     console.log('')
 
     // 初始化进度管理器
     const totalBytes = data.reduce((sum, file) => sum + file.size, 0)
-    const fileConcurrency = Math.min(4, concurrency)
+    const fileConcurrency = concurrency
     progressManager = new ProgressManager(total, fileConcurrency, totalBytes)
     progressManager.init()
 

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
+import fileSystem from 'node:fs'
 import { readdirSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -15,7 +16,12 @@ const digest = (data) => crypto.createHash('md5').update(data).digest('hex')
 
 async function fixture(
   t,
-  { ignoreRange = false, corrupt = false, slowLarge = false } = {},
+  {
+    ignoreRange = false,
+    corrupt = false,
+    slowLarge = false,
+    interval = 3,
+  } = {},
 ) {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'ww-transfer-'))
   const content = crypto.randomBytes(12 * MiB)
@@ -65,7 +71,7 @@ async function fixture(
           res.end()
         }
       },
-      slowLarge && !req.url.includes('small') ? 15 : 3,
+      slowLarge && !req.url.includes('small') ? 15 : interval,
     )
     res.on('close', () => clearInterval(timer))
   })
@@ -412,7 +418,69 @@ test('multiple native jobs share the global connection budget and survive reallo
     )
 })
 
-test('native checksum failure is reported and never publishes a completed destination', async (t) => {
+test('completed downloads are hashed concurrently without occupying the native engine', async (t) => {
+  const f = await fixture(t)
+  const scheduler = new DownloadScheduler(8)
+  t.after(() => scheduler.close())
+  const streams = new Set()
+  const held = new Set()
+  let peak = 0
+  const read = fileSystem.createReadStream
+  t.mock.method(fileSystem, 'createReadStream', (filename, options) => {
+    const stream = read(filename, options)
+    if (!String(filename).endsWith('.download')) return stream
+    streams.add(stream)
+    peak = Math.max(peak, streams.size)
+    stream.once('close', () => streams.delete(stream))
+    // Emulate a slow disk read; a second checksum must start before it finishes.
+    stream.once('data', () => {
+      if (streams.size < 2) {
+        stream.pause()
+        held.add(stream)
+        const timer = setTimeout(() => stream.resume(), 1000)
+        stream.once('close', () => clearTimeout(timer))
+      }
+    })
+    if (streams.size >= 2) for (const other of held) other.resume()
+    return stream
+  })
+  await Promise.all(
+    [0, 1, 2, 3].map((i) =>
+      scheduler.download(f.url + `?file=${i}`, path.join(f.directory, `${i}`), {
+        size: f.content.length,
+        md5: digest(f.content),
+      }),
+    ),
+  )
+  assert.ok(peak >= 2, `only ${peak} concurrent local checksum reads`)
+  for (let i = 0; i < 4; i++)
+    assert.deepEqual(
+      await fs.readFile(path.join(f.directory, `${i}`)),
+      f.content,
+    )
+})
+
+test('small files fill the configured connection budget beyond four file slots', async (t) => {
+  const f = await fixture(t, { interval: 15 })
+  const scheduler = new DownloadScheduler(8)
+  t.after(() => scheduler.close())
+  const small = f.content.subarray(0, MiB)
+  await Promise.all(
+    Array.from({ length: 8 }, (_, i) =>
+      scheduler.download(
+        f.url + `?small=${i}`,
+        path.join(f.directory, `${i}`),
+        { size: small.length, md5: digest(small) },
+      ),
+    ),
+  )
+  assert.ok(f.peak > 4, `only ${f.peak} simultaneous file downloads`)
+  assert.ok(f.peak <= 8, `oversubscribed ${f.peak}`)
+  for (let i = 0; i < 8; i++)
+    assert.deepEqual(await fs.readFile(path.join(f.directory, `${i}`)), small)
+})
+
+test('checksum failure is reported and never publishes a completed destination', async (t) => {
   const f = await fixture(t, { corrupt: true })
   const scheduler = new DownloadScheduler(4)
   t.after(() => scheduler.close())

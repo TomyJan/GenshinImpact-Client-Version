@@ -6,6 +6,7 @@ import path from 'node:path'
 import http from 'node:http'
 import crypto from 'node:crypto'
 import { test } from 'node:test'
+import { execFileSync } from 'node:child_process'
 import { DownloadScheduler } from './transfer.js'
 import { readAria2Progress } from './aria2-resume.js'
 
@@ -128,6 +129,30 @@ test('native multithread download writes one data file without fragment director
   assert.ok(f.peak <= 8, `oversubscribed ${f.peak}`)
   assert.equal(verification[0], 0)
   assert.equal(verification.at(-1), f.content.length)
+  if (process.platform === 'win32') {
+    const attributes = Number(
+      execFileSync(
+        path.join(
+          process.env.SystemRoot || 'C:\\Windows',
+          'System32',
+          'WindowsPowerShell',
+          'v1.0',
+          'powershell.exe',
+        ),
+        [
+          '-NoProfile',
+          '-NonInteractive',
+          '-Command',
+          `[int](Get-Item -LiteralPath '${destination.replaceAll("'", "''")}').Attributes`,
+        ],
+        { encoding: 'utf8', windowsHide: true },
+      ),
+    )
+    assert.ok(
+      attributes & 512,
+      'native Windows downloads must use sparse files',
+    )
+  }
 })
 
 test('interruption persists native control and a fresh engine resumes missing bytes only', async (t) => {
@@ -188,6 +213,181 @@ test('interruption persists native control and a fresh engine resumes missing by
   })
   assert.ok(f.transferred - before < f.content.length - MiB)
   assert.deepEqual(await fs.readFile(destination), f.content)
+})
+
+test('a transient RPC timeout does not stop a healthy native download', async (t) => {
+  const f = await fixture(t)
+  const scheduler = new DownloadScheduler(4)
+  t.after(() => scheduler.close())
+  await scheduler.initialize()
+  const realFetch = globalThis.fetch
+  let interrupted = 0
+  t.mock.method(globalThis, 'fetch', (url, options) => {
+    if (
+      url === scheduler.client.endpoint &&
+      JSON.parse(options.body).method === 'aria2.tellStatus' &&
+      interrupted < 2
+    ) {
+      const name = ['TimeoutError', 'AbortError'][interrupted++]
+      return Promise.reject(new DOMException('RPC temporarily busy', name))
+    }
+    return realFetch(url, options)
+  })
+  const destination = path.join(f.directory, 'game.pak')
+  const result = await scheduler.download(f.url, destination, {
+    size: f.content.length,
+    md5: digest(f.content),
+  })
+  assert.equal(interrupted, 2)
+  assert.equal(result.verified, true)
+  assert.deepEqual(await fs.readFile(destination), f.content)
+})
+
+test('an ambiguous addUri timeout stops the old engine before a safe retry', async (t) => {
+  const f = await fixture(t)
+  const scheduler = new DownloadScheduler(4)
+  t.after(() => scheduler.close())
+  await scheduler.initialize()
+  const oldClient = scheduler.client
+  const realFetch = globalThis.fetch
+  let interrupted = false
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    const response = await realFetch(url, options)
+    if (
+      url === oldClient.endpoint &&
+      JSON.parse(options.body).method === 'aria2.addUri' &&
+      !interrupted
+    ) {
+      interrupted = true
+      await response.arrayBuffer()
+      throw new DOMException(
+        'accepted request lost its response',
+        'TimeoutError',
+      )
+    }
+    return response
+  })
+  const destination = path.join(f.directory, 'game.pak')
+  const options = { size: f.content.length, md5: digest(f.content) }
+  await assert.rejects(
+    scheduler.download(f.url, destination, options),
+    /RPC addUri.*accepted request lost its response/,
+  )
+  assert.notEqual(oldClient.child.exitCode, null, 'old engine is still running')
+  await scheduler.download(f.url, destination, options)
+  assert.notEqual(scheduler.client, oldClient)
+  assert.deepEqual(await fs.readFile(destination), f.content)
+})
+
+test('an accepted addUri with a reset response body stops its engine before retrying', async (t) => {
+  const f = await fixture(t)
+  const scheduler = new DownloadScheduler(4)
+  t.after(() => scheduler.close())
+  await scheduler.initialize()
+  const oldClient = scheduler.client
+  const realFetch = globalThis.fetch
+  let interrupted = false
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    const response = await realFetch(url, options)
+    if (
+      url === oldClient.endpoint &&
+      JSON.parse(options.body).method === 'aria2.addUri' &&
+      !interrupted
+    ) {
+      interrupted = true
+      await response.arrayBuffer()
+      return new Response(
+        new ReadableStream({
+          start(controller) {
+            controller.error(
+              new TypeError('terminated', {
+                cause: { code: 'UND_ERR_SOCKET' },
+              }),
+            )
+          },
+        }),
+      )
+    }
+    return response
+  })
+  const destination = path.join(f.directory, 'game.pak')
+  const options = { size: f.content.length, md5: digest(f.content) }
+  await assert.rejects(
+    scheduler.download(f.url, destination, options),
+    /RPC addUri.*UND_ERR_SOCKET/,
+  )
+  assert.ok(
+    oldClient.child.exitCode !== null || oldClient.child.signalCode !== null,
+  )
+  await scheduler.download(f.url, destination, options)
+  assert.notEqual(scheduler.client, oldClient)
+  assert.deepEqual(await fs.readFile(destination), f.content)
+})
+
+test('a failed native engine can be replaced and its unfinished download resumed', async (t) => {
+  const f = await fixture(t, { slowLarge: true })
+  const scheduler = new DownloadScheduler(4)
+  t.after(() => scheduler.close())
+  const destination = path.join(f.directory, 'game.pak')
+  let stoppedClient
+  await assert.rejects(
+    scheduler.download(f.url, destination, {
+      size: f.content.length,
+      md5: digest(f.content),
+      onProgress(current) {
+        if (current > 2 * MiB && !stoppedClient)
+          readAria2Progress(destination + '.download.aria2')
+            .then((saved) => {
+              if (saved?.completedLength >= MiB && !stoppedClient) {
+                stoppedClient = scheduler.client
+                stoppedClient.child.kill()
+              }
+            })
+            .catch(() => {})
+      },
+    }),
+    /aria2|fetch|ECONN/i,
+  )
+  await stoppedClient.exited
+  assert.match(stoppedClient.error.message, /SIGTERM/)
+  let recovered = 0
+  await scheduler.download(f.url, destination, {
+    size: f.content.length,
+    md5: digest(f.content),
+    onProgress(current, network) {
+      if (!network) recovered = Math.max(recovered, current)
+    },
+  })
+  assert.notEqual(scheduler.client, stoppedClient)
+  assert.ok(recovered >= MiB, 'native resume state was discarded')
+  assert.deepEqual(await fs.readFile(destination), f.content)
+})
+
+test('parallel file retries survive a shared engine exit without rejecting the replacement jobs', async (t) => {
+  const f = await fixture(t, { slowLarge: true })
+  const scheduler = new DownloadScheduler(4)
+  t.after(() => scheduler.close())
+  let killed = false
+  await Promise.all(
+    [0, 1].map(async (i) => {
+      const destination = path.join(f.directory, `${i}.pak`)
+      const options = {
+        size: f.content.length,
+        md5: digest(f.content),
+        onProgress(current) {
+          if (current > MiB && !killed) {
+            killed = true
+            scheduler.client.child.kill()
+          }
+        },
+      }
+      await scheduler
+        .download(f.url, destination, options)
+        .catch(() => scheduler.download(f.url, destination, options))
+      assert.deepEqual(await fs.readFile(destination), f.content)
+    }),
+  )
+  assert.equal(killed, true)
 })
 
 test('multiple native jobs share the global connection budget and survive reallocation', async (t) => {

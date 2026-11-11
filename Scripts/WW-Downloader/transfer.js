@@ -92,7 +92,9 @@ class Aria2Client {
         '--quiet=true',
         '--console-log-level=error',
         '--download-result=hide',
-        '--file-allocation=none',
+        // Windows 的 none 不会设置稀疏标志；多连接从大偏移写入时可能
+        // 同步补零数 GB 并阻塞 RPC。trunc 创建稀疏文件，保留单文件续传。
+        '--file-allocation=trunc',
         '--disk-cache=0',
         '--auto-save-interval=1',
         '--max-concurrent-downloads=4',
@@ -100,15 +102,27 @@ class Aria2Client {
         `--stop-with-process=${process.pid}`,
         `--max-connection-per-server=${limit}`,
       ],
-      { stdio: 'ignore', windowsHide: true },
+      { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true },
     )
+    this.output = ''
+    const collectOutput = (chunk) => {
+      this.output = (this.output + chunk.toString()).slice(-4096)
+    }
+    this.child.stdout.on('data', collectOutput)
+    this.child.stderr.on('data', collectOutput)
     this.exited = new Promise((resolve) => {
       this.child.once('error', (error) => {
         this.error = error
         resolve()
       })
-      this.child.once('close', (code) => {
-        this.error ||= new Error(`aria2 进程已退出（${code}）`)
+      this.child.once('close', (code, signal) => {
+        const reason = signal ? `信号 ${signal}` : `退出码 ${code}`
+        const output = this.output.replaceAll(this.secret, '[redacted]').trim()
+        this.error ||=
+          this.failure ||
+          new Error(
+            `aria2 进程已退出（${reason}）${output ? `: ${output}` : ''}`,
+          )
         resolve()
       })
     })
@@ -127,32 +141,58 @@ class Aria2Client {
         }
       }
     } catch (error) {
-      await this.close()
+      await this.close(error)
       throw error
     }
   }
 
   async rpc(method, ...params) {
     if (this.error) throw this.error
-    const response = await fetch(this.endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Connection: 'close' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 'ww',
-        method: `aria2.${method}`,
-        params: [`token:${this.secret}`, ...params],
-      }),
-      signal: AbortSignal.timeout(3000),
-    })
-    const data = await response.json()
-    if (data.error) throw new Error(`aria2 RPC: ${data.error.message}`)
-    if (!response.ok) throw new Error(`aria2 RPC HTTP ${response.status}`)
-    return data.result
+    // 大文件落盘/校验繁忙时，本机 RPC 也可能短暂超时。只重试只读查询；
+    // addUri 等写操作超时后不能盲重发，否则会创建重复的原生下载任务。
+    const readOnly = method === 'getVersion' || method === 'tellStatus'
+    for (let attempt = 0; ; attempt++) {
+      if (this.error) throw this.error
+      try {
+        const response = await fetch(this.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Connection: 'close' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: 'ww',
+            method: `aria2.${method}`,
+            params: [`token:${this.secret}`, ...params],
+          }),
+          signal: AbortSignal.timeout(3000),
+        })
+        const data = await response.json()
+        if (data.error) throw new Error(`aria2 RPC: ${data.error.message}`)
+        if (!response.ok) throw new Error(`aria2 RPC HTTP ${response.status}`)
+        return data.result
+      } catch (error) {
+        if (this.error) throw this.error
+        const temporary =
+          error.name === 'TimeoutError' ||
+          error.name === 'AbortError' ||
+          (error instanceof TypeError &&
+            ['fetch failed', 'terminated'].includes(error.message))
+        if (!temporary) throw error
+        if (!readOnly || attempt >= 2) {
+          const failure = new Error(
+            `aria2 本地 RPC ${method} 失败: ${error.cause?.code || error.message || error.name}`,
+            { cause: error },
+          )
+          failure.code = 'ARIA2_RPC_TRANSPORT'
+          throw failure
+        }
+        await delay(100)
+      }
+    }
   }
 
-  async close() {
+  async close(error) {
     if (!this.child) return
+    this.failure ||= error
     if (!this.error) await this.rpc('forceShutdown').catch(() => {})
     const timer = setTimeout(() => this.child.kill(), 5000)
     try {
@@ -310,8 +350,13 @@ export class DownloadScheduler {
       this.ticking = this.tick()
         .catch(async (error) => {
           // RPC/子进程失败必须关闭原生写入后才结束任务。
-          await this.client.close()
-          for (const job of this.jobs) {
+          const client = this.client
+          await client.close(error)
+          const failedJobs = [...this.jobs]
+          // 旧进程已停写后才允许下一次重试启动新引擎，继续复用原生断点。
+          this.initializing = undefined
+          this.client = undefined
+          for (const job of failedJobs) {
             try {
               const saved = await readAria2Progress(
                 job.destination + '.download.aria2',
@@ -483,6 +528,8 @@ export class DownloadScheduler {
           await this.client.rpc('removeDownloadResult', job.gid).catch(() => {})
         }
       } catch (error) {
+        if (this.client.error || error.code === 'ARIA2_RPC_TRANSPORT')
+          throw error
         // stat/rename/清理等文件局部错误不能取消其他文件；先确认本任务已停写。
         if (job.gid) await this.pause([job])
         this.settle(job, error)

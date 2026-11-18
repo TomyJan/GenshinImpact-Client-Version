@@ -1,0 +1,68 @@
+{
+  "default": {
+    "cdnList": [
+      {
+        "url": "https://hw-pcdownload-qcloud.aki-game.net/",
+        "P": 1677,
+        "K2": 1,
+        "K1": 1
+      },
+      {
+        "url": "https://pcdownload-huoshan.aki-game.net/",
+        "P": 0,
+        "K2": 1,
+        "K1": 1
+      },
+      {
+        "url": "https://hw-pcdownload-akamai.aki-game.net/",
+        "P": 2177,
+        "K2": 1,
+        "K1": 1
+      },
+      {
+        "url": "https://hw-pcdownload-aws.aki-game.net/",
+        "P": 7276,
+        "K2": 1,
+        "K1": 1
+      }
+    ],
+    "resource": {
+      "fileCheckListMd5": "acde2b3a1f548f04383a8c0a5c29363e",
+      "path": "launcher/app/50004_P7xcUZnEr1AXIGON25E6KjpOgTlVrg6e/parent/3.1.0.1/18cf6b807e98494697b4808dfea8030f/launcher.zip",
+      "size": 465259014,
+      "version": "3.1.0.1",
+      "md5": "2af24546fb82585b14dfad8913e09507"
+    },
+    "changelog": {
+      "en": "Part of the functions optimized",
+      "zh-Hans": "优化了部分功能",
+      "ja": "ゲーム動作改善",
+      "ko": "일부 기능을 최적화함",
+      "zh-Hant": "優化了部分功能",
+      "fr": "Partie des fonctions optimisées",
+      "pt-BR": "Parte das funções otimizadas",
+      "es": "Optimizadas algunas funciones",
+      "de": "Funktionen teilweise optimiert",
+      "th": "ปรับปรุงประสบการณ์การใช้งานบางส่วนให้ดียิ่งขึ้น"
+    }
+  },
+  "experiment": {
+    "updater": {
+      "enableCDNSelect": true
+    },
+    "componentList": [
+      {
+        "Id": "KRWebViewRuntime",
+        "fileCheckListMd5": "852c066819f820fd02bc3634a831d9fa",
+        "path": "launcher/environment/KRWebViewRuntime.zip",
+        "size": 249517572,
+        "version": "133.0.3065.59",
+        "md5": "28114c06a191aa4fd061c767183cea58"
+      }
+    ]
+  },
+  "crashInitSwitch": 1,
+  "resourcesGray": {
+    "graySwitch": 0
+  }
+}
